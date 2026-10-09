@@ -39,7 +39,7 @@ function App() {
   };
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/gofungible-ext-dapp-token/">
       <LayoutProvider>
         <Routes>
           <Route path="/" element={<Outlet />}>
