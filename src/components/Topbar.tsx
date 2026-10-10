@@ -28,7 +28,7 @@ export function Topbar() {
             <Menu className="h-6 w-6" />
           </button>
           <h1 className="text-lg font-semibold text-gray-900 hidden sm:block">
-            Gofungible Ext DApp Token
+            dAppmin
           </h1>
         </div>
         <div className="flex items-center gap-2">

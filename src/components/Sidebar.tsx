@@ -67,7 +67,7 @@ export function Sidebar() {
     >
       <div className="flex flex-col h-full">
         <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
-          <h1 className="text-xl font-bold text-gray-900">Gofungible</h1>
+          <h1 className="text-xl font-bold text-gray-900">Fungible Standard</h1>
           <button
             onClick={closeSidebar}
             className="lg:hidden p-2 text-gray-500 hover:text-gray-700"
@@ -78,7 +78,7 @@ export function Sidebar() {
             </svg>
           </button>
         </div>
-        <nav className="flex-1 overflow-y-auto p-4 space-y-1" aria-label="Main navigation">
+        <nav className="flex-1 overflow-y-auto p-4 space-y-2" aria-label="Main navigation">
           {sidebarItems.length === 0 ? (
             <div className="text-center text-gray-500 py-8">
               <p className="text-sm">No modules loaded</p>
@@ -89,9 +89,10 @@ export function Sidebar() {
               <SidebarItemComponent key={item.id} item={item} />
             ))
           )}
+          <div className="border-t border-gray-200 my-4" />
           <button
             onClick={openLoader}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2 mt-4 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors font-medium"
+            className="w-full flex items-center justify-center gap-2 px-3 py-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors font-medium"
             aria-label="Load new module"
           >
             <Plus className="h-5 w-5" />
