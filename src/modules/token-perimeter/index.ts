@@ -1,34 +1,34 @@
 import { ModuleInstance, ModuleManifest } from '../../types';
 import { coreFramework } from '../../core/CoreFramework';
-import { Dashboard } from './Dashboard';
+import { TokenPerimeter } from './TokenPerimeter';
 
 const manifest: ModuleManifest = {
-  id: 'dashboard',
-  name: 'Dashboard',
+  id: 'token-perimeter',
+  name: 'Token Perimeter',
   version: '1.0.0',
   description: 'Overview of all chains where the multichain token is present and ERC-20 features',
   author: 'Gofungible Team',
-  entryPoint: 'dashboard',
+  entryPoint: 'token-perimeter',
   routes: [
     {
       path: '/',
-      component: 'Dashboard',
+      component: 'TokenPerimeter',
       exact: true,
     },
   ],
   topbarItems: [
     {
-      id: 'dashboard-refresh',
+      id: 'token-perimeter-refresh',
       label: 'Refresh',
       icon: 'refresh-cw',
-      action: 'refresh-dashboard',
+      action: 'refresh-token-perimeter',
       order: 1,
     },
   ],
   sidebarItems: [
     {
-      id: 'dashboard',
-      label: 'Dashboard',
+      id: 'token-perimeter',
+      label: 'Token Perimeter',
       icon: 'layout-dashboard',
       route: '/',
       order: 1,
@@ -36,22 +36,22 @@ const manifest: ModuleManifest = {
   ],
 };
 
-let dashboardInstance: ModuleInstance | null = null;
+let tokenPerimeterInstance: ModuleInstance | null = null;
 
-const dashboardModule: ModuleInstance = {
+const tokenPerimeterModule: ModuleInstance = {
   manifest,
   initialize(core) {
-    dashboardInstance = dashboardModule;
-    core.registerModule(dashboardModule);
-    console.log('Dashboard module initialized');
+    tokenPerimeterInstance = tokenPerimeterModule;
+    core.registerModule(tokenPerimeterModule);
+    console.log('TokenPerimeter module initialized');
     return Promise.resolve();
   },
   destroy() {
-    if (dashboardInstance) {
-      coreFramework.unregisterModule(dashboardModule.manifest.id);
-      dashboardInstance = null;
+    if (tokenPerimeterInstance) {
+      coreFramework.unregisterModule(tokenPerimeterModule.manifest.id);
+      tokenPerimeterInstance = null;
     }
-    console.log('Dashboard module destroyed');
+    console.log('TokenPerimeter module destroyed');
     return Promise.resolve();
   },
   getRoutes() {
@@ -65,5 +65,5 @@ const dashboardModule: ModuleInstance = {
   },
 };
 
-export { dashboardModule, manifest, Dashboard };
-export default dashboardModule;
+export { tokenPerimeterModule, manifest, TokenPerimeter };
+export default tokenPerimeterModule;

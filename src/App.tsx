@@ -2,19 +2,19 @@ import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { coreFramework } from './core/CoreFramework';
 import { LayoutProvider } from './components/LayoutProvider';
-import { Dashboard } from './modules/dashboard/Dashboard';
+import { TokenPerimeter } from './modules/token-perimeter/TokenPerimeter';
 import './index.css';
 
 function App() {
   useEffect(() => {
-    void loadDashboardModule();
+    void loadTokenPerimeterModule();
   }, []);
 
-  const loadDashboardModule = async () => {
+  const loadTokenPerimeterModule = async () => {
     try {
-      await import('./modules/dashboard/index');
+      await import('./modules/token-perimeter/index');
     } catch (error) {
-      console.error('Failed to load dashboard module:', error);
+      console.error('Failed to load token-perimeter module:', error);
     }
   };
 
@@ -23,7 +23,7 @@ function App() {
     
     if (routes.length === 0) {
       return (
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/" element={<TokenPerimeter />} />
       );
     }
 
