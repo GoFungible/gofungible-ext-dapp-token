@@ -1,7 +1,8 @@
 import React from 'react';
 import { useLayout } from './LayoutProvider';
 import { SidebarItem } from '../types';
-import { ChevronDown, LayoutDashboard, Settings, Network, FileText, Plus } from 'lucide-react';
+import { ChevronDown, LayoutDashboard, Settings, Network, FileText, Plus, ArrowRightLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   'layout-dashboard': LayoutDashboard,
@@ -9,20 +10,25 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   'network': Network,
   'file-text': FileText,
   'plus': Plus,
+  'arrow-right-left': ArrowRightLeft,
 };
 
 function SidebarItemComponent({ item, level = 0 }: { item: SidebarItem; level?: number }) {
   const { closeSidebar } = useLayout();
+  const navigate = useNavigate();
   const Icon = item.icon ? iconMap[item.icon] : LayoutDashboard;
   const hasChildren = item.children && item.children.length > 0;
   const [expanded, setExpanded] = React.useState(false);
 
   const handleClick = (e: React.MouseEvent) => {
-    if (!hasChildren) {
+    if (!hasChildren && item.route) {
+      navigate(item.route);
       closeSidebar();
-    } else {
+    } else if (hasChildren) {
       e.preventDefault();
       setExpanded(!expanded);
+    } else {
+      closeSidebar();
     }
   };
 

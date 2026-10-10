@@ -1,17 +1,22 @@
-import React, { useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { coreFramework } from './core/CoreFramework';
 import { LayoutProvider } from './components/LayoutProvider';
 import { TokenPerimeter } from './modules/token-perimeter/TokenPerimeter';
 import { LoaderModule } from './modules/loader/LoaderModule';
+import { TokenBridge } from './modules/token-bridge/TokenBridge';
+import { Loader2 } from 'lucide-react';
 import './index.css';
 
 const componentRegistry: Record<string, React.ComponentType> = {
   'TokenPerimeter': TokenPerimeter,
   'LoaderModule': LoaderModule,
+  'TokenBridge': TokenBridge,
 };
 
 function App() {
+  const [modulesLoaded, setModulesLoaded] = useState(false);
+
   useEffect(() => {
     void loadModules();
   }, []);
@@ -19,6 +24,8 @@ function App() {
   const loadModules = async () => {
     await loadTokenPerimeterModule();
     await loadLoaderModule();
+    await loadTokenBridgeModule();
+    setModulesLoaded(true);
   };
 
   const loadTokenPerimeterModule = async () => {
@@ -43,13 +50,24 @@ function App() {
     }
   };
 
+  const loadTokenBridgeModule = async () => {
+    try {
+      const mod = await import('./modules/token-bridge/index');
+      console.log('Token bridge module loaded:', mod);
+      if (mod.default && typeof mod.default.initialize === 'function') {
+        await mod.default.initialize(coreFramework);
+        console.log('TokenBridge module initialized successfully');
+      }
+    } catch (error) {
+      console.error('Failed to load token-bridge module:', error);
+    }
+  };
+
   const renderRoutes = () => {
     const routes = coreFramework.getAllRoutes();
 
     if (routes.length === 0) {
-      return (
-        <Route path="/" element={<TokenPerimeter />} />
-      );
+      return <Route path="/" element={<TokenPerimeter />} />;
     }
 
     return routes.map((route, index) => {
@@ -76,12 +94,16 @@ function App() {
   return (
     <BrowserRouter basename="/gofungible-ext-dapp-token/">
       <LayoutProvider>
-        <Routes>
-          <Route path="/" element={<Outlet />}>
+        {!modulesLoaded ? (
+          <div className="min-h-screen flex items-center justify-center">
+            <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
+          </div>
+        ) : (
+          <Routes>
             {renderRoutes()}
-          </Route>
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        )}
       </LayoutProvider>
     </BrowserRouter>
   );
