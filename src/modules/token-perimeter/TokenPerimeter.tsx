@@ -126,8 +126,8 @@ function StatsOverview() {
 
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-      {stats.map((stat, index) => (
-        <div key={index} className="bg-white rounded-xl border border-gray-200 p-6">
+      {stats.map((stat) => (
+        <div key={stat.label} className="bg-white rounded-xl border border-gray-200 p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-500">{stat.label}</p>
@@ -245,8 +245,8 @@ export function TokenPerimeter() {
               </tr>
               <tr className="border-b border-gray-100">
                 <td className="py-3 px-4 text-sm font-medium text-gray-700">Flash Minting</td>
-                {mockChains.map(() => (
-                  <td className="py-3 px-4 text-sm text-gray-600">
+                {mockChains.map(c => (
+                  <td key={c.id} className="py-3 px-4 text-sm text-gray-600">
                     <XCircle className="h-4 w-4 text-gray-300 inline" />
                   </td>
                 ))}

@@ -3,16 +3,23 @@ import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom
 import { coreFramework } from './core/CoreFramework';
 import { LayoutProvider } from './components/LayoutProvider';
 import { TokenPerimeter } from './modules/token-perimeter/TokenPerimeter';
+import { LoaderModule } from './modules/loader/LoaderModule';
 import './index.css';
 
 const componentRegistry: Record<string, React.ComponentType> = {
   'TokenPerimeter': TokenPerimeter,
+  'LoaderModule': LoaderModule,
 };
 
 function App() {
   useEffect(() => {
-    void loadTokenPerimeterModule();
+    void loadModules();
   }, []);
+
+  const loadModules = async () => {
+    await loadTokenPerimeterModule();
+    await loadLoaderModule();
+  };
 
   const loadTokenPerimeterModule = async () => {
     try {
@@ -22,6 +29,17 @@ function App() {
       }
     } catch (error) {
       console.error('Failed to load token-perimeter module:', error);
+    }
+  };
+
+  const loadLoaderModule = async () => {
+    try {
+      const mod = await import('./modules/loader/index');
+      if (mod.default && typeof mod.default.initialize === 'function') {
+        await mod.default.initialize(coreFramework);
+      }
+    } catch (error) {
+      console.error('Failed to load loader module:', error);
     }
   };
 

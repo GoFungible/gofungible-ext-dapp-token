@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import { coreFramework } from '../core/CoreFramework';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
+import { LoaderModule } from '../modules/loader/LoaderModule';
 import { SidebarItem, TopbarItem } from '../types';
 
 interface LayoutContextType {
@@ -10,6 +11,9 @@ interface LayoutContextType {
   closeSidebar: () => void;
   sidebarItems: SidebarItem[];
   topbarItems: TopbarItem[];
+  showLoader: boolean;
+  openLoader: () => void;
+  closeLoader: () => void;
 }
 
 const LayoutContext = createContext<LayoutContextType | undefined>(undefined);
@@ -18,6 +22,7 @@ export function LayoutProvider({ children }: { children: ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarItems, setSidebarItems] = useState<SidebarItem[]>([]);
   const [topbarItems, setTopbarItems] = useState<TopbarItem[]>([]);
+  const [showLoader, setShowLoader] = useState(false);
 
   useEffect(() => {
     const updateItems = () => {
@@ -38,6 +43,8 @@ export function LayoutProvider({ children }: { children: ReactNode }) {
 
   const toggleSidebar = () => setSidebarOpen(prev => !prev);
   const closeSidebar = () => setSidebarOpen(false);
+  const openLoader = () => setShowLoader(true);
+  const closeLoader = () => setShowLoader(false);
 
   return (
     <LayoutContext.Provider value={{
@@ -46,6 +53,9 @@ export function LayoutProvider({ children }: { children: ReactNode }) {
       closeSidebar,
       sidebarItems,
       topbarItems,
+      showLoader,
+      openLoader,
+      closeLoader,
     }}>
       <div className="min-h-screen bg-gray-50 flex">
         <Sidebar />
@@ -61,6 +71,9 @@ export function LayoutProvider({ children }: { children: ReactNode }) {
             onClick={closeSidebar}
             aria-hidden="true"
           />
+        )}
+        {showLoader && (
+          <LoaderModule onClose={closeLoader} />
         )}
       </div>
     </LayoutContext.Provider>

@@ -1,13 +1,14 @@
 import React from 'react';
 import { useLayout } from './LayoutProvider';
 import { SidebarItem } from '../types';
-import { ChevronDown, LayoutDashboard, Settings, Network, FileText } from 'lucide-react';
+import { ChevronDown, LayoutDashboard, Settings, Network, FileText, Plus } from 'lucide-react';
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   'layout-dashboard': LayoutDashboard,
   'settings': Settings,
   'network': Network,
   'file-text': FileText,
+  'plus': Plus,
 };
 
 function SidebarItemComponent({ item, level = 0 }: { item: SidebarItem; level?: number }) {
@@ -49,7 +50,7 @@ function SidebarItemComponent({ item, level = 0 }: { item: SidebarItem; level?: 
 }
 
 export function Sidebar() {
-  const { sidebarOpen, closeSidebar, sidebarItems } = useLayout();
+  const { sidebarOpen, closeSidebar, sidebarItems, openLoader } = useLayout();
 
   return (
     <aside
@@ -82,6 +83,14 @@ export function Sidebar() {
               <SidebarItemComponent key={item.id} item={item} />
             ))
           )}
+          <button
+            onClick={openLoader}
+            className="w-full flex items-center justify-center gap-2 px-3 py-2 mt-4 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors font-medium"
+            aria-label="Load new module"
+          >
+            <Plus className="h-5 w-5" />
+            <span>Load New Module</span>
+          </button>
         </nav>
         <div className="p-4 border-t border-gray-200">
           <p className="text-xs text-gray-500 text-center">
