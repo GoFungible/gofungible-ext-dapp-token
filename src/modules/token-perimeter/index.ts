@@ -1,12 +1,13 @@
 import { ModuleInstance, ModuleManifest } from '../../types';
 import { coreFramework } from '../../core/CoreFramework';
+import { eventBus } from '../../core/EventBus';
 import { TokenPerimeter } from './TokenPerimeter';
 
 const manifest: ModuleManifest = {
   id: 'token-perimeter',
   name: 'Token Perimeter',
   version: '1.0.0',
-  description: 'Overview of all chains where the multichain token is present and ERC-20 features',
+  description: 'Manage the EVM chains covered by the multichain token perimeter',
   author: 'Gofungible Team',
   entryPoint: 'token-perimeter',
   routes: [
@@ -43,6 +44,17 @@ const tokenPerimeterModule: ModuleInstance = {
   initialize(core) {
     tokenPerimeterInstance = tokenPerimeterModule;
     core.registerModule(tokenPerimeterModule);
+
+    eventBus.on('refresh-token-perimeter', () => {
+      console.log('TokenPerimeter: refresh requested');
+    });
+    eventBus.on('perimeter:bind', (data) => {
+      console.log('TokenPerimeter: chain bound', data);
+    });
+    eventBus.on('perimeter:unbind', (data) => {
+      console.log('TokenPerimeter: chain unbound', data);
+    });
+
     console.log('TokenPerimeter module initialized');
     return Promise.resolve();
   },

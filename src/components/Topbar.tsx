@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLayout } from './LayoutProvider';
+import { eventBus } from '../core/EventBus';
 import { Menu, Settings, Bell, User, ChevronDown, Network, RefreshCw } from 'lucide-react';
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -36,7 +37,7 @@ export function Topbar() {
             return (
               <button
                 key={item.id}
-                onClick={() => item.action && console.log(`Action: ${item.action}`)}
+                onClick={() => item.action && eventBus.emit(item.action, undefined)}
                 className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
                 aria-label={item.label}
               >

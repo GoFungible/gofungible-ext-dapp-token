@@ -1,3 +1,5 @@
+export const MASTER_CHAIN_ID = 1;
+
 export interface ChainData {
   id: number;
   name: string;
@@ -19,6 +21,20 @@ export interface TokenData {
   priceChange24h?: number;
 }
 
+export interface PerimeterState {
+  chains: ChainData[];
+  isLoading: boolean;
+  error?: string;
+  success?: string;
+}
+
+export interface PerimeterEvent {
+  chainId: number;
+  chainName: string;
+  action: 'bind' | 'unbind';
+  timestamp: number;
+}
+
 export function formatNumber(num: number | string): string {
   const n = typeof num === 'string' ? parseFloat(num) : num;
   if (n >= 1e12) return (n / 1e12).toFixed(2) + 'T';
@@ -30,4 +46,8 @@ export function formatNumber(num: number | string): string {
 
 export function formatAddress(address: string): string {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
+}
+
+export function isEthereumAddress(address: string): boolean {
+  return /^0x[a-fA-F0-9]{40}$/.test(address);
 }
