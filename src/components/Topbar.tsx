@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLayout } from './LayoutProvider';
-import { Menu, Settings, Bell, User, ChevronDown, Network } from 'lucide-react';
+import { Menu, Settings, Bell, User, ChevronDown, Network, RefreshCw } from 'lucide-react';
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   'menu': Menu,
@@ -9,6 +9,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   'user': User,
   'chevron-down': ChevronDown,
   'network': Network,
+  'refresh-cw': RefreshCw,
 };
 
 export function Topbar() {

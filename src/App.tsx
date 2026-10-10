@@ -1,9 +1,13 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { coreFramework } from './core/CoreFramework';
 import { LayoutProvider } from './components/LayoutProvider';
 import { TokenPerimeter } from './modules/token-perimeter/TokenPerimeter';
 import './index.css';
+
+const componentRegistry: Record<string, React.ComponentType> = {
+  'TokenPerimeter': TokenPerimeter,
+};
 
 function App() {
   useEffect(() => {
@@ -12,7 +16,10 @@ function App() {
 
   const loadTokenPerimeterModule = async () => {
     try {
-      await import('./modules/token-perimeter/index');
+      const mod = await import('./modules/token-perimeter/index');
+      if (mod.default && typeof mod.default.initialize === 'function') {
+        await mod.default.initialize(coreFramework);
+      }
     } catch (error) {
       console.error('Failed to load token-perimeter module:', error);
     }
@@ -20,22 +27,32 @@ function App() {
 
   const renderRoutes = () => {
     const routes = coreFramework.getAllRoutes();
-    
+
     if (routes.length === 0) {
       return (
         <Route path="/" element={<TokenPerimeter />} />
       );
     }
 
-    return routes.map((route, index) => (
-      <Route
-        key={index}
-        path={route.path}
-        element={
-          <RouteComponent componentName={route.component} />
-        }
-      />
-    ));
+    return routes.map((route, index) => {
+      const Component = componentRegistry[route.component];
+      if (!Component) {
+        return (
+          <Route
+            key={index}
+            path={route.path}
+            element={<div>Component not found: {route.component}</div>}
+          />
+        );
+      }
+      return (
+        <Route
+          key={index}
+          path={route.path}
+          element={<Component />}
+        />
+      );
+    });
   };
 
   return (
@@ -51,9 +68,5 @@ function App() {
     </BrowserRouter>
   );
 }
-
-const RouteComponent: React.FC<{ componentName: string }> = ({ componentName }) => {
-  return <div>Loading component: {componentName}</div>;
-};
 
 export default App;
