@@ -5,6 +5,7 @@ import { LayoutProvider } from './components/LayoutProvider';
 import { TokenPerimeter } from './modules/token-perimeter/TokenPerimeter';
 import { LoaderModule } from './modules/loader/LoaderModule';
 import { TokenBridge } from './modules/token-bridge/TokenBridge';
+import { Dashboard } from './modules/dashboard/Dashboard';
 import { Loader2 } from 'lucide-react';
 import './index.css';
 
@@ -12,6 +13,7 @@ const componentRegistry: Record<string, React.ComponentType> = {
   'TokenPerimeter': TokenPerimeter,
   'LoaderModule': LoaderModule,
   'TokenBridge': TokenBridge,
+  'Dashboard': Dashboard,
 };
 
 function App() {
@@ -22,6 +24,7 @@ function App() {
   }, []);
 
   const loadModules = async () => {
+    await loadDashboardModule();
     await loadTokenPerimeterModule();
     await loadLoaderModule();
     await loadTokenBridgeModule();
@@ -60,6 +63,19 @@ function App() {
       }
     } catch (error) {
       console.error('Failed to load token-bridge module:', error);
+    }
+  };
+
+  const loadDashboardModule = async () => {
+    try {
+      const mod = await import('./modules/dashboard/index');
+      console.log('Dashboard module loaded:', mod);
+      if (mod.default && typeof mod.default.initialize === 'function') {
+        await mod.default.initialize(coreFramework);
+        console.log('Dashboard module initialized successfully');
+      }
+    } catch (error) {
+      console.error('Failed to load dashboard module:', error);
     }
   };
 

@@ -11,7 +11,7 @@ const manifest: ModuleManifest = {
   entryPoint: 'token-perimeter',
   routes: [
     {
-      path: '/',
+      path: '/perimeter',
       component: 'TokenPerimeter',
       exact: true,
     },
@@ -29,8 +29,8 @@ const manifest: ModuleManifest = {
     {
       id: 'token-perimeter',
       label: 'Token Perimeter',
-      icon: 'layout-dashboard',
-      route: '/',
+      icon: 'network',
+      route: '/perimeter',
       order: 1,
     },
   ],
