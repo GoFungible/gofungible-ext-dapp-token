@@ -22,7 +22,7 @@ const manifest: ModuleManifest = {
       label: 'Token Bridge',
       icon: 'arrow-right-left',
       route: '/bridge',
-      order: 2,
+      order: 3,
     },
   ],
 };

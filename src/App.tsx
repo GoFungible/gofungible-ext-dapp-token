@@ -6,6 +6,7 @@ import { TokenPerimeter } from './modules/token-perimeter/TokenPerimeter';
 import { LoaderModule } from './modules/loader/LoaderModule';
 import { TokenBridge } from './modules/token-bridge/TokenBridge';
 import { Dashboard } from './modules/dashboard/Dashboard';
+import { Environment } from './modules/environment/Environment';
 import { Loader2 } from 'lucide-react';
 import './index.css';
 
@@ -14,6 +15,7 @@ const componentRegistry: Record<string, React.ComponentType> = {
   'LoaderModule': LoaderModule,
   'TokenBridge': TokenBridge,
   'Dashboard': Dashboard,
+  'Environment': Environment,
 };
 
 function App() {
@@ -25,6 +27,7 @@ function App() {
 
   const loadModules = async () => {
     await loadDashboardModule();
+    await loadEnvironmentModule();
     await loadTokenPerimeterModule();
     await loadLoaderModule();
     await loadTokenBridgeModule();
@@ -76,6 +79,19 @@ function App() {
       }
     } catch (error) {
       console.error('Failed to load dashboard module:', error);
+    }
+  };
+
+  const loadEnvironmentModule = async () => {
+    try {
+      const mod = await import('./modules/environment/index');
+      console.log('Environment module loaded:', mod);
+      if (mod.default && typeof mod.default.initialize === 'function') {
+        await mod.default.initialize(coreFramework);
+        console.log('Environment module initialized successfully');
+      }
+    } catch (error) {
+      console.error('Failed to load environment module:', error);
     }
   };
 

@@ -32,7 +32,7 @@ const manifest: ModuleManifest = {
       label: 'Token Perimeter',
       icon: 'network',
       route: '/perimeter',
-      order: 1,
+      order: 2,
     },
   ],
 };
