@@ -7,6 +7,7 @@ import { LoaderModule } from './modules/loader/LoaderModule';
 import { TokenBridge } from './modules/token-bridge/TokenBridge';
 import { Dashboard } from './modules/dashboard/Dashboard';
 import { Environment } from './modules/environment/Environment';
+import { TokenNegotiation } from './modules/token-negotiation/TokenNegotiation';
 import { Loader2 } from 'lucide-react';
 import './index.css';
 
@@ -16,6 +17,7 @@ const componentRegistry: Record<string, React.ComponentType> = {
   'TokenBridge': TokenBridge,
   'Dashboard': Dashboard,
   'Environment': Environment,
+  'TokenNegotiation': TokenNegotiation,
 };
 
 function App() {
@@ -28,6 +30,7 @@ function App() {
   const loadModules = async () => {
     await loadDashboardModule();
     await loadEnvironmentModule();
+    await loadTokenNegotiationModule();
     await loadTokenPerimeterModule();
     await loadLoaderModule();
     await loadTokenBridgeModule();
@@ -92,6 +95,19 @@ function App() {
       }
     } catch (error) {
       console.error('Failed to load environment module:', error);
+    }
+  };
+
+  const loadTokenNegotiationModule = async () => {
+    try {
+      const mod = await import('./modules/token-negotiation/index');
+      console.log('TokenNegotiation module loaded:', mod);
+      if (mod.default && typeof mod.default.initialize === 'function') {
+        await mod.default.initialize(coreFramework);
+        console.log('TokenNegotiation module initialized successfully');
+      }
+    } catch (error) {
+      console.error('Failed to load token-negotiation module:', error);
     }
   };
 
