@@ -39,7 +39,7 @@ const DefaultLayout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 );
 
 const MinimalLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="min-h-screen bg-white">
+  <div className="min-h-screen bg-surface">
     {children}
   </div>
 );

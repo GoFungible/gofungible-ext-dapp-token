@@ -266,5 +266,18 @@
       "loadModulesFromZip": "Error al cargar módulos desde ZIP",
       "loadModuleFromUrl": "Error al cargar el módulo desde la URL"
     }
+  },
+  "themeManager": {
+    "navLabel": "Gestor de Temas",
+    "title": "Gestor de Temas",
+    "subtitle": "Gestione y cambie los temas de la aplicación.",
+    "active": "Activo",
+    "apply": "Aplicar",
+    "remove": "Eliminar",
+    "modeLight": "Modo claro",
+    "modeDark": "Modo oscuro",
+    "importTitle": "Importar Tema",
+    "importSuccess": "El módulo de tema se cargó correctamente.",
+    "importError": "Error al importar el módulo de tema."
   }
 }

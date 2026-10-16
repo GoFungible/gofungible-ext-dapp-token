@@ -2,10 +2,12 @@ import { CoreFramework, ModuleInstance, ModuleManifest, ModuleRoute, TopbarItem,
 import { moduleRegistry } from './ModuleRegistry';
 import { eventBus } from './EventBus';
 import { layoutManager } from './LayoutManager';
+import { themeRegistry } from './ThemeRegistry';
 
 class CoreFrameworkImpl implements CoreFramework {
   eventBus = eventBus;
   layout = layoutManager;
+  theme = themeRegistry;
 
   registerModule(module: ModuleInstance): void {
     moduleRegistry.register(module);

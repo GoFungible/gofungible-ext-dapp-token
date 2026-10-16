@@ -49,15 +49,15 @@ function ChainSelector({
       <button
         onClick={() => !disabled && setIsOpen(true)}
         disabled={disabled}
-        className="w-full flex items-center justify-between px-4 py-3 border border-gray-300 rounded-lg bg-white hover:border-blue-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="w-full flex items-center justify-between px-4 py-3 border border-gray-300 rounded-lg bg-surface hover:border-blue-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
-            <Network className="h-5 w-5 text-gray-400" />
+            <Network className="h-5 w-5 text-muted" />
           </div>
-          <span className="text-gray-500">{t('tokenBridge.selectChain', { label: label.toLowerCase() })}</span>
+          <span className="text-muted">{t('tokenBridge.selectChain', { label: label.toLowerCase() })}</span>
         </div>
-        <ChevronDown className="h-5 w-5 text-gray-400" />
+        <ChevronDown className="h-5 w-5 text-muted" />
       </button>
     );
   }
@@ -70,20 +70,20 @@ function ChainSelector({
       <button
         onClick={() => !disabled && setIsOpen(true)}
         disabled={disabled}
-        className="w-full flex items-center justify-between px-4 py-3 border border-gray-300 rounded-lg bg-white hover:border-blue-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-left"
+        className="w-full flex items-center justify-between px-4 py-3 border border-gray-300 rounded-lg bg-surface hover:border-blue-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-left"
       >
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
             <Network className="h-5 w-5 text-green-600" />
           </div>
           <div>
-            <p className="font-medium text-gray-900">{chain.name}</p>
-            <p className="text-sm text-gray-500">{token?.symbol || 'GFT'} • {formatAddress(token?.address || '')}</p>
+            <p className="font-medium text-foreground">{chain.name}</p>
+            <p className="text-sm text-muted">{token?.symbol || 'GFT'} • {formatAddress(token?.address || '')}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-gray-700">{parseFloat(balance).toFixed(4)} {token?.symbol}</span>
-          <ChevronDown className={`h-5 w-5 text-gray-400 ${isOpen ? 'rotate-180' : ''}`} />
+          <span className="text-sm font-medium text-foreground">{parseFloat(balance).toFixed(4)} {token?.symbol}</span>
+          <ChevronDown className={`h-5 w-5 text-muted ${isOpen ? 'rotate-180' : ''}`} />
         </div>
       </button>
 
@@ -94,10 +94,10 @@ function ChainSelector({
             onClick={() => setIsOpen(false)}
             aria-hidden="true"
           />
-          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-md bg-white rounded-xl shadow-xl border border-gray-200 p-4">
+          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-md bg-surface rounded-xl shadow-xl border border-gray-200 p-4">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-gray-900">{t('tokenBridge.selectChainModal', { label })}</h3>
-              <button onClick={() => setIsOpen(false)} className="p-1 text-gray-400 hover:text-gray-600">
+              <h3 className="font-semibold text-foreground">{t('tokenBridge.selectChainModal', { label })}</h3>
+              <button onClick={() => setIsOpen(false)} className="p-1 text-muted hover:text-muted">
                 <X className="h-5 w-5" />
               </button>
             </div>
@@ -115,10 +115,10 @@ function ChainSelector({
                     <Network className="h-5 w-5 text-green-600" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-gray-900 truncate">{c.name}</p>
-                    <p className="text-sm text-gray-500 truncate">{c.token?.symbol} • {formatAddress(c.token?.address || '')}</p>
+                    <p className="font-medium text-foreground truncate">{c.name}</p>
+                    <p className="text-sm text-muted truncate">{c.token?.symbol} • {formatAddress(c.token?.address || '')}</p>
                   </div>
-                  <span className="text-sm text-gray-500">
+                  <span className="text-sm text-muted">
                     {c.token ? formatAmount(BigInt(c.token.totalSupply), c.token.decimals) : '0'} {c.token?.symbol}
                   </span>
                 </button>
@@ -158,17 +158,17 @@ function AmountInput({
 
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-700">{t('tokenBridge.amount')}</label>
+      <label className="block text-sm font-medium text-foreground">{t('tokenBridge.amount')}</label>
       <div className="relative">
         <input
           type="text"
           value={amount}
           onChange={handleChange}
           placeholder={t('common.amountPlaceholder')}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 text-right text-lg font-mono"
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-surface focus:border-blue-400 focus:ring-2 focus:ring-blue-100 text-right text-lg font-mono"
           disabled={!chain}
         />
-        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 font-medium">
+        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-muted font-medium">
           {token?.symbol || 'GFT'}
         </span>
       </div>
@@ -178,7 +178,7 @@ function AmountInput({
           {error}
         </p>
       )}
-      <div className="flex items-center justify-between text-sm text-gray-500">
+      <div className="flex items-center justify-between text-sm text-muted">
         <span>{t('tokenBridge.available', { max: maxAmount, symbol: token?.symbol || 'GFT' })}</span>
         <button
           type="button"
@@ -197,7 +197,7 @@ function TransactionHistory({ transactions }: { transactions: BridgeTransaction[
   const { t } = useTranslation();
   if (transactions.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-500">
+      <div className="text-center py-8 text-muted">
         <Send className="h-12 w-12 mx-auto mb-4 text-gray-300" />
         <p>{t('tokenBridge.noTransactions')}</p>
         <p className="text-sm mt-1">{t('tokenBridge.noTransactionsDesc')}</p>
@@ -207,11 +207,11 @@ function TransactionHistory({ transactions }: { transactions: BridgeTransaction[
 
   return (
     <div className="space-y-3">
-      <h3 className="font-semibold text-gray-900">{t('tokenBridge.transactionHistory')}</h3>
+      <h3 className="font-semibold text-foreground">{t('tokenBridge.transactionHistory')}</h3>
       {transactions.slice().reverse().map(tx => (
-        <div key={tx.id} className="bg-white border border-gray-200 rounded-lg p-4">
+        <div key={tx.id} className="bg-surface border border-gray-200 rounded-lg p-4">
           <div className="flex items-center justify-between mb-2">
-            <span className="font-medium text-gray-900">
+            <span className="font-medium text-foreground">
               {t('tokenBridge.txRoute', { from: tx.fromChainId, to: tx.toChainId })}
             </span>
             <span className={`px-2 py-1 text-xs font-medium rounded-full ${
@@ -222,7 +222,7 @@ function TransactionHistory({ transactions }: { transactions: BridgeTransaction[
               {t(`tokenBridge.status.${tx.status}`)}
             </span>
           </div>
-          <div className="flex items-center justify-between text-sm text-gray-500">
+          <div className="flex items-center justify-between text-sm text-muted">
             <span>{t('tokenBridge.txAmount', { amount: formatAmount(BigInt(tx.amount), 18) })}</span>
             <span>{new Date(tx.timestamp).toLocaleString(i18n.language)}</span>
           </div>
@@ -351,18 +351,18 @@ const fromToken = state.fromChain?.token;
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">{t('tokenBridge.title')}</h1>
-        <p className="text-gray-500 mt-1">{t('tokenBridge.subtitle')}</p>
+        <h1 className="text-3xl font-bold text-foreground">{t('tokenBridge.title')}</h1>
+        <p className="text-muted mt-1">{t('tokenBridge.subtitle')}</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white rounded-xl border border-gray-200 p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('tokenBridge.bridgeTransfer')}</h2>
+          <div className="bg-surface rounded-xl border border-gray-200 p-6">
+            <h2 className="text-xl font-semibold text-foreground mb-6">{t('tokenBridge.bridgeTransfer')}</h2>
 
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">{t('tokenBridge.fromChain')}</label>
+                <label className="block text-sm font-medium text-foreground mb-2">{t('tokenBridge.fromChain')}</label>
                 <ChainSelector
                   label="From"
                   chain={state.fromChain}
@@ -376,7 +376,7 @@ const fromToken = state.fromChain?.token;
                   type="button"
                   onClick={handleSwapChains}
                   disabled={state.isLoading}
-                  className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors disabled:opacity-50"
+                  className="p-2 text-muted hover:text-muted hover:bg-gray-100 rounded-full transition-colors disabled:opacity-50"
                   aria-label={t('tokenBridge.swapChains')}
                 >
                   <ArrowRightLeft className="h-5 w-5" />
@@ -384,7 +384,7 @@ const fromToken = state.fromChain?.token;
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">{t('tokenBridge.toChain')}</label>
+                <label className="block text-sm font-medium text-foreground mb-2">{t('tokenBridge.toChain')}</label>
                 <ChainSelector
                   label="To"
                   chain={state.toChain}
@@ -438,14 +438,14 @@ const fromToken = state.fromChain?.token;
             </div>
           </div>
 
-          <div className="bg-white rounded-xl border border-gray-200 p-6">
+          <div className="bg-surface rounded-xl border border-gray-200 p-6">
             <TransactionHistory transactions={transactions} />
           </div>
         </div>
 
         <div className="space-y-6">
-          <div className="bg-white rounded-xl border border-gray-200 p-6">
-            <h3 className="font-semibold text-gray-900 mb-4">{t('tokenBridge.bridgeInfo')}</h3>
+          <div className="bg-surface rounded-xl border border-gray-200 p-6">
+            <h3 className="font-semibold text-foreground mb-4">{t('tokenBridge.bridgeInfo')}</h3>
             <div className="space-y-4">
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <div className="flex items-center gap-2 text-blue-800 mb-2">
@@ -462,17 +462,17 @@ const fromToken = state.fromChain?.token;
                 <p className="text-sm text-purple-700">{t('tokenBridge.slaveToMasterDesc')}</p>
               </div>
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                <div className="flex items-center gap-2 text-gray-800 mb-2">
+                <div className="flex items-center gap-2 text-foreground mb-2">
                   <DollarSign className="h-5 w-5" />
                   <span className="font-medium">{t('tokenBridge.oneToOneRatio')}</span>
                 </div>
-                <p className="text-sm text-gray-700">{t('tokenBridge.oneToOneRatioDesc')}</p>
+                <p className="text-sm text-foreground">{t('tokenBridge.oneToOneRatioDesc')}</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl border border-gray-200 p-6">
-            <h3 className="font-semibold text-gray-900 mb-4">{t('tokenBridge.supportedChains')}</h3>
+          <div className="bg-surface rounded-xl border border-gray-200 p-6">
+            <h3 className="font-semibold text-foreground mb-4">{t('tokenBridge.supportedChains')}</h3>
             <div className="space-y-3">
               {SUPPORTED_CHAINS.filter(c => c.isActive).map(chain => (
                 <div
@@ -487,10 +487,10 @@ const fromToken = state.fromChain?.token;
                     <Network className="h-4 w-4 text-green-600" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-gray-900 truncate">{chain.name}</p>
-                    <p className="text-xs text-gray-500 truncate">{chain.token?.symbol} • {formatAddress(chain.token?.address || '')}</p>
+                    <p className="font-medium text-foreground truncate">{chain.name}</p>
+                    <p className="text-xs text-muted truncate">{chain.token?.symbol} • {formatAddress(chain.token?.address || '')}</p>
                   </div>
-                  <span className="text-xs text-gray-500">{formatNumber(chain.token?.totalSupply || '0')} {chain.token?.symbol}</span>
+                  <span className="text-xs text-muted">{formatNumber(chain.token?.totalSupply || '0')} {chain.token?.symbol}</span>
                 </div>
               ))}
             </div>

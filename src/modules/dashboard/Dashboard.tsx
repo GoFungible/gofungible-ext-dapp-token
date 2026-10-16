@@ -20,17 +20,17 @@ function ChainCard({ chain }: { chain: ChainData }) {
   const isPositive = priceChange >= 0;
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6 hover:border-blue-300 transition-colors">
+    <div className="bg-surface rounded-xl border border-gray-200 p-6 hover:border-blue-300 transition-colors">
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
           <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
             chain.isActive ? 'bg-green-100' : 'bg-gray-100'
           }`}>
-            <Network className={`h-6 w-6 ${chain.isActive ? 'text-green-600' : 'text-gray-400'}`} />
+            <Network className={`h-6 w-6 ${chain.isActive ? 'text-green-600' : 'text-muted'}`} />
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900">{chain.name}</h3>
-            <p className="text-sm text-gray-500">{chain.symbol} • Chain ID: {chain.id}</p>
+            <h3 className="font-semibold text-foreground">{chain.name}</h3>
+            <p className="text-sm text-muted">{chain.symbol} • Chain ID: {chain.id}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -40,7 +40,7 @@ function ChainCard({ chain }: { chain: ChainData }) {
               {t('dashboard.active')}
             </span>
           ) : (
-            <span className="flex items-center gap-1 text-xs font-medium text-gray-500 bg-gray-50 px-2 py-1 rounded-full">
+            <span className="flex items-center gap-1 text-xs font-medium text-muted bg-gray-50 px-2 py-1 rounded-full">
               <XCircle className="h-3 w-3" />
               {t('dashboard.inactive')}
             </span>
@@ -52,45 +52,45 @@ function ChainCard({ chain }: { chain: ChainData }) {
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+              <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
                 {t('dashboard.tokenAddress')}
               </p>
               <div className="flex items-center gap-2">
-                <code className="text-sm font-mono text-gray-700 flex-1 truncate">{formatAddress(token.address)}</code>
-                <button className="p-1 text-gray-400 hover:text-gray-600" aria-label={t('dashboard.copyAddress')}>
+                <code className="text-sm font-mono text-foreground flex-1 truncate">{formatAddress(token.address)}</code>
+                <button className="p-1 text-muted hover:text-muted" aria-label={t('dashboard.copyAddress')}>
                   <Copy className="h-4 w-4" />
                 </button>
               </div>
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+              <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
                 {t('dashboard.decimals')}
               </p>
-              <p className="text-lg font-semibold text-gray-900">{token.decimals}</p>
+              <p className="text-lg font-semibold text-foreground">{token.decimals}</p>
             </div>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+              <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
                 {t('dashboard.totalSupply')}
               </p>
-              <p className="text-lg font-semibold text-gray-900">{formatNumber(token.totalSupply)}</p>
+              <p className="text-lg font-semibold text-foreground">{formatNumber(token.totalSupply)}</p>
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+              <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
                 {t('dashboard.holders')}
               </p>
-              <p className="text-lg font-semibold text-gray-900">{formatNumber(token.holders)}</p>
+              <p className="text-lg font-semibold text-foreground">{formatNumber(token.holders)}</p>
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+              <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
                 {t('dashboard.priceUsd')}
               </p>
-              <p className="text-lg font-semibold text-gray-900">${token.priceUsd?.toFixed(4) || 'N/A'}</p>
+              <p className="text-lg font-semibold text-foreground">${token.priceUsd?.toFixed(4) || 'N/A'}</p>
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+              <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
                 {t('dashboard.change24h')}
               </p>
               <p className={`text-lg font-semibold ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
@@ -113,7 +113,7 @@ function ChainCard({ chain }: { chain: ChainData }) {
               href={chain.blockExplorer}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700"
+              className="flex items-center gap-1 text-sm text-muted hover:text-foreground"
             >
               <ExternalLink className="h-4 w-4" />
               {t('dashboard.chainExplorer')}
@@ -142,11 +142,11 @@ function StatsOverview() {
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
       {stats.map((stat) => (
-        <div key={stat.label} className="bg-white rounded-xl border border-gray-200 p-6">
+        <div key={stat.label} className="bg-surface rounded-xl border border-gray-200 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">{stat.label}</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">{stat.value}</p>
+              <p className="text-sm font-medium text-muted">{stat.label}</p>
+              <p className="text-2xl font-bold text-foreground mt-1">{stat.value}</p>
             </div>
             <div className={`p-3 rounded-xl ${stat.color}`}>
               <stat.icon className="h-6 w-6" />
@@ -163,14 +163,14 @@ export function Dashboard() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">{t('dashboard.title')}</h1>
-        <p className="text-gray-500 mt-1">{t('dashboard.subtitle')}</p>
+        <h1 className="text-3xl font-bold text-foreground">{t('dashboard.title')}</h1>
+        <p className="text-muted mt-1">{t('dashboard.subtitle')}</p>
       </div>
 
       <StatsOverview />
 
       <div>
-        <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+        <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
           <Activity className="h-5 w-5 text-blue-600" />
           {t('dashboard.chainDeployments')}
         </h2>
@@ -181,8 +181,8 @@ export function Dashboard() {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+      <div className="bg-surface rounded-xl border border-gray-200 p-6">
+        <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
           <TrendingUp className="h-5 w-5 text-blue-600" />
           {t('dashboard.erc20Overview')}
         </h2>
@@ -190,9 +190,9 @@ export function Dashboard() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-gray-200">
-                <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">{t('dashboard.tableFeature')}</th>
+                <th className="text-left py-3 px-4 text-sm font-medium text-muted">{t('dashboard.tableFeature')}</th>
                 {mockChains.map(c => (
-                  <th key={c.id} className="text-left py-3 px-4 text-sm font-medium text-gray-500">
+                  <th key={c.id} className="text-left py-3 px-4 text-sm font-medium text-muted">
                     {c.name}
                   </th>
                 ))}
@@ -200,33 +200,33 @@ export function Dashboard() {
             </thead>
             <tbody>
               <tr className="border-b border-gray-100">
-                <td className="py-3 px-4 text-sm font-medium text-gray-700">{t('dashboard.features.standardErc20')}</td>
+                <td className="py-3 px-4 text-sm font-medium text-foreground">{t('dashboard.features.standardErc20')}</td>
                 {mockChains.map(c => (
-                  <td key={c.id} className="py-3 px-4 text-sm text-gray-600">
+                  <td key={c.id} className="py-3 px-4 text-sm text-muted">
                     <CheckCircle className="h-4 w-4 text-green-500 inline" />
                   </td>
                 ))}
               </tr>
               <tr className="border-b border-gray-100">
-                <td className="py-3 px-4 text-sm font-medium text-gray-700">{t('dashboard.features.mintable')}</td>
+                <td className="py-3 px-4 text-sm font-medium text-foreground">{t('dashboard.features.mintable')}</td>
                 {mockChains.map(c => (
-                  <td key={c.id} className="py-3 px-4 text-sm text-gray-600">
+                  <td key={c.id} className="py-3 px-4 text-sm text-muted">
                     <CheckCircle className="h-4 w-4 text-green-500 inline" />
                   </td>
                 ))}
               </tr>
               <tr className="border-b border-gray-100">
-                <td className="py-3 px-4 text-sm font-medium text-gray-700">{t('dashboard.features.burnable')}</td>
+                <td className="py-3 px-4 text-sm font-medium text-foreground">{t('dashboard.features.burnable')}</td>
                 {mockChains.map(c => (
-                  <td key={c.id} className="py-3 px-4 text-sm text-gray-600">
+                  <td key={c.id} className="py-3 px-4 text-sm text-muted">
                     <CheckCircle className="h-4 w-4 text-green-500 inline" />
                   </td>
                 ))}
               </tr>
               <tr className="border-b border-gray-100">
-                <td className="py-3 px-4 text-sm font-medium text-gray-700">{t('dashboard.features.pausable')}</td>
+                <td className="py-3 px-4 text-sm font-medium text-foreground">{t('dashboard.features.pausable')}</td>
                 {mockChains.map((c, i) => (
-                  <td key={c.id} className="py-3 px-4 text-sm text-gray-600">
+                  <td key={c.id} className="py-3 px-4 text-sm text-muted">
                     {i < 3 ? (
                       <CheckCircle className="h-4 w-4 text-green-500 inline" />
                     ) : (
@@ -236,9 +236,9 @@ export function Dashboard() {
                 ))}
               </tr>
               <tr className="border-b border-gray-100">
-                <td className="py-3 px-4 text-sm font-medium text-gray-700">{t('dashboard.features.permitEip2612')}</td>
+                <td className="py-3 px-4 text-sm font-medium text-foreground">{t('dashboard.features.permitEip2612')}</td>
                 {mockChains.map((c, i) => (
-                  <td key={c.id} className="py-3 px-4 text-sm text-gray-600">
+                  <td key={c.id} className="py-3 px-4 text-sm text-muted">
                     {i < 4 ? (
                       <CheckCircle className="h-4 w-4 text-green-500 inline" />
                     ) : (
@@ -248,9 +248,9 @@ export function Dashboard() {
                 ))}
               </tr>
               <tr className="border-b border-gray-100">
-                <td className="py-3 px-4 text-sm font-medium text-gray-700">{t('dashboard.features.votesEip5805')}</td>
+                <td className="py-3 px-4 text-sm font-medium text-foreground">{t('dashboard.features.votesEip5805')}</td>
                 {mockChains.map((c, i) => (
-                  <td key={c.id} className="py-3 px-4 text-sm text-gray-600">
+                  <td key={c.id} className="py-3 px-4 text-sm text-muted">
                     {i === 0 ? (
                       <CheckCircle className="h-4 w-4 text-green-500 inline" />
                     ) : (
@@ -260,17 +260,17 @@ export function Dashboard() {
                 ))}
               </tr>
               <tr className="border-b border-gray-100">
-                <td className="py-3 px-4 text-sm font-medium text-gray-700">{t('dashboard.features.flashMinting')}</td>
+                <td className="py-3 px-4 text-sm font-medium text-foreground">{t('dashboard.features.flashMinting')}</td>
                 {mockChains.map(c => (
-                  <td key={c.id} className="py-3 px-4 text-sm text-gray-600">
+                  <td key={c.id} className="py-3 px-4 text-sm text-muted">
                     <XCircle className="h-4 w-4 text-gray-300 inline" />
                   </td>
                 ))}
               </tr>
               <tr>
-                <td className="py-3 px-4 text-sm font-medium text-gray-700">{t('dashboard.features.bridgeEnabled')}</td>
+                <td className="py-3 px-4 text-sm font-medium text-foreground">{t('dashboard.features.bridgeEnabled')}</td>
                 {mockChains.map((c, i) => (
-                  <td key={c.id} className="py-3 px-4 text-sm text-gray-600">
+                  <td key={c.id} className="py-3 px-4 text-sm text-muted">
                     {i < 4 ? (
                       <CheckCircle className="h-4 w-4 text-green-500 inline" />
                     ) : (

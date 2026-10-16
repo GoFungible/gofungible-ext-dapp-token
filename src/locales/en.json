@@ -266,5 +266,18 @@
       "loadModulesFromZip": "Failed to load modules from zip",
       "loadModuleFromUrl": "Failed to load module from URL"
     }
+  },
+  "themeManager": {
+    "navLabel": "Theme Manager",
+    "title": "Theme Manager",
+    "subtitle": "Manage and switch application themes.",
+    "active": "Active",
+    "apply": "Apply",
+    "remove": "Remove",
+    "modeLight": "Light mode",
+    "modeDark": "Dark mode",
+    "importTitle": "Import Theme",
+    "importSuccess": "Theme module loaded successfully.",
+    "importError": "Failed to import theme module."
   }
 }

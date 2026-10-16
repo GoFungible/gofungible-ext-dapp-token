@@ -9,6 +9,7 @@ import { TokenBridge } from './modules/token-bridge/TokenBridge';
 import { Dashboard } from './modules/dashboard/Dashboard';
 import { Environment } from './modules/environment/Environment';
 import { TokenNegotiation } from './modules/token-negotiation/TokenNegotiation';
+import { ThemeManager } from './modules/theme-manager/ThemeManager';
 import { Loader2 } from 'lucide-react';
 import './index.css';
 
@@ -19,6 +20,7 @@ const componentRegistry: Record<string, React.ComponentType> = {
   'Dashboard': Dashboard,
   'Environment': Environment,
   'TokenNegotiation': TokenNegotiation,
+  'ThemeManager': ThemeManager,
 };
 
 function App() {
@@ -36,6 +38,10 @@ function App() {
     await loadTokenPerimeterModule();
     await loadLoaderModule();
     await loadTokenBridgeModule();
+    await loadDefaultThemeModule();
+    await loadDarkThemeModule();
+    await loadBrandThemeModule();
+    await loadThemeManagerModule();
     setModulesLoaded(true);
   };
 
@@ -110,6 +116,50 @@ function App() {
       }
     } catch (error) {
       console.error('Failed to load token-negotiation module:', error);
+    }
+  };
+
+  const loadThemeManagerModule = async () => {
+    try {
+      const mod = await import('./modules/theme-manager/index');
+      if (mod.default && typeof mod.default.initialize === 'function') {
+        await mod.default.initialize(coreFramework);
+      }
+    } catch (error) {
+      console.error('Failed to load theme-manager module:', error);
+    }
+  };
+
+  const loadDefaultThemeModule = async () => {
+    try {
+      const mod = await import('./modules/themes/default-theme');
+      if (mod.default && typeof mod.default.initialize === 'function') {
+        await mod.default.initialize(coreFramework);
+      }
+    } catch (error) {
+      console.error('Failed to load default-theme module:', error);
+    }
+  };
+
+  const loadDarkThemeModule = async () => {
+    try {
+      const mod = await import('./modules/themes/dark-theme');
+      if (mod.default && typeof mod.default.initialize === 'function') {
+        await mod.default.initialize(coreFramework);
+      }
+    } catch (error) {
+      console.error('Failed to load dark-theme module:', error);
+    }
+  };
+
+  const loadBrandThemeModule = async () => {
+    try {
+      const mod = await import('./modules/themes/brand-theme');
+      if (mod.default && typeof mod.default.initialize === 'function') {
+        await mod.default.initialize(coreFramework);
+      }
+    } catch (error) {
+      console.error('Failed to load brand-theme module:', error);
     }
   };
 

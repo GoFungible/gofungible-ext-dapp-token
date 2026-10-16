@@ -144,8 +144,8 @@ export function TokenNegotiation() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">{t('tokenNegotiation.title')}</h1>
-        <p className="text-gray-500 mt-1">
+        <h1 className="text-3xl font-bold text-foreground">{t('tokenNegotiation.title')}</h1>
+        <p className="text-muted mt-1">
           {t('tokenNegotiation.subtitle')}
         </p>
       </div>
@@ -164,30 +164,30 @@ export function TokenNegotiation() {
         </div>
       )}
 
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
+      <div className="bg-surface rounded-xl border border-gray-200 p-6">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white rounded-xl border border-gray-200 p-5">
-            <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+          <div className="bg-surface rounded-xl border border-gray-200 p-5">
+            <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
               {t('tokenNegotiation.totalUnits')}
             </p>
-            <p className="text-2xl font-bold text-gray-900">{formatUnits(total)} {t('tokenNegotiation.unitGFT')}</p>
+            <p className="text-2xl font-bold text-foreground">{formatUnits(total)} {t('tokenNegotiation.unitGFT')}</p>
           </div>
-          <div className="bg-white rounded-xl border border-gray-200 p-5">
-            <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+          <div className="bg-surface rounded-xl border border-gray-200 p-5">
+            <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
               {t('tokenNegotiation.activeChains')}
             </p>
-            <p className="text-2xl font-bold text-gray-900">{chainStates.length}</p>
+            <p className="text-2xl font-bold text-foreground">{chainStates.length}</p>
           </div>
-          <div className="bg-white rounded-xl border border-gray-200 p-5">
-            <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+          <div className="bg-surface rounded-xl border border-gray-200 p-5">
+            <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
               {t('tokenNegotiation.exchanges')}
             </p>
-            <p className="text-2xl font-bold text-gray-900">{selectedState.exchanges.length}</p>
+            <p className="text-2xl font-bold text-foreground">{selectedState.exchanges.length}</p>
           </div>
-          <div className="bg-white rounded-xl border border-gray-200 p-5 flex items-center justify-center">
+          <div className="bg-surface rounded-xl border border-gray-200 p-5 flex items-center justify-center">
             <button
               onClick={handleRefresh}
-              className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 text-muted hover:text-foreground hover:bg-gray-100 rounded-lg transition-colors"
               aria-label={t('common.refresh')}
               title={t('common.refresh')}
             >
@@ -197,7 +197,7 @@ export function TokenNegotiation() {
         </div>
 
         <div className="flex items-center justify-between mb-4">
-          <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide">
+          <label className="block text-xs font-medium text-muted uppercase tracking-wide">
             {t('tokenNegotiation.selectChain')}
           </label>
         </div>
@@ -210,7 +210,7 @@ export function TokenNegotiation() {
             setEditingExchange(null);
             setEditValue('');
           }}
-          className="w-full px-3 py-1.5 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none font-mono text-sm"
+          className="w-full px-3 py-1.5 border border-gray-300 rounded-lg bg-surface focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none font-mono text-sm"
           disabled={editingExchange !== null}
         >
           {mockChains.map(chain => (
@@ -221,16 +221,16 @@ export function TokenNegotiation() {
         </select>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
+      <div className="bg-surface rounded-xl border border-gray-200 p-6">
         <div className="flex items-center gap-4 mb-6">
           <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center">
             <Network className="h-6 w-6 text-green-600" />
           </div>
           <div>
-            <h2 className="text-xl font-semibold text-gray-900">
+            <h2 className="text-xl font-semibold text-foreground">
               {t('tokenNegotiation.chainHeader', { name: selectedChain.name, id: selectedChain.id })}
             </h2>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-muted">
               {selectedChain.rpcUrl}
             </p>
           </div>
@@ -240,18 +240,18 @@ export function TokenNegotiation() {
           <table className="w-full text-left">
             <thead>
               <tr className="border-b border-gray-200">
-                <th className="py-3 px-4 text-sm font-medium text-gray-500">{t('tokenNegotiation.table.exchange')}</th>
-                <th className="py-3 px-4 text-sm font-medium text-gray-500">{t('tokenNegotiation.table.unitsPaired')}</th>
-                <th className="py-3 px-4 text-sm font-medium text-gray-500">{t('tokenNegotiation.table.action')}</th>
+                <th className="py-3 px-4 text-sm font-medium text-muted">{t('tokenNegotiation.table.exchange')}</th>
+                <th className="py-3 px-4 text-sm font-medium text-muted">{t('tokenNegotiation.table.unitsPaired')}</th>
+                <th className="py-3 px-4 text-sm font-medium text-muted">{t('tokenNegotiation.table.action')}</th>
               </tr>
             </thead>
             <tbody>
               {selectedState.exchanges.map(pair => (
                 <tr key={pair.exchangeId} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                  <td className="py-3 px-4 text-sm text-gray-700 font-medium">
+                  <td className="py-3 px-4 text-sm text-foreground font-medium">
                     {pair.exchangeName}
                   </td>
-                  <td className="py-3 px-4 text-sm text-gray-600">
+                  <td className="py-3 px-4 text-sm text-muted">
                     {isEditing(pair) ? (
                       <div className="flex items-center gap-2">
                         <input
@@ -261,7 +261,7 @@ export function TokenNegotiation() {
                           className="w-32 px-2 py-1 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none"
                           disabled={isSaving(pair)}
                         />
-                        <span className="text-xs text-gray-500">{t('tokenNegotiation.unitGFT')}</span>
+                        <span className="text-xs text-muted">{t('tokenNegotiation.unitGFT')}</span>
                       </div>
                     ) : (
                       formatUnits(pair.units)
@@ -279,7 +279,7 @@ export function TokenNegotiation() {
                         </button>
                         <button
                           onClick={() => setEditingExchange(null)}
-                          className="px-3 py-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors text-xs"
+                          className="px-3 py-1.5 text-muted hover:text-foreground hover:bg-gray-100 rounded transition-colors text-xs"
                         >
                           {t('common.cancel')}
                         </button>
@@ -303,7 +303,7 @@ export function TokenNegotiation() {
         </div>
 
         {selectedState.exchanges.length === 0 && (
-          <div className="py-8 text-center text-gray-500">
+          <div className="py-8 text-center text-muted">
             {t('tokenNegotiation.noExchanges')}
           </div>
         )}

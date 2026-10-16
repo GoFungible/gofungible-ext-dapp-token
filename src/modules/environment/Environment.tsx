@@ -30,7 +30,7 @@ function StatusBadge({ deployed }: { deployed: boolean }) {
     );
   }
   return (
-    <span className="flex items-center gap-1 text-xs font-medium text-gray-500 bg-gray-50 px-2 py-1 rounded-full">
+    <span className="flex items-center gap-1 text-xs font-medium text-muted bg-gray-50 px-2 py-1 rounded-full">
       <XCircle className="h-3 w-3" />
       {t('environment.notDeployed')}
     </span>
@@ -54,11 +54,11 @@ function AddressRow({
       <div className="flex items-center gap-2 min-w-0">
         <StatusBadge deployed={deployed} />
         {address ? (
-          <code className="text-sm font-mono text-gray-700 truncate max-w-[220px]">
+          <code className="text-sm font-mono text-foreground truncate max-w-[220px]">
             {address.slice(0, 10)}...{address.slice(-8)}
           </code>
         ) : (
-          <span className="text-sm text-gray-400 font-mono">—</span>
+          <span className="text-sm text-muted font-mono">—</span>
         )}
       </div>
       {address && showExplorer && explorer && (
@@ -66,7 +66,7 @@ function AddressRow({
           href={`${explorer}/address/${address}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-gray-400 hover:text-gray-600"
+          className="text-muted hover:text-muted"
           aria-label={t('environment.viewOnExplorer')}
           title={t('environment.viewOnExplorer')}
         >
@@ -106,9 +106,9 @@ function TokenDeployment({
   const isFormValid = isCreate2 ? !!form.create2Salt && isAddressValid : !!isAddressValid;
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
+    <div className="bg-surface rounded-xl border border-gray-200 p-6 space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+        <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
           <Plus className="h-5 w-5 text-blue-600" />
           {t('environment.tokenContract')}
         </h3>
@@ -126,7 +126,7 @@ function TokenDeployment({
               className="h-4 w-4 text-blue-600 focus:ring-blue-500"
               disabled={isLoading}
             />
-            <span className="text-sm text-gray-700">{t('environment.existingTokenAddress')}</span>
+            <span className="text-sm text-foreground">{t('environment.existingTokenAddress')}</span>
           </label>
           <label className="flex items-center gap-2">
             <input
@@ -137,12 +137,12 @@ function TokenDeployment({
               className="h-4 w-4 text-blue-600 focus:ring-blue-500"
               disabled={isLoading}
             />
-            <span className="text-sm text-gray-700">{t('environment.deployViaCreate2')}</span>
+            <span className="text-sm text-foreground">{t('environment.deployViaCreate2')}</span>
           </label>
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+          <label className="block text-xs font-medium text-muted uppercase tracking-wide mb-1">
             {t('environment.tokenContractAddress')}
           </label>
           <input
@@ -163,7 +163,7 @@ function TokenDeployment({
 
         {isCreate2 && (
           <div>
-            <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+            <label className="block text-xs font-medium text-muted uppercase tracking-wide mb-1">
               {t('environment.create2Salt')}
             </label>
             <input
@@ -180,7 +180,7 @@ function TokenDeployment({
 
       {state.token.address && (
         <div className="bg-gray-50 rounded-lg p-4">
-          <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+          <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
             {t('environment.currentTokenAddress')}
           </p>
           <AddressRow
@@ -231,22 +231,22 @@ function FungibleProxyDeployment({
 }) {
   const { t } = useTranslation();
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
+    <div className="bg-surface rounded-xl border border-gray-200 p-6 space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+        <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
           <Settings className="h-5 w-5 text-purple-600" />
           {t('environment.fungibleProxyContract')}
         </h3>
         <StatusBadge deployed={state.fungibleProxy.deployed} />
       </div>
 
-      <p className="text-sm text-gray-500">
+      <p className="text-sm text-muted">
         {t('environment.fungibleProxyDesc')}
       </p>
 
       {state.fungibleProxy.address && (
         <div className="bg-gray-50 rounded-lg p-4">
-          <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+          <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
             {t('environment.proxyAddress')}
           </p>
           <AddressRow
@@ -297,16 +297,16 @@ function FungibleFactoryDeployment({
 }) {
   const { t } = useTranslation();
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
+    <div className="bg-surface rounded-xl border border-gray-200 p-6 space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+        <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
           <Network className="h-5 w-5 text-green-600" />
           {t('environment.fungibleFactoryContract')}
         </h3>
         <StatusBadge deployed={state.fungibleFactory.deployed} />
       </div>
 
-      <p className="text-sm text-gray-500">
+      <p className="text-sm text-muted">
         {t('environment.fungibleFactoryDesc')}
       </p>
 
@@ -318,10 +318,10 @@ function FungibleFactoryDeployment({
           explorer={explorer}
         />
         <div className="flex items-center gap-2 mt-2">
-          <div className={state.fungibleFactory.assigned ? 'text-green-600' : 'text-gray-400'}>
+          <div className={state.fungibleFactory.assigned ? 'text-green-600' : 'text-muted'}>
             {state.fungibleFactory.assigned ? <CheckCircle className="h-4 w-4 inline" /> : <XCircle className="h-4 w-4 inline" />}
           </div>
-          <span className="text-sm text-gray-600">
+          <span className="text-sm text-muted">
             {state.fungibleFactory.assigned
               ? t('environment.assignedToProxy')
               : t('environment.notAssignedToProxy')}
@@ -546,8 +546,8 @@ export function Environment() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">{t('environment.title')}</h1>
-        <p className="text-gray-500 mt-1">
+        <h1 className="text-3xl font-bold text-foreground">{t('environment.title')}</h1>
+        <p className="text-muted mt-1">
           {t('environment.subtitle')}
         </p>
       </div>
@@ -566,9 +566,9 @@ export function Environment() {
         </div>
       )}
 
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
+      <div className="bg-surface rounded-xl border border-gray-200 p-6">
         <div className="flex items-center justify-between mb-4">
-          <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide">
+          <label className="block text-xs font-medium text-muted uppercase tracking-wide">
             {t('environment.selectChain')}
           </label>
           <button
@@ -577,7 +577,7 @@ export function Environment() {
               setError(undefined);
               eventBus.emit('refresh-environment', undefined);
             }}
-            className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-1.5 text-muted hover:text-foreground hover:bg-gray-100 rounded-lg transition-colors"
             aria-label={t('common.refresh')}
             title={t('common.refresh')}
           >
@@ -598,7 +598,7 @@ export function Environment() {
               create2Salt: 'fungible-token',
             });
           }}
-          className="w-full px-3 py-1.5 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none font-mono text-sm"
+          className="w-full px-3 py-1.5 border border-gray-300 rounded-lg bg-surface focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none font-mono text-sm"
           disabled={activeStep !== null}
         >
           {mockChains.map(chain => (
@@ -616,10 +616,10 @@ export function Environment() {
               <Network className="h-6 w-6 text-blue-600" />
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-semibold text-foreground">
                 {t('environment.chainHeader', { name: selectedChain.name, id: selectedChain.id })}
               </h2>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-muted">
                 {selectedChain.rpcUrl}
               </p>
             </div>

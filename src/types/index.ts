@@ -23,6 +23,33 @@ export interface TokenInfo {
   holders?: number;
 }
 
+export interface ThemeColors {
+  primary: string;
+  secondary: string;
+  background: string;
+  surface: string;
+  text: string;
+  accent: string;
+  border: string;
+  muted: string;
+}
+
+export interface ThemeFonts {
+  sans: string;
+  mono: string;
+  heading: string;
+}
+
+export interface ThemeConfig {
+  id: string;
+  name: string;
+  description?: string;
+  colors: ThemeColors;
+  fonts: ThemeFonts;
+  radius: string;
+  mode: 'light' | 'dark';
+}
+
 export interface ModuleManifest {
   id: string;
   name: string;
@@ -34,6 +61,7 @@ export interface ModuleManifest {
   topbarItems?: TopbarItem[];
   sidebarItems?: SidebarItem[];
   extensionPoints?: string[];
+  theme?: ThemeConfig;
 }
 
 export interface ModuleRoute {
@@ -74,6 +102,16 @@ export interface ModuleInstance {
   getSidebarItems(): SidebarItem[];
 }
 
+export interface ThemeRegistry {
+  register(theme: ThemeConfig): void;
+  unregister(themeId: string): void;
+  get(themesId: string): ThemeConfig | undefined;
+  getAll(): ThemeConfig[];
+  setActive(themeId: string): void;
+  getActive(): ThemeConfig;
+  apply(themeId: string): void;
+}
+
 export interface CoreFramework {
   registerModule(module: ModuleInstance): void;
   unregisterModule(moduleId: string): void;
@@ -81,6 +119,7 @@ export interface CoreFramework {
   getAllModules(): ModuleInstance[];
   eventBus: EventBus;
   layout: LayoutManager;
+  theme: ThemeRegistry;
 }
 
 export interface EventBus {

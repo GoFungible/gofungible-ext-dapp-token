@@ -30,7 +30,7 @@ function CopyAddress({ address }: { address: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="p-1 text-gray-400 hover:text-gray-600"
+      className="p-1 text-muted hover:text-muted"
       aria-label={copied ? t('common.copied') : t('dashboard.copyAddress')}
       title={copied ? t('common.copied') : t('dashboard.copyAddress')}
     >
@@ -56,17 +56,17 @@ function ChainTokenCard({
   const isPositive = priceChange >= 0;
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6 hover:border-blue-300 transition-colors h-full">
+    <div className="bg-surface rounded-xl border border-gray-200 p-6 hover:border-blue-300 transition-colors h-full">
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
           <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
             chain.isActive ? 'bg-green-100' : 'bg-gray-100'
           }`}>
-            <Network className={`h-6 w-6 ${chain.isActive ? 'text-green-600' : 'text-gray-400'}`} />
+            <Network className={`h-6 w-6 ${chain.isActive ? 'text-green-600' : 'text-muted'}`} />
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900">{chain.name}</h3>
-            <p className="text-sm text-gray-500">{chain.symbol} • Chain ID: {chain.id}</p>
+            <h3 className="font-semibold text-foreground">{chain.name}</h3>
+            <p className="text-sm text-muted">{chain.symbol} • Chain ID: {chain.id}</p>
           </div>
         </div>
         {statusBadge}
@@ -76,45 +76,45 @@ function ChainTokenCard({
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+              <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
                 {t('tokenPerimeter.tokenAddress')}
               </p>
               <div className="flex items-center gap-2">
-                <code className="text-sm font-mono text-gray-700 flex-1 truncate">
+                <code className="text-sm font-mono text-foreground flex-1 truncate">
                   {formatAddress(token.address)}
                 </code>
                 <CopyAddress address={token.address} />
               </div>
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+              <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
                 {t('tokenPerimeter.decimals')}
               </p>
-              <p className="text-lg font-semibold text-gray-900">{token.decimals}</p>
+              <p className="text-lg font-semibold text-foreground">{token.decimals}</p>
             </div>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+              <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
                 {t('tokenPerimeter.totalSupply')}
               </p>
-              <p className="text-lg font-semibold text-gray-900">{formatNumber(token.totalSupply)}</p>
+              <p className="text-lg font-semibold text-foreground">{formatNumber(token.totalSupply)}</p>
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+              <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
                 {t('tokenPerimeter.holders')}
               </p>
-              <p className="text-lg font-semibold text-gray-900">{formatNumber(token.holders)}</p>
+              <p className="text-lg font-semibold text-foreground">{formatNumber(token.holders)}</p>
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+              <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
                 {t('tokenPerimeter.priceUsd')}
               </p>
-              <p className="text-lg font-semibold text-gray-900">${token.priceUsd?.toFixed(4) || 'N/A'}</p>
+              <p className="text-lg font-semibold text-foreground">${token.priceUsd?.toFixed(4) || 'N/A'}</p>
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+              <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
                 {t('tokenPerimeter.change24h')}
               </p>
               <p className={`text-lg font-semibold ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
@@ -137,7 +137,7 @@ function ChainTokenCard({
               href={chain.blockExplorer}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700"
+              className="flex items-center gap-1 text-sm text-muted hover:text-foreground"
             >
               <ExternalLink className="h-4 w-4" />
               {t('tokenPerimeter.chainExplorer')}
@@ -168,15 +168,15 @@ function BindForm({
   const isAddressValid = tokenAddress && isEthereumAddress(tokenAddress);
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
+    <div className="bg-surface rounded-xl border border-gray-200 p-6 space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+        <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
           <Plus className="h-5 w-5 text-blue-600" />
           {t('tokenPerimeter.bindChain', { name: chain.name })}
         </h3>
         <button
           onClick={onCancel}
-          className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+          className="p-1.5 text-muted hover:text-muted hover:bg-gray-100 rounded-lg transition-colors"
           aria-label={t('tokenPerimeter.cancelBind')}
         >
           <X className="h-4 w-4" />
@@ -186,18 +186,18 @@ function BindForm({
       <div className="bg-gray-50 rounded-lg p-4 space-y-3">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center">
-            <Network className="h-5 w-5 text-gray-500" />
+            <Network className="h-5 w-5 text-muted" />
           </div>
           <div>
-            <p className="font-medium text-gray-900">{chain.name}</p>
-            <p className="text-sm text-gray-500">
+            <p className="font-medium text-foreground">{chain.name}</p>
+            <p className="text-sm text-muted">
               {chain.symbol} • Chain ID: {chain.id}
             </p>
           </div>
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+          <label className="block text-xs font-medium text-muted uppercase tracking-wide mb-1">
             {t('tokenPerimeter.tokenContractAddress')}
           </label>
           <input
@@ -221,7 +221,7 @@ function BindForm({
         <button
           onClick={onCancel}
           disabled={isLoading}
-          className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50"
+          className="px-4 py-2 text-foreground bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50"
         >
           {t('common.cancel')}
         </button>
@@ -262,15 +262,15 @@ function UnbindModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-md">
+      <div className="bg-surface rounded-xl shadow-xl w-full max-w-md">
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
+          <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
             <Trash2 className="h-5 w-5 text-red-600" />
             {t('tokenPerimeter.unbindChain')}
           </h2>
           <button
             onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 text-muted hover:text-muted hover:bg-gray-100 rounded-lg transition-colors"
             aria-label={t('common.close')}
           >
             <X className="h-5 w-5" />
@@ -293,7 +293,7 @@ function UnbindModal({
           <button
             onClick={onClose}
             disabled={isLoading}
-            className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50"
+            className="px-4 py-2 text-foreground bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50"
           >
             {t('common.cancel')}
           </button>
@@ -446,8 +446,8 @@ export function TokenPerimeter() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">{t('tokenPerimeter.title')}</h1>
-        <p className="text-gray-500 mt-1">
+        <h1 className="text-3xl font-bold text-foreground">{t('tokenPerimeter.title')}</h1>
+        <p className="text-muted mt-1">
           {t('tokenPerimeter.subtitle')}
         </p>
       </div>
@@ -466,13 +466,13 @@ export function TokenPerimeter() {
         </div>
       )}
 
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
+      <div className="bg-surface rounded-xl border border-gray-200 p-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           <div className="lg:col-span-5">
-            <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+            <p className="text-xs font-medium text-muted uppercase tracking-wide mb-2">
               {t('tokenPerimeter.masterChain')}
             </p>
-            <div className="px-3 py-1.5 border border-gray-300 rounded-lg bg-white font-mono text-sm text-gray-700 mb-3">
+            <div className="px-3 py-1.5 border border-gray-300 rounded-lg bg-surface font-mono text-sm text-foreground mb-3">
               {t('tokenPerimeter.masterToken')}
             </div>
             {masterChain && (
@@ -520,14 +520,14 @@ export function TokenPerimeter() {
           </div>
 
           <div className="lg:col-span-5">
-            <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+            <p className="text-xs font-medium text-muted uppercase tracking-wide mb-2">
               {t('tokenPerimeter.chain')}
             </p>
             <div className="relative mb-3">
               <select
                 value={selectedChainId}
                 onChange={e => setSelectedChainId(Number(e.target.value))}
-                className="w-full px-3 py-1.5 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none appearance-none font-mono text-sm pr-8"
+                className="w-full px-3 py-1.5 border border-gray-300 rounded-lg bg-surface focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none appearance-none font-mono text-sm pr-8"
                 disabled={isLoading}
               >
                 {selectableChains.map(chain => (
@@ -540,7 +540,7 @@ export function TokenPerimeter() {
                   </option>
                 ))}
               </select>
-              <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-gray-400 pointer-events-none" />
+              <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted pointer-events-none" />
             </div>
 
             {selectedChain && (
@@ -553,7 +553,7 @@ export function TokenPerimeter() {
                       {t('tokenPerimeter.active')}
                     </span>
                   ) : (
-                    <span className="flex items-center gap-1 text-xs font-medium text-gray-500 bg-gray-50 px-2 py-1 rounded-full">
+                    <span className="flex items-center gap-1 text-xs font-medium text-muted bg-gray-50 px-2 py-1 rounded-full">
                       <XCircle className="h-3 w-3" />
                       {t('tokenPerimeter.available')}
                     </span>

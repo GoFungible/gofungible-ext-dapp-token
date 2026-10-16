@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLayout } from './LayoutProvider';
 import { SidebarItem } from '../types';
-import { ChevronDown, LayoutDashboard, Settings, Network, FileText, Plus, ArrowRightLeft } from 'lucide-react';
+import { ChevronDown, LayoutDashboard, Settings, Network, FileText, Plus, ArrowRightLeft, Palette } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -12,6 +12,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   'file-text': FileText,
   'plus': Plus,
   'arrow-right-left': ArrowRightLeft,
+  'palette': Palette,
 };
 
 function SidebarItemComponent({ item, level = 0 }: { item: SidebarItem; level?: number }) {
@@ -38,7 +39,7 @@ function SidebarItemComponent({ item, level = 0 }: { item: SidebarItem; level?: 
     <div className={level > 0 ? 'ml-4' : ''}>
       <button
         onClick={handleClick}
-        className="w-full flex items-center gap-2 px-3 py-2 text-left text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+        className="w-full flex items-center gap-2 px-3 py-2 text-left text-foreground hover:text-foreground hover:bg-muted/30 rounded-lg transition-colors"
       >
         <Icon className="h-5 w-5 flex-shrink-0" />
         <span className="flex-1 truncate font-medium">{t(item.label)}</span>
@@ -63,17 +64,17 @@ export function Sidebar() {
 
   return (
     <aside
-      className={`fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-200 ease-in-out lg:relative lg:translate-x-0 ${
+      className={`fixed inset-y-0 left-0 z-50 w-64 bg-surface border-r border-border transform transition-transform duration-200 ease-in-out lg:relative lg:translate-x-0 ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       }`}
       aria-label={t('sidebar.closeSidebar')}
     >
       <div className="flex flex-col h-full">
         <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
-          <h1 className="text-xl font-bold text-gray-900">{t('sidebar.appTitle')}</h1>
+          <h1 className="text-xl font-bold text-foreground">{t('sidebar.appTitle')}</h1>
           <button
             onClick={closeSidebar}
-            className="lg:hidden p-2 text-gray-500 hover:text-gray-700"
+            className="lg:hidden p-2 text-muted hover:text-foreground"
             aria-label={t('sidebar.closeSidebar')}
           >
             <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -83,7 +84,7 @@ export function Sidebar() {
         </div>
         <nav className="flex-1 overflow-y-auto p-4 space-y-2" aria-label="Main navigation">
           {sidebarItems.length === 0 ? (
-            <div className="text-center text-gray-500 py-8">
+            <div className="text-center text-muted py-8">
               <p className="text-sm">{t('sidebar.noModulesLoaded')}</p>
               <p className="text-xs mt-1">{t('sidebar.loadModuleToSeeNav')}</p>
             </div>
@@ -95,7 +96,7 @@ export function Sidebar() {
           <div className="border-t border-gray-200 my-4" />
           <button
             onClick={openLoader}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors font-medium"
+            className="w-full flex items-center justify-center gap-2 px-3 py-2 text-foreground hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors font-medium"
             aria-label={t('sidebar.loadNewModuleAria')}
           >
             <Plus className="h-5 w-5" />
@@ -103,7 +104,7 @@ export function Sidebar() {
           </button>
         </nav>
         <div className="p-4 border-t border-gray-200">
-          <p className="text-xs text-gray-500 text-center">
+          <p className="text-xs text-muted text-center">
             {t('sidebar.version')}
           </p>
         </div>
