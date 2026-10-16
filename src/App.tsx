@@ -41,6 +41,9 @@ function App() {
     await loadDefaultThemeModule();
     await loadDarkThemeModule();
     await loadBrandThemeModule();
+    await loadRetroThemeModule();
+    await loadGlassThemeModule();
+    await loadBrutalistThemeModule();
     await loadThemeManagerModule();
     setModulesLoaded(true);
   };
@@ -161,6 +164,25 @@ function App() {
     } catch (error) {
       console.error('Failed to load brand-theme module:', error);
     }
+  };
+
+  const loadRetroThemeModule = async () => {
+    try {
+      const mod = await import('./modules/themes/retro-theme');
+      if (mod.default && typeof mod.default.initialize === 'function') await mod.default.initialize(coreFramework);
+    } catch (error) { console.error('Failed to load retro-theme module:', error); }
+  };
+  const loadGlassThemeModule = async () => {
+    try {
+      const mod = await import('./modules/themes/glass-theme');
+      if (mod.default && typeof mod.default.initialize === 'function') await mod.default.initialize(coreFramework);
+    } catch (error) { console.error('Failed to load glass-theme module:', error); }
+  };
+  const loadBrutalistThemeModule = async () => {
+    try {
+      const mod = await import('./modules/themes/brutalist-theme');
+      if (mod.default && typeof mod.default.initialize === 'function') await mod.default.initialize(coreFramework);
+    } catch (error) { console.error('Failed to load brutalist-theme module:', error); }
   };
 
   const renderRoutes = () => {

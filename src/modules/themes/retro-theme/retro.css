@@ -1,0 +1,34 @@
+/* Retro 80s theme refinements */
+[data-theme="retro"] {
+  --color-primary: #ff00ff;
+  --color-secondary: #00ffff;
+  --color-background: #1a0033;
+  --color-surface: #2d0a4e;
+  --color-text: #ffff00;
+  --color-accent: #39ff14;
+  --color-border: #ff00ff;
+  --color-muted: #ff99ff;
+  --font-sans: 'Courier New', 'Lucida Console', monospace;
+  --font-mono: 'Courier New', monospace;
+  --font-heading: 'Courier New', monospace;
+  --radius: 0px;
+}
+
+[data-theme="retro"] body {
+  background: linear-gradient(135deg, #1a0033 0%, #2d0a4e 50%, #1a0033 100%);
+  text-shadow: 0 0 8px rgba(255, 255, 0, 0.5);
+}
+
+[data-theme="retro"] .text-foreground {
+  text-shadow: 0 0 4px rgba(255, 255, 0, 0.7);
+}
+
+[data-theme="retro"] * {
+  box-shadow: none;
+}
+
+[data-theme="retro"] .rounded-xl,
+[data-theme="retro"] .rounded-lg {
+  border: 2px solid #ff00ff;
+  box-shadow: 4px 4px 0px #00ffff;
+}

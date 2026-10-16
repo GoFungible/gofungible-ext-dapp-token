@@ -1,0 +1,37 @@
+/* Neo-brutalist theme refinements */
+[data-theme="brutalist"] {
+  --color-primary: #000000;
+  --color-secondary: #ffe600;
+  --color-background: #ffe600;
+  --color-surface: #ffffff;
+  --color-text: #000000;
+  --color-accent: #ff0000;
+  --color-border: #000000;
+  --color-muted: #333333;
+  --font-sans: 'Helvetica Neue', 'Arial Black', sans-serif;
+  --font-mono: 'Courier New', monospace;
+  --font-heading: 'Arial Black', 'Helvetica Neue', sans-serif;
+  --radius: 0;
+}
+
+[data-theme="brutalist"] body {
+  background: #ffe600;
+  background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,0,0,0.05) 10px, rgba(0,0,0,0.05) 20px);
+}
+
+[data-theme="brutalist"] .bg-surface,
+[data-theme="brutalist"] .rounded-xl,
+[data-theme="brutalist"] .rounded-lg {
+  border: 3px solid #000000;
+  box-shadow: 6px 6px 0px #000000;
+  border-radius: 0px;
+}
+
+[data-theme="brutalist"] *:focus-visible {
+  outline: 4px dotted #ff0000;
+}
+
+[data-theme="brutalist"] .bg-surface:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0px #000000;
+}
