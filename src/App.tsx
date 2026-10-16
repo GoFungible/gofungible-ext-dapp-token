@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { coreFramework } from './core/CoreFramework';
 import { LayoutProvider } from './components/LayoutProvider';
 import { TokenPerimeter } from './modules/token-perimeter/TokenPerimeter';
@@ -22,6 +23,7 @@ const componentRegistry: Record<string, React.ComponentType> = {
 
 function App() {
   const [modulesLoaded, setModulesLoaded] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     void loadModules();
@@ -125,7 +127,7 @@ function App() {
           <Route
             key={index}
             path={route.path}
-            element={<div>Component not found: {route.component}</div>}
+            element={<div>{t('app.componentNotFound', { component: route.component })}</div>}
           />
         );
       }

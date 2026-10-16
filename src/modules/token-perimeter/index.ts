@@ -20,7 +20,7 @@ const manifest: ModuleManifest = {
   topbarItems: [
     {
       id: 'token-perimeter-refresh',
-      label: 'Refresh',
+      label: 'topbar.refresh',
       icon: 'refresh-cw',
       action: 'refresh-token-perimeter',
       order: 1,
@@ -29,7 +29,7 @@ const manifest: ModuleManifest = {
   sidebarItems: [
     {
       id: 'token-perimeter',
-      label: 'Token Perimeter',
+      label: 'nav.token-perimeter',
       icon: 'network',
       route: '/perimeter',
       order: 2,

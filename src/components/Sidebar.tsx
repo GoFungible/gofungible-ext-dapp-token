@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLayout } from './LayoutProvider';
 import { SidebarItem } from '../types';
 import { ChevronDown, LayoutDashboard, Settings, Network, FileText, Plus, ArrowRightLeft } from 'lucide-react';
@@ -15,6 +16,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 
 function SidebarItemComponent({ item, level = 0 }: { item: SidebarItem; level?: number }) {
   const { closeSidebar } = useLayout();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const Icon = item.icon ? iconMap[item.icon] : LayoutDashboard;
   const hasChildren = item.children && item.children.length > 0;
@@ -39,7 +41,7 @@ function SidebarItemComponent({ item, level = 0 }: { item: SidebarItem; level?: 
         className="w-full flex items-center gap-2 px-3 py-2 text-left text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
       >
         <Icon className="h-5 w-5 flex-shrink-0" />
-        <span className="flex-1 truncate font-medium">{item.label}</span>
+        <span className="flex-1 truncate font-medium">{t(item.label)}</span>
         {hasChildren && (
           <ChevronDown className={`h-4 w-4 transition-transform ${expanded ? 'rotate-180' : ''}`} />
         )}
@@ -57,21 +59,22 @@ function SidebarItemComponent({ item, level = 0 }: { item: SidebarItem; level?: 
 
 export function Sidebar() {
   const { sidebarOpen, closeSidebar, sidebarItems, openLoader } = useLayout();
+  const { t } = useTranslation();
 
   return (
     <aside
       className={`fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-200 ease-in-out lg:relative lg:translate-x-0 ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       }`}
-      aria-label="Sidebar navigation"
+      aria-label={t('sidebar.closeSidebar')}
     >
       <div className="flex flex-col h-full">
         <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
-          <h1 className="text-xl font-bold text-gray-900">Fungible Standard</h1>
+          <h1 className="text-xl font-bold text-gray-900">{t('sidebar.appTitle')}</h1>
           <button
             onClick={closeSidebar}
             className="lg:hidden p-2 text-gray-500 hover:text-gray-700"
-            aria-label="Close sidebar"
+            aria-label={t('sidebar.closeSidebar')}
           >
             <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -81,8 +84,8 @@ export function Sidebar() {
         <nav className="flex-1 overflow-y-auto p-4 space-y-2" aria-label="Main navigation">
           {sidebarItems.length === 0 ? (
             <div className="text-center text-gray-500 py-8">
-              <p className="text-sm">No modules loaded</p>
-              <p className="text-xs mt-1">Load a module to see navigation items</p>
+              <p className="text-sm">{t('sidebar.noModulesLoaded')}</p>
+              <p className="text-xs mt-1">{t('sidebar.loadModuleToSeeNav')}</p>
             </div>
           ) : (
             sidebarItems.map(item => (
@@ -93,15 +96,15 @@ export function Sidebar() {
           <button
             onClick={openLoader}
             className="w-full flex items-center justify-center gap-2 px-3 py-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors font-medium"
-            aria-label="Load new module"
+            aria-label={t('sidebar.loadNewModuleAria')}
           >
             <Plus className="h-5 w-5" />
-            <span>Load New Module</span>
+            <span>{t('sidebar.loadNewModule')}</span>
           </button>
         </nav>
         <div className="p-4 border-t border-gray-200">
           <p className="text-xs text-gray-500 text-center">
-            Gofungible Ext DApp Token v1.0.0
+            {t('sidebar.version')}
           </p>
         </div>
       </div>

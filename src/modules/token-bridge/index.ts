@@ -19,7 +19,7 @@ const manifest: ModuleManifest = {
   sidebarItems: [
     {
       id: 'token-bridge',
-      label: 'Token Bridge',
+      label: 'nav.token-bridge',
       icon: 'arrow-right-left',
       route: '/bridge',
       order: 3,

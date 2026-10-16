@@ -19,7 +19,7 @@ const manifest: ModuleManifest = {
   sidebarItems: [
     {
       id: 'dashboard',
-      label: 'Dashboard',
+      label: 'nav.dashboard',
       icon: 'layout-dashboard',
       route: '/',
       order: 0,

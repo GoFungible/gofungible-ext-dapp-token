@@ -20,7 +20,7 @@ const manifest: ModuleManifest = {
   sidebarItems: [
     {
       id: 'environment',
-      label: 'Environment',
+      label: 'nav.environment',
       icon: 'settings',
       route: '/environment',
       order: 1,

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Network,
   Settings,
@@ -19,35 +20,35 @@ import { eventBus } from '../../core/EventBus';
 import mockChains from '@data/chains.json';
 
 function StatusBadge({ deployed }: { deployed: boolean }) {
+  const { t } = useTranslation();
   if (deployed) {
     return (
       <span className="flex items-center gap-1 text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">
         <CheckCircle className="h-3 w-3" />
-        Deployed
+        {t('environment.deployed')}
       </span>
     );
   }
   return (
     <span className="flex items-center gap-1 text-xs font-medium text-gray-500 bg-gray-50 px-2 py-1 rounded-full">
       <XCircle className="h-3 w-3" />
-      Not deployed
+      {t('environment.notDeployed')}
     </span>
   );
 }
 
 function AddressRow({
-  label,
   address,
   deployed,
   showExplorer,
   explorer,
 }: {
-  label: string;
   address: string | null;
   deployed: boolean;
   showExplorer?: boolean;
   explorer?: string;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-2 min-w-0">
@@ -66,8 +67,8 @@ function AddressRow({
           target="_blank"
           rel="noopener noreferrer"
           className="text-gray-400 hover:text-gray-600"
-          aria-label={`View ${label} on explorer`}
-          title="View on explorer"
+          aria-label={t('environment.viewOnExplorer')}
+          title={t('environment.viewOnExplorer')}
         >
           <ExternalLink className="h-4 w-4" />
         </a>
@@ -99,6 +100,7 @@ function TokenDeployment({
   isLoading: boolean;
   explorer: string;
 }) {
+  const { t } = useTranslation();
   const isCreate2 = form.useCreate2;
   const isAddressValid = form.tokenAddress && /^0x[a-fA-F0-9]{40}$/.test(form.tokenAddress);
   const isFormValid = isCreate2 ? !!form.create2Salt && isAddressValid : !!isAddressValid;
@@ -108,7 +110,7 @@ function TokenDeployment({
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
           <Plus className="h-5 w-5 text-blue-600" />
-          Token Contract (Create2Token)
+          {t('environment.tokenContract')}
         </h3>
         <StatusBadge deployed={state.token.deployed} />
       </div>
@@ -124,7 +126,7 @@ function TokenDeployment({
               className="h-4 w-4 text-blue-600 focus:ring-blue-500"
               disabled={isLoading}
             />
-            <span className="text-sm text-gray-700">Existing token address</span>
+            <span className="text-sm text-gray-700">{t('environment.existingTokenAddress')}</span>
           </label>
           <label className="flex items-center gap-2">
             <input
@@ -135,26 +137,26 @@ function TokenDeployment({
               className="h-4 w-4 text-blue-600 focus:ring-blue-500"
               disabled={isLoading}
             />
-            <span className="text-sm text-gray-700">Deploy via Create2</span>
+            <span className="text-sm text-gray-700">{t('environment.deployViaCreate2')}</span>
           </label>
         </div>
 
         <div>
           <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
-            Token Contract Address
+            {t('environment.tokenContractAddress')}
           </label>
           <input
             type="text"
             value={form.tokenAddress}
             onChange={e => setForm({ ...form, tokenAddress: e.target.value })}
-            placeholder={isCreate2 ? 'Leave empty to compute' : '0x...'}
+            placeholder={isCreate2 ? t('environment.leaveEmptyToCompute') : t('common.addressPlaceholder')}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg font-mono text-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none"
             disabled={isLoading}
           />
           {form.tokenAddress && !isAddressValid && (
             <p className="text-xs text-red-600 mt-1 flex items-center gap-1">
               <AlertCircle className="h-3 w-3" />
-              Invalid Ethereum address
+              {t('environment.invalidAddress')}
             </p>
           )}
         </div>
@@ -162,13 +164,13 @@ function TokenDeployment({
         {isCreate2 && (
           <div>
             <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
-              Create2 Salt
+              {t('environment.create2Salt')}
             </label>
             <input
               type="text"
               value={form.create2Salt}
               onChange={e => setForm({ ...form, create2Salt: e.target.value })}
-              placeholder="e.g. my-token-salt"
+              placeholder={t('environment.create2SaltPlaceholder')}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg font-mono text-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none"
               disabled={isLoading}
             />
@@ -179,10 +181,9 @@ function TokenDeployment({
       {state.token.address && (
         <div className="bg-gray-50 rounded-lg p-4">
           <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
-            Current Token Address
+            {t('environment.currentTokenAddress')}
           </p>
           <AddressRow
-            label="Token"
             address={state.token.address}
             deployed={state.token.deployed}
             showExplorer={!!explorer}
@@ -196,19 +197,19 @@ function TokenDeployment({
           onClick={onSubmit}
           disabled={isLoading || !isFormValid || state.token.deployed}
           className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
-          title="Deploy or register token contract"
+          title={t('environment.deployOrRegisterToken')}
         >
           {isLoading ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
-              Deploying...
+              {t('common.deploying')}
             </>
           ) : state.token.deployed ? (
-            'Token Deployed'
+            t('environment.tokenDeployed')
           ) : (
             <>
             <Plus className="h-4 w-4" />
-            {isCreate2 ? 'Deploy Create2Token' : 'Confirm Token Address'}
+            {isCreate2 ? t('environment.deployCreate2Token') : t('environment.confirmTokenAddress')}
           </>
           )}
         </button>
@@ -228,28 +229,27 @@ function FungibleProxyDeployment({
   isLoading: boolean;
   explorer: string;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
           <Settings className="h-5 w-5 text-purple-600" />
-          FungibleProxy Contract
+          {t('environment.fungibleProxyContract')}
         </h3>
         <StatusBadge deployed={state.fungibleProxy.deployed} />
       </div>
 
       <p className="text-sm text-gray-500">
-        Deploy a FungibleProxy contract initialized with the Create2Token.
-        The proxy delegates calls to the token logic contract.
+        {t('environment.fungibleProxyDesc')}
       </p>
 
       {state.fungibleProxy.address && (
         <div className="bg-gray-50 rounded-lg p-4">
           <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
-            Proxy Address
+            {t('environment.proxyAddress')}
           </p>
           <AddressRow
-            label="FungibleProxy"
             address={state.fungibleProxy.address}
             deployed={state.fungibleProxy.deployed}
             showExplorer={!!explorer}
@@ -263,19 +263,19 @@ function FungibleProxyDeployment({
           onClick={onDeploy}
           disabled={isLoading || !state.token.deployed || state.fungibleProxy.deployed}
           className="px-4 py-2 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
-          title="Deploy FungibleProxy contract"
+          title={t('environment.deployFungibleProxy')}
         >
           {isLoading ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
-              Deploying...
+              {t('common.deploying')}
             </>
           ) : state.fungibleProxy.deployed ? (
-            'Proxy Deployed'
+            t('environment.proxyDeployed')
           ) : (
             <>
             <Plus className="h-4 w-4" />
-            Deploy FungibleProxy
+            {t('environment.deployFungibleProxy')}
             </>
           )}
         </button>
@@ -295,24 +295,23 @@ function FungibleFactoryDeployment({
   isLoading: boolean;
   explorer: string;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
           <Network className="h-5 w-5 text-green-600" />
-          FungibleFactory Contract
+          {t('environment.fungibleFactoryContract')}
         </h3>
         <StatusBadge deployed={state.fungibleFactory.deployed} />
       </div>
 
       <p className="text-sm text-gray-500">
-        Deploy a FungibleFactory contract and assign it to the FungibleProxy.
-        The factory gates creation of new Fungible Standard Tokens on this chain.
+        {t('environment.fungibleFactoryDesc')}
       </p>
 
       <div className="bg-gray-50 rounded-lg p-4 space-y-2">
         <AddressRow
-          label="FungibleFactory"
           address={state.fungibleFactory.address}
           deployed={state.fungibleFactory.deployed}
           showExplorer={!!explorer}
@@ -324,8 +323,8 @@ function FungibleFactoryDeployment({
           </div>
           <span className="text-sm text-gray-600">
             {state.fungibleFactory.assigned
-              ? 'Assigned to FungibleProxy'
-              : 'Not assigned to FungibleProxy'}
+              ? t('environment.assignedToProxy')
+              : t('environment.notAssignedToProxy')}
           </span>
         </div>
       </div>
@@ -335,19 +334,19 @@ function FungibleFactoryDeployment({
           onClick={onDeploy}
           disabled={isLoading || !state.fungibleProxy.deployed || state.fungibleFactory.deployed}
           className="px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
-          title="Deploy FungibleFactory and assign to FungibleProxy"
+          title={t('environment.deployAndAssignFactory')}
         >
           {isLoading ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
-              Deploying...
+              {t('common.deploying')}
             </>
           ) : state.fungibleFactory.deployed ? (
-            'Factory Deployed'
+            t('environment.factoryDeployed')
           ) : (
             <>
             <Plus className="h-4 w-4" />
-            Deploy &amp; Assign Factory
+            {t('environment.deployAndAssignFactory')}
             </>
           )}
         </button>
@@ -369,6 +368,7 @@ function deployFactoryPlaceholder(): string {
 }
 
 export function Environment() {
+  const { t } = useTranslation();
   const [chainStates, setChainStates] = useState<EnvironmentChainState[]>([]);
   const [selectedChainId, setSelectedChainId] = useState<number>(0);
   const [activeStep, setActiveStep] = useState<string | null>(null);
@@ -454,12 +454,12 @@ export function Environment() {
 
       setSuccess(
         form.useCreate2
-          ? `Create2Token deployed on ${selectedChain?.name}`
-          : `Token address registered on ${selectedChain?.name}`
+          ? t('environment.success.tokenDeployed', { name: selectedChain?.name || '' })
+          : t('environment.success.tokenAddressRegistered', { name: selectedChain?.name || '' })
       );
       setForm({ tokenAddress: '', useCreate2: true, create2Salt: 'fungible-token' });
     } catch {
-      setError('Failed to deploy token contract. Please try again.');
+      setError(t('environment.error.deployToken'));
     } finally {
       setActiveStep(null);
     }
@@ -492,9 +492,9 @@ export function Environment() {
         timestamp: Date.now(),
       });
 
-      setSuccess(`FungibleProxy deployed on ${selectedChain?.name}`);
+      setSuccess(t('environment.success.proxyDeployed', { name: selectedChain?.name || '' }));
     } catch {
-      setError('Failed to deploy FungibleProxy. Please try again.');
+      setError(t('environment.error.deployProxy'));
     } finally {
       setActiveStep(null);
     }
@@ -527,11 +527,9 @@ export function Environment() {
         timestamp: Date.now(),
       });
 
-      setSuccess(
-        `FungibleFactory deployed and assigned to FungibleProxy on ${selectedChain?.name}`
-      );
+      setSuccess(t('environment.success.factoryDeployed', { name: selectedChain?.name || '' }));
     } catch {
-      setError('Failed to deploy FungibleFactory. Please try again.');
+      setError(t('environment.error.deployFactory'));
     } finally {
       setActiveStep(null);
     }
@@ -548,11 +546,9 @@ export function Environment() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Environment</h1>
+        <h1 className="text-3xl font-bold text-gray-900">{t('environment.title')}</h1>
         <p className="text-gray-500 mt-1">
-          Manage the contract environment of a chain. Deploy a Create2Token, a
-          FungibleProxy, and a FungibleFactory, then assign the factory to the
-          proxy.
+          {t('environment.subtitle')}
         </p>
       </div>
 
@@ -573,7 +569,7 @@ export function Environment() {
       <div className="bg-white rounded-xl border border-gray-200 p-6">
         <div className="flex items-center justify-between mb-4">
           <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide">
-            Select Chain
+            {t('environment.selectChain')}
           </label>
           <button
             onClick={() => {
@@ -582,8 +578,8 @@ export function Environment() {
               eventBus.emit('refresh-environment', undefined);
             }}
             className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-            aria-label="Refresh"
-            title="Refresh"
+            aria-label={t('common.refresh')}
+            title={t('common.refresh')}
           >
             <RefreshCw className="h-4 w-4" />
           </button>
@@ -607,7 +603,7 @@ export function Environment() {
         >
           {mockChains.map(chain => (
             <option key={chain.id} value={chain.id}>
-              {chain.name} ({chain.symbol}) • Chain ID: {chain.id}
+              {t('environment.chainOption', { name: chain.name, symbol: chain.symbol, id: chain.id })}
             </option>
           ))}
         </select>
@@ -621,7 +617,7 @@ export function Environment() {
             </div>
             <div>
               <h2 className="text-xl font-semibold text-gray-900">
-                {selectedChain.name} • Chain ID: {selectedChain.id}
+                {t('environment.chainHeader', { name: selectedChain.name, id: selectedChain.id })}
               </h2>
               <p className="text-sm text-gray-500">
                 {selectedChain.rpcUrl}

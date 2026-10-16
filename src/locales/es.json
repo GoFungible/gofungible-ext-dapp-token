@@ -1,0 +1,270 @@
+{
+  "app": {
+    "title": "dAppmin",
+    "componentNotFound": "Componente no encontrado: {{component}}"
+  },
+  "common": {
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "close": "Cerrar",
+    "refresh": "Actualizar",
+    "loading": "Cargando...",
+    "deploying": "Desplegando...",
+    "processing": "Procesando...",
+    "copied": "Copiado",
+    "max": "Máximo",
+    "edit": "Editar",
+    "addressPlaceholder": "0x...",
+    "amountPlaceholder": "0.00",
+    "unitGFT": "GFT"
+  },
+  "nav": {
+    "dashboard": "Panel",
+    "environment": "Entorno",
+    "token-perimeter": "Perímetro de Token",
+    "token-bridge": "Puente de Token",
+    "token-negotiation": "Negociación de Token"
+  },
+  "topbar": {
+    "openSidebar": "Abrir menú lateral",
+    "closeSidebar": "Cerrar menú lateral",
+    "refresh": "Actualizar",
+    "adminUser": "Admin",
+    "networkEthereumMainnet": "Ethereum Mainnet",
+    "networkPolygon": "Polygon",
+    "networkArbitrum": "Arbitrum",
+    "networkOptimism": "Optimism",
+    "networkBase": "Base"
+  },
+  "sidebar": {
+    "appTitle": "Fungible Standard",
+    "closeSidebar": "Cerrar menú lateral",
+    "noModulesLoaded": "No hay módulos cargados",
+    "loadModuleToSeeNav": "Cargue un módulo para ver los elementos de navegación",
+    "loadNewModule": "Cargar Nuevo Módulo",
+    "loadNewModuleAria": "Cargar nuevo módulo",
+    "version": "Gofungible Ext DApp Token v1.0.0"
+  },
+  "dashboard": {
+    "title": "Panel",
+    "subtitle": "Despliegue del token multichain en redes EVM",
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "stats": {
+      "activeChains": "Cadenas Activas",
+      "totalSupply": "Suministro Total",
+      "totalHolders": "Tenedores Totales",
+      "avgPriceUsd": "Precio Promedio (USD)"
+    },
+    "chainDeployments": "Despliegue de Cadenas",
+    "erc20Overview": "Resumen de Características ERC-20",
+    "features": {
+      "standardErc20": "ERC-20 Estándar",
+      "mintable": "Acuñable",
+      "burnable": "Quemable",
+      "pausable": "Pausable",
+      "permitEip2612": "Permiso (EIP-2612)",
+      "votesEip5805": "Votos (EIP-5805)",
+      "flashMinting": "Acuñación Flash",
+      "bridgeEnabled": "Puente Habilitado"
+    },
+    "tokenAddress": "Dirección del Token",
+    "decimals": "Decimales",
+    "totalSupply": "Suministro Total",
+    "holders": "Tenedores",
+    "priceUsd": "Precio (USD)",
+    "change24h": "Cambio 24h",
+    "viewOnExplorer": "Ver en Explorador",
+    "chainExplorer": "Explorador de Cadena",
+    "copyAddress": "Copiar dirección",
+    "tableFeature": "Característica"
+  },
+  "environment": {
+    "title": "Entorno",
+    "subtitle": "Gestione el entorno contractual de una cadena. Despliegue un Create2Token, un FungibleProxy y un FungibleFactory, y asigne la fábrica al proxy.",
+    "deployed": "Desplegado",
+    "notDeployed": "No desplegado",
+    "viewOnExplorer": "Ver en explorador",
+    "tokenContract": "Contrato de Token (Create2Token)",
+    "existingTokenAddress": "Dirección de token existente",
+    "deployViaCreate2": "Desplegar vía Create2",
+    "tokenContractAddress": "Dirección del Contrato de Token",
+    "leaveEmptyToCompute": "Déjelo vacío para calcular",
+    "invalidAddress": "Dirección de Ethereum inválida",
+    "create2Salt": "Sal Create2",
+    "create2SaltPlaceholder": "p. ej. my-token-salt",
+    "currentTokenAddress": "Dirección Actual del Token",
+    "token": "Token",
+    "deployOrRegisterToken": "Desplegar o registrar contrato de token",
+    "tokenDeployed": "Token Desplegado",
+    "deployCreate2Token": "Desplegar Create2Token",
+    "confirmTokenAddress": "Confirmar Dirección de Token",
+    "fungibleProxyContract": "Contrato FungibleProxy",
+    "fungibleProxyDesc": "Despliegue un contrato FungibleProxy inicializado con el Create2Token. El proxy delega llamadas al contrato de lógica del token.",
+    "proxyAddress": "Dirección del Proxy",
+    "deployFungibleProxy": "Desplegar FungibleProxy",
+    "proxyDeployed": "Proxy Desplegado",
+    "fungibleFactoryContract": "Contrato FungibleFactory",
+    "fungibleFactoryDesc": "Despliegue un contrato FungibleFactory y asígnelo al FungibleProxy. La fábrica controla la creación de nuevos Tokens Fungible Estándar en esta cadena.",
+    "fungibleFactory": "FungibleFactory",
+    "assignedToProxy": "Asignado a FungibleProxy",
+    "notAssignedToProxy": "No asignado a FungibleProxy",
+    "deployAndAssignFactory": "Desplegar y Asignar Fábrica",
+    "factoryDeployed": "Fábrica Desplegada",
+    "selectChain": "Seleccionar Cadena",
+    "chainOption": "{{name}} ({{symbol}}) • ID de Cadena: {{id}}",
+    "chainHeader": "{{name}} • ID de Cadena: {{id}}",
+    "success": {
+      "tokenDeployed": "Create2Token desplegado en {{name}}",
+      "tokenAddressRegistered": "Dirección de token registrada en {{name}}",
+      "proxyDeployed": "FungibleProxy desplegado en {{name}}",
+      "factoryDeployed": "FungibleFactory desplegado y asignado a FungibleProxy en {{name}}"
+    },
+    "error": {
+      "deployToken": "Error al desplegar el contrato de token. Inténtelo de nuevo.",
+      "deployProxy": "Error al desplegar FungibleProxy. Inténtelo de nuevo.",
+      "deployFactory": "Error al desplegar FungibleFactory. Inténtelo de nuevo."
+    }
+  },
+  "tokenPerimeter": {
+    "title": "Perímetro de Token",
+    "subtitle": "Gestione las cadenas EVM cubiertas por el token multichain. Vincule nuevas cadenas para agregarlas al perímetro o desvincule las existentes para eliminarlas.",
+    "masterChain": "CADENA MAESTRA",
+    "masterToken": "Token Maestro",
+    "masterBadge": "Maestro",
+    "chain": "CADENA",
+    "active": "Activo",
+    "available": "Disponible",
+    "bound": "Vinculado",
+    "chainOption": "{{name}} ({{symbol}}) {{status}}",
+    "tokenAddress": "Dirección del Token",
+    "decimals": "Decimales",
+    "totalSupply": "Suministro Total",
+    "holders": "Tenedores",
+    "priceUsd": "Precio (USD)",
+    "change24h": "Cambio 24h",
+    "viewOnExplorer": "Ver en Explorador",
+    "chainExplorer": "Explorador de Cadena",
+    "bindChain": "Vincular {{name}} al Perímetro",
+    "cancelBind": "Cancelar vinculación",
+    "tokenContractAddress": "Dirección del Contrato de Token",
+    "invalidAddress": "Dirección de Ethereum inválida",
+    "confirmBind": "Confirmar Vinculación",
+    "binding": "Vinculando...",
+    "bind": "Vincular",
+    "unbind": "Desvincular",
+    "unbindChain": "Desvincular Cadena",
+    "unbindWarning": "Advertencia: Esta acción no se puede deshacer",
+    "unbindDescription": "Desvincular {{name}} eliminará el token de esta cadena del perímetro del token multichain. Los tokens ya puenteados a esta cadena no se quemarán.",
+    "confirmUnbind": "Confirmar Desvinculación",
+    "unbinding": "Desvinculando...",
+    "titleBind": "Vincular cadena seleccionada al perímetro",
+    "titleUnbind": "Desvincular cadena seleccionada del perímetro",
+    "successBound": "Se vinculó correctamente {{name}} al perímetro del token multichain",
+    "errorBindFailed": "Error al vincular la cadena. Inténtelo de nuevo.",
+    "successUnbound": "Se desvinculó correctamente {{name}} del perímetro del token multichain",
+    "errorUnbindFailed": "Error al desvincular la cadena. Inténtelo de nuevo."
+  },
+  "tokenBridge": {
+    "title": "Puente de Token",
+    "subtitle": "Transfiera tokens entre cadenas en el perímetro del token multichain",
+    "selectChain": "Seleccionar cadena {{label}}",
+    "selectChainModal": "Seleccionar Cadena {{label}}",
+    "amount": "Monto",
+    "available": "Disponible: {{max}} {{symbol}}",
+    "max": "Máximo",
+    "noTransactions": "No hay transacciones de puente aún",
+    "noTransactionsDesc": "Su historial de puentes aparecerá aquí",
+    "transactionHistory": "Historial de Transacciones",
+    "txRoute": "{{from}} → {{to}}",
+    "txAmount": "{{amount}} GFT",
+    "viewTransaction": "Ver Transacción",
+    "bridgeTransfer": "Transferencia de Puente",
+    "fromChain": "Cadena Origen",
+    "toChain": "Cadena Destino",
+    "swapChains": "Intercambiar cadenas",
+    "bridgeTokens": "Puente de Tokens",
+    "bridgeInfo": "Información del Puente",
+    "masterToSlave": "Maestro → Esclavo",
+    "masterToSlaveDesc": "Transfiere desde el Token Maestro (Ethereum) a Tokens Esclavos en otras cadenas",
+    "slaveToMaster": "Esclavo → Maestro",
+    "slaveToMasterDesc": "Transfiere desde Tokens Esclavos de vuelta al Token Maestro en Ethereum",
+    "oneToOneRatio": "Relación 1:1",
+    "oneToOneRatioDesc": "Los tokens se transfieren a una relación 1:1 sin comisiones (se aplican tarifas de gas)",
+    "supportedChains": "Cadenas Soportadas",
+    "status": {
+      "completed": "Completada",
+      "pending": "Pendiente",
+      "failed": "Fallida"
+    },
+    "error": {
+      "validAmount": "Ingrese un monto válido",
+      "insufficientBalance": "Saldo insuficiente. Máximo: {{max}} {{symbol}}",
+      "selectBothChains": "Seleccione ambas cadenas"
+    },
+    "success": {
+      "bridged": "Se transfirió correctamente {{amount}} {{symbol}} de {{from}} a {{to}}"
+    }
+  },
+  "tokenNegotiation": {
+    "title": "Negociación de Token",
+    "subtitle": "Gestione la distribución de unidades del Token Multichain en intercambios de cada cadena.",
+    "totalUnits": "Unidades Totales",
+    "activeChains": "Cadenas Activas",
+    "exchanges": "Intercambios",
+    "selectChain": "Seleccionar Cadena",
+    "chainOption": "{{name}} ({{symbol}}) • ID de Cadena: {{id}}",
+    "chainHeader": "{{name}} • ID de Cadena: {{id}}",
+    "table": {
+      "exchange": "Intercambio",
+      "unitsPaired": "Unidades Emparejadas",
+      "action": "Acción"
+    },
+    "unitGFT": "GFT",
+    "saving": "Guardando...",
+    "edit": "Editar",
+    "noExchanges": "No hay intercambios configurados para esta cadena.",
+    "success": {
+      "updated": "Se actualizaron las unidades de {{name}} a {{units}} en {{chain}}"
+    },
+    "error": {
+      "updateFailed": "Error al actualizar las unidades. Inténtelo de nuevo."
+    }
+  },
+  "loader": {
+    "loadNewModule": "Cargar Nuevo Módulo",
+    "tab": {
+      "file": "Archivo",
+      "zip": "ZIP",
+      "url": "URL",
+      "descFile": "Cargue un archivo JavaScript de módulo",
+      "descZip": "Cargue módulos desde un archivo ZIP",
+      "descUrl": "Cargue un módulo desde una URL remota"
+    },
+    "file": {
+      "selectFile": "Seleccione un archivo JavaScript de módulo para cargar",
+      "supportedFormats": "Formatos compatibles: .js, .ts, .jsx, .tsx",
+      "chooseFile": "Elegir Archivo"
+    },
+    "zip": {
+      "selectZip": "Seleccione un archivo ZIP que contenga archivos de módulo",
+      "eachJsFile": "Cada archivo .js en el ZIP se cargará como un módulo separado",
+      "chooseZip": "Elegir Archivo ZIP"
+    },
+    "url": {
+      "enterUrl": "Ingrese la URL de un módulo para cargarlo de forma remota",
+      "moduleUrl": "URL del Módulo",
+      "placeholder": "https://example.com/module.js",
+      "loadFromUrl": "Cargar desde URL"
+    },
+    "success": {
+      "moduleLoaded": "El módulo \"{{name}}\" se cargó correctamente",
+      "modulesLoadedFromZip": "{{count}} módulo(s) cargado(s) desde ZIP"
+    },
+    "error": {
+      "loadModule": "Error al cargar el módulo",
+      "loadModulesFromZip": "Error al cargar módulos desde ZIP",
+      "loadModuleFromUrl": "Error al cargar el módulo desde la URL"
+    }
+  }
+}

@@ -1,0 +1,270 @@
+{
+  "app": {
+    "title": "dAppmin",
+    "componentNotFound": "Component not found: {{component}}"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "close": "Close",
+    "refresh": "Refresh",
+    "loading": "Loading...",
+    "deploying": "Deploying...",
+    "processing": "Processing...",
+    "copied": "Copied",
+    "max": "Max",
+    "edit": "Edit",
+    "addressPlaceholder": "0x...",
+    "amountPlaceholder": "0.00",
+    "unitGFT": "GFT"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "environment": "Environment",
+    "token-perimeter": "Token Perimeter",
+    "token-bridge": "Token Bridge",
+    "token-negotiation": "Token Negotiation"
+  },
+  "topbar": {
+    "openSidebar": "Open sidebar",
+    "closeSidebar": "Close sidebar",
+    "refresh": "Refresh",
+    "adminUser": "Admin",
+    "networkEthereumMainnet": "Ethereum Mainnet",
+    "networkPolygon": "Polygon",
+    "networkArbitrum": "Arbitrum",
+    "networkOptimism": "Optimism",
+    "networkBase": "Base"
+  },
+  "sidebar": {
+    "appTitle": "Fungible Standard",
+    "closeSidebar": "Close sidebar",
+    "noModulesLoaded": "No modules loaded",
+    "loadModuleToSeeNav": "Load a module to see navigation items",
+    "loadNewModule": "Load New Module",
+    "loadNewModuleAria": "Load new module",
+    "version": "Gofungible Ext DApp Token v1.0.0"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Overview of multichain token deployment across EVM networks",
+    "active": "Active",
+    "inactive": "Inactive",
+    "stats": {
+      "activeChains": "Active Chains",
+      "totalSupply": "Total Supply",
+      "totalHolders": "Total Holders",
+      "avgPriceUsd": "Avg Price (USD)"
+    },
+    "chainDeployments": "Chain Deployments",
+    "erc20Overview": "ERC-20 Features Overview",
+    "features": {
+      "standardErc20": "Standard ERC-20",
+      "mintable": "Mintable",
+      "burnable": "Burnable",
+      "pausable": "Pausable",
+      "permitEip2612": "Permit (EIP-2612)",
+      "votesEip5805": "Votes (EIP-5805)",
+      "flashMinting": "Flash Minting",
+      "bridgeEnabled": "Bridge Enabled"
+    },
+    "tokenAddress": "Token Address",
+    "decimals": "Decimals",
+    "totalSupply": "Total Supply",
+    "holders": "Holders",
+    "priceUsd": "Price (USD)",
+    "change24h": "24h Change",
+    "viewOnExplorer": "View on Explorer",
+    "chainExplorer": "Chain Explorer",
+    "copyAddress": "Copy address",
+    "tableFeature": "Feature"
+  },
+  "environment": {
+    "title": "Environment",
+    "subtitle": "Manage the contract environment of a chain. Deploy a Create2Token, a FungibleProxy, and a FungibleFactory, then assign the factory to the proxy.",
+    "deployed": "Deployed",
+    "notDeployed": "Not deployed",
+    "viewOnExplorer": "View on explorer",
+    "tokenContract": "Token Contract (Create2Token)",
+    "existingTokenAddress": "Existing token address",
+    "deployViaCreate2": "Deploy via Create2",
+    "tokenContractAddress": "Token Contract Address",
+    "leaveEmptyToCompute": "Leave empty to compute",
+    "invalidAddress": "Invalid Ethereum address",
+    "create2Salt": "Create2 Salt",
+    "create2SaltPlaceholder": "e.g. my-token-salt",
+    "currentTokenAddress": "Current Token Address",
+    "token": "Token",
+    "deployOrRegisterToken": "Deploy or register token contract",
+    "tokenDeployed": "Token Deployed",
+    "deployCreate2Token": "Deploy Create2Token",
+    "confirmTokenAddress": "Confirm Token Address",
+    "fungibleProxyContract": "FungibleProxy Contract",
+    "fungibleProxyDesc": "Deploy a FungibleProxy contract initialized with the Create2Token. The proxy delegates calls to the token logic contract.",
+    "proxyAddress": "Proxy Address",
+    "deployFungibleProxy": "Deploy FungibleProxy",
+    "proxyDeployed": "Proxy Deployed",
+    "fungibleFactoryContract": "FungibleFactory Contract",
+    "fungibleFactoryDesc": "Deploy a FungibleFactory contract and assign it to the FungibleProxy. The factory gates creation of new Fungible Standard Tokens on this chain.",
+    "fungibleFactory": "FungibleFactory",
+    "assignedToProxy": "Assigned to FungibleProxy",
+    "notAssignedToProxy": "Not assigned to FungibleProxy",
+    "deployAndAssignFactory": "Deploy & Assign Factory",
+    "factoryDeployed": "Factory Deployed",
+    "selectChain": "Select Chain",
+    "chainOption": "{{name}} ({{symbol}}) • Chain ID: {{id}}",
+    "chainHeader": "{{name}} • Chain ID: {{id}}",
+    "success": {
+      "tokenDeployed": "Create2Token deployed on {{name}}",
+      "tokenAddressRegistered": "Token address registered on {{name}}",
+      "proxyDeployed": "FungibleProxy deployed on {{name}}",
+      "factoryDeployed": "FungibleFactory deployed and assigned to FungibleProxy on {{name}}"
+    },
+    "error": {
+      "deployToken": "Failed to deploy token contract. Please try again.",
+      "deployProxy": "Failed to deploy FungibleProxy. Please try again.",
+      "deployFactory": "Failed to deploy FungibleFactory. Please try again."
+    }
+  },
+  "tokenPerimeter": {
+    "title": "Token Perimeter",
+    "subtitle": "Manage the EVM chains covered by the multichain token. Bind new chains to add them to the token perimeter or unbind existing ones to remove them.",
+    "masterChain": "MASTER CHAIN",
+    "masterToken": "Master Token",
+    "masterBadge": "Master",
+    "chain": "CHAIN",
+    "active": "Active",
+    "available": "Available",
+    "bound": "Bound",
+    "chainOption": "{{name}} ({{symbol}}) {{status}}",
+    "tokenAddress": "Token Address",
+    "decimals": "Decimals",
+    "totalSupply": "Total Supply",
+    "holders": "Holders",
+    "priceUsd": "Price (USD)",
+    "change24h": "24h Change",
+    "viewOnExplorer": "View on Explorer",
+    "chainExplorer": "Chain Explorer",
+    "bindChain": "Bind {{name}} to Perimeter",
+    "cancelBind": "Cancel bind",
+    "tokenContractAddress": "Token Contract Address",
+    "invalidAddress": "Invalid Ethereum address",
+    "confirmBind": "Confirm Bind",
+    "binding": "Binding...",
+    "bind": "Bind",
+    "unbind": "Unbind",
+    "unbindChain": "Unbind Chain",
+    "unbindWarning": "Warning: This action cannot be undone",
+    "unbindDescription": "Unbinding {{name}} will remove the token on this chain from the multichain token perimeter. Tokens already bridged to this chain will not be burned.",
+    "confirmUnbind": "Confirm Unbind",
+    "unbinding": "Unbinding...",
+    "titleBind": "Bind selected chain to perimeter",
+    "titleUnbind": "Unbind selected chain from perimeter",
+    "successBound": "Successfully bound {{name}} to the multichain token perimeter",
+    "errorBindFailed": "Failed to bind chain. Please try again.",
+    "successUnbound": "Successfully unbound {{name}} from the multichain token perimeter",
+    "errorUnbindFailed": "Failed to unbind chain. Please try again."
+  },
+  "tokenBridge": {
+    "title": "Token Bridge",
+    "subtitle": "Bridge tokens between chains in the multichain token perimeter",
+    "selectChain": "Select {{label}} chain",
+    "selectChainModal": "Select {{label}} Chain",
+    "amount": "Amount",
+    "available": "Available: {{max}} {{symbol}}",
+    "max": "Max",
+    "noTransactions": "No bridge transactions yet",
+    "noTransactionsDesc": "Your bridge history will appear here",
+    "transactionHistory": "Transaction History",
+    "txRoute": "{{from}} → {{to}}",
+    "txAmount": "{{amount}} GFT",
+    "viewTransaction": "View Transaction",
+    "bridgeTransfer": "Bridge Transfer",
+    "fromChain": "From Chain",
+    "toChain": "To Chain",
+    "swapChains": "Swap chains",
+    "bridgeTokens": "Bridge Tokens",
+    "bridgeInfo": "Bridge Info",
+    "masterToSlave": "Master → Slave",
+    "masterToSlaveDesc": "Bridge from Master Token (Ethereum) to Slave Tokens on other chains",
+    "slaveToMaster": "Slave → Master",
+    "slaveToMasterDesc": "Bridge from Slave Tokens back to Master Token on Ethereum",
+    "oneToOneRatio": "1:1 Ratio",
+    "oneToOneRatioDesc": "Tokens are bridged at a 1:1 ratio with no fees (gas fees apply)",
+    "supportedChains": "Supported Chains",
+    "status": {
+      "completed": "Completed",
+      "pending": "Pending",
+      "failed": "Failed"
+    },
+    "error": {
+      "validAmount": "Please enter a valid amount",
+      "insufficientBalance": "Insufficient balance. Maximum: {{max}} {{symbol}}",
+      "selectBothChains": "Please select both chains"
+    },
+    "success": {
+      "bridged": "Successfully bridged {{amount}} {{symbol}} from {{from}} to {{to}}"
+    }
+  },
+  "tokenNegotiation": {
+    "title": "Token Negotiation",
+    "subtitle": "Manage the distribution of Multichain Token units across exchanges on each chain.",
+    "totalUnits": "Total Units",
+    "activeChains": "Active Chains",
+    "exchanges": "Exchanges",
+    "selectChain": "Select Chain",
+    "chainOption": "{{name}} ({{symbol}}) • Chain ID: {{id}}",
+    "chainHeader": "{{name}} • Chain ID: {{id}}",
+    "table": {
+      "exchange": "Exchange",
+      "unitsPaired": "Units Paired",
+      "action": "Action"
+    },
+    "unitGFT": "GFT",
+    "saving": "Saving...",
+    "edit": "Edit",
+    "noExchanges": "No exchanges configured for this chain.",
+    "success": {
+      "updated": "Updated {{name}} units to {{units}} on {{chain}}"
+    },
+    "error": {
+      "updateFailed": "Failed to update units. Please try again."
+    }
+  },
+  "loader": {
+    "loadNewModule": "Load New Module",
+    "tab": {
+      "file": "File",
+      "zip": "ZIP",
+      "url": "URL",
+      "descFile": "Load a module JavaScript file",
+      "descZip": "Load modules from a ZIP archive",
+      "descUrl": "Load a module from a remote URL"
+    },
+    "file": {
+      "selectFile": "Select a module JavaScript file to load",
+      "supportedFormats": "Supported formats: .js, .ts, .jsx, .tsx",
+      "chooseFile": "Choose File"
+    },
+    "zip": {
+      "selectZip": "Select a ZIP archive containing module files",
+      "eachJsFile": "Each .js file in the ZIP will be loaded as a separate module",
+      "chooseZip": "Choose ZIP File"
+    },
+    "url": {
+      "enterUrl": "Enter the URL of a module to load remotely",
+      "moduleUrl": "Module URL",
+      "placeholder": "https://example.com/module.js",
+      "loadFromUrl": "Load from URL"
+    },
+    "success": {
+      "moduleLoaded": "Module \"{{name}}\" loaded successfully",
+      "modulesLoadedFromZip": "{{count}} module(s) loaded from zip"
+    },
+    "error": {
+      "loadModule": "Failed to load module",
+      "loadModulesFromZip": "Failed to load modules from zip",
+      "loadModuleFromUrl": "Failed to load module from URL"
+    }
+  }
+}

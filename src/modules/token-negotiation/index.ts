@@ -20,7 +20,7 @@ const manifest: ModuleManifest = {
   sidebarItems: [
     {
       id: 'token-negotiation',
-      label: 'Token Negotiation',
+      label: 'nav.token-negotiation',
       icon: 'file-text',
       route: '/token-negotiation',
       order: 4,

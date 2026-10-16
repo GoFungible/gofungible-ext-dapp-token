@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FolderOpen, File, Globe, X, Loader2, CheckCircle, AlertCircle, Plus } from 'lucide-react';
 import { moduleLoader } from '../../core/ModuleLoader';
 
@@ -9,6 +10,7 @@ interface LoaderModuleProps {
 }
 
 export function LoaderModule({ onClose = () => {} }: LoaderModuleProps) {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<LoadMethod>('file');
   const [fileInputRef, setFileInputRef] = useState<HTMLInputElement | null>(null);
   const [zipInputRef, setZipInputRef] = useState<HTMLInputElement | null>(null);
@@ -25,10 +27,10 @@ export function LoaderModule({ onClose = () => {} }: LoaderModuleProps) {
 
     try {
       const module = await moduleLoader.loadFromFile(file);
-      setResult({ success: true, message: `Module "${module.manifest.name}" loaded successfully` });
+      setResult({ success: true, message: t('loader.success.moduleLoaded', { name: module.manifest.name }) });
       onClose();
     } catch (error) {
-      setResult({ success: false, message: error instanceof Error ? error.message : 'Failed to load module' });
+      setResult({ success: false, message: error instanceof Error ? error.message : t('loader.error.loadModule') });
     } finally {
       setLoading(false);
       if (fileInputRef) fileInputRef.value = '';
@@ -44,10 +46,10 @@ export function LoaderModule({ onClose = () => {} }: LoaderModuleProps) {
 
     try {
       const modules = await moduleLoader.loadFromZip(file);
-      setResult({ success: true, message: `${modules.length} module(s) loaded from zip` });
+      setResult({ success: true, message: t('loader.success.modulesLoadedFromZip', { count: modules.length }) });
       onClose();
     } catch (error) {
-      setResult({ success: false, message: error instanceof Error ? error.message : 'Failed to load modules from zip' });
+      setResult({ success: false, message: error instanceof Error ? error.message : t('loader.error.loadModulesFromZip') });
     } finally {
       setLoading(false);
       if (zipInputRef) zipInputRef.value = '';
@@ -62,20 +64,20 @@ export function LoaderModule({ onClose = () => {} }: LoaderModuleProps) {
 
     try {
       const module = await moduleLoader.loadFromUrl(urlInput.trim());
-      setResult({ success: true, message: `Module "${module.manifest.name}" loaded successfully` });
+      setResult({ success: true, message: t('loader.success.moduleLoaded', { name: module.manifest.name }) });
       setUrlInput('');
       onClose();
     } catch (error) {
-      setResult({ success: false, message: error instanceof Error ? error.message : 'Failed to load module from URL' });
+      setResult({ success: false, message: error instanceof Error ? error.message : t('loader.error.loadModuleFromUrl') });
     } finally {
       setLoading(false);
     }
   };
 
   const tabs: { id: LoadMethod; label: string; icon: React.ComponentType<{ className?: string }>; description: string }[] = [
-    { id: 'file', label: 'File', icon: File, description: 'Load a module JavaScript file' },
-    { id: 'zip', label: 'ZIP', icon: FolderOpen, description: 'Load modules from a ZIP archive' },
-    { id: 'url', label: 'URL', icon: Globe, description: 'Load a module from a remote URL' },
+    { id: 'file', label: t('loader.tab.file'), icon: File, description: t('loader.tab.descFile') },
+    { id: 'zip', label: t('loader.tab.zip'), icon: FolderOpen, description: t('loader.tab.descZip') },
+    { id: 'url', label: t('loader.tab.url'), icon: Globe, description: t('loader.tab.descUrl') },
   ];
 
   return (
@@ -84,12 +86,12 @@ export function LoaderModule({ onClose = () => {} }: LoaderModuleProps) {
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
             <Plus className="h-5 w-5 text-blue-600" />
-            Load New Module
+            {t('loader.loadNewModule')}
           </h2>
           <button
             onClick={onClose}
             className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-            aria-label="Close"
+            aria-label={t('common.close')}
           >
             <X className="h-5 w-5" />
           </button>
@@ -117,7 +119,7 @@ export function LoaderModule({ onClose = () => {} }: LoaderModuleProps) {
             <div className="space-y-4">
               <div className="text-center">
                 <File className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-                <p className="text-gray-600 mb-4">Select a module JavaScript file to load</p>
+                <p className="text-gray-600 mb-4">{t('loader.file.selectFile')}</p>
                 <input
                   ref={setFileInputRef}
                   type="file"
@@ -128,10 +130,10 @@ export function LoaderModule({ onClose = () => {} }: LoaderModuleProps) {
                 />
                 <label htmlFor="file-input" className="inline-flex items-center gap-2 px-6 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-colors">
                   <File className="h-5 w-5 text-gray-400" />
-                  <span className="text-gray-700 font-medium">Choose File</span>
+                  <span className="text-gray-700 font-medium">{t('loader.file.chooseFile')}</span>
                 </label>
               </div>
-              <p className="text-xs text-gray-500 text-center">Supported formats: .js, .ts, .jsx, .tsx</p>
+              <p className="text-xs text-gray-500 text-center">{t('loader.file.supportedFormats')}</p>
             </div>
           )}
 
@@ -139,7 +141,7 @@ export function LoaderModule({ onClose = () => {} }: LoaderModuleProps) {
             <div className="space-y-4">
               <div className="text-center">
                 <FolderOpen className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-                <p className="text-gray-600 mb-4">Select a ZIP archive containing module files</p>
+                <p className="text-gray-600 mb-4">{t('loader.zip.selectZip')}</p>
                 <input
                   ref={setZipInputRef}
                   type="file"
@@ -150,10 +152,10 @@ export function LoaderModule({ onClose = () => {} }: LoaderModuleProps) {
                 />
                 <label htmlFor="zip-input" className="inline-flex items-center gap-2 px-6 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-colors">
                   <FolderOpen className="h-5 w-5 text-gray-400" />
-                  <span className="text-gray-700 font-medium">Choose ZIP File</span>
+                  <span className="text-gray-700 font-medium">{t('loader.zip.chooseZip')}</span>
                 </label>
               </div>
-              <p className="text-xs text-gray-500 text-center">Each .js file in the ZIP will be loaded as a separate module</p>
+              <p className="text-xs text-gray-500 text-center">{t('loader.zip.eachJsFile')}</p>
             </div>
           )}
 
@@ -161,18 +163,18 @@ export function LoaderModule({ onClose = () => {} }: LoaderModuleProps) {
             <div className="space-y-4">
               <div className="text-center">
                 <Globe className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-                <p className="text-gray-600 mb-4">Enter the URL of a module to load remotely</p>
+                <p className="text-gray-600 mb-4">{t('loader.url.enterUrl')}</p>
               </div>
               <div>
                 <label htmlFor="url-input" className="block text-sm font-medium text-gray-700 mb-1">
-                  Module URL
+                  {t('loader.url.moduleUrl')}
                 </label>
                 <input
                   id="url-input"
                   type="url"
                   value={urlInput}
                   onChange={e => setUrlInput(e.target.value)}
-                  placeholder="https://example.com/module.js"
+                  placeholder={t('loader.url.placeholder')}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                   disabled={loading}
                 />
@@ -185,12 +187,12 @@ export function LoaderModule({ onClose = () => {} }: LoaderModuleProps) {
                 {loading ? (
                   <>
                     <Loader2 className="h-5 w-5 animate-spin" />
-                    Loading...
+                    {t('common.loading')}
                   </>
                 ) : (
                   <>
                     <Globe className="h-5 w-5" />
-                    Load from URL
+                    {t('loader.url.loadFromUrl')}
                   </>
                 )}
               </button>
@@ -218,7 +220,7 @@ export function LoaderModule({ onClose = () => {} }: LoaderModuleProps) {
             onClick={onClose}
             className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
           >
-            Close
+            {t('common.close')}
           </button>
         </div>
       </div>

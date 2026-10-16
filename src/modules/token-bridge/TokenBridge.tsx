@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import i18n from '../../i18n';
 import {
   ArrowRightLeft,
   ArrowDown,
@@ -36,6 +38,7 @@ function ChainSelector({
   excludeChainId?: number;
   isFromChain?: boolean;
 }) {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const availableChains = SUPPORTED_CHAINS.filter(
     c => c.isActive && c.id !== excludeChainId
@@ -52,7 +55,7 @@ function ChainSelector({
           <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
             <Network className="h-5 w-5 text-gray-400" />
           </div>
-          <span className="text-gray-500">Select {label.toLowerCase()} chain</span>
+          <span className="text-gray-500">{t('tokenBridge.selectChain', { label: label.toLowerCase() })}</span>
         </div>
         <ChevronDown className="h-5 w-5 text-gray-400" />
       </button>
@@ -93,7 +96,7 @@ function ChainSelector({
           />
           <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-md bg-white rounded-xl shadow-xl border border-gray-200 p-4">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-gray-900">Select {label} Chain</h3>
+              <h3 className="font-semibold text-gray-900">{t('tokenBridge.selectChainModal', { label })}</h3>
               <button onClick={() => setIsOpen(false)} className="p-1 text-gray-400 hover:text-gray-600">
                 <X className="h-5 w-5" />
               </button>
@@ -143,6 +146,7 @@ function AmountInput({
   onMax: () => void;
   error?: string;
 }) {
+  const { t } = useTranslation();
   const token = chain?.token;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -154,13 +158,13 @@ function AmountInput({
 
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-700">Amount</label>
+      <label className="block text-sm font-medium text-gray-700">{t('tokenBridge.amount')}</label>
       <div className="relative">
         <input
           type="text"
           value={amount}
           onChange={handleChange}
-          placeholder="0.00"
+          placeholder={t('common.amountPlaceholder')}
           className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 text-right text-lg font-mono"
           disabled={!chain}
         />
@@ -175,14 +179,14 @@ function AmountInput({
         </p>
       )}
       <div className="flex items-center justify-between text-sm text-gray-500">
-        <span>Available: {maxAmount} {token?.symbol || 'GFT'}</span>
+        <span>{t('tokenBridge.available', { max: maxAmount, symbol: token?.symbol || 'GFT' })}</span>
         <button
           type="button"
           onClick={onMax}
           disabled={!chain || parseFloat(amount) >= parseFloat(maxAmount)}
           className="text-blue-600 hover:text-blue-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Max
+          {t('common.max')}
         </button>
       </div>
     </div>
@@ -190,36 +194,37 @@ function AmountInput({
 }
 
 function TransactionHistory({ transactions }: { transactions: BridgeTransaction[] }) {
+  const { t } = useTranslation();
   if (transactions.length === 0) {
     return (
       <div className="text-center py-8 text-gray-500">
         <Send className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-        <p>No bridge transactions yet</p>
-        <p className="text-sm mt-1">Your bridge history will appear here</p>
+        <p>{t('tokenBridge.noTransactions')}</p>
+        <p className="text-sm mt-1">{t('tokenBridge.noTransactionsDesc')}</p>
       </div>
     );
   }
 
   return (
     <div className="space-y-3">
-      <h3 className="font-semibold text-gray-900">Transaction History</h3>
+      <h3 className="font-semibold text-gray-900">{t('tokenBridge.transactionHistory')}</h3>
       {transactions.slice().reverse().map(tx => (
         <div key={tx.id} className="bg-white border border-gray-200 rounded-lg p-4">
           <div className="flex items-center justify-between mb-2">
             <span className="font-medium text-gray-900">
-              {tx.fromChainId} → {tx.toChainId}
+              {t('tokenBridge.txRoute', { from: tx.fromChainId, to: tx.toChainId })}
             </span>
             <span className={`px-2 py-1 text-xs font-medium rounded-full ${
               tx.status === 'completed' ? 'bg-green-100 text-green-700' :
               tx.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
               'bg-red-100 text-red-700'
             }`}>
-              {tx.status}
+              {t(`tokenBridge.status.${tx.status}`)}
             </span>
           </div>
           <div className="flex items-center justify-between text-sm text-gray-500">
-            <span>{formatAmount(BigInt(tx.amount), 18)} GFT</span>
-            <span>{new Date(tx.timestamp).toLocaleString()}</span>
+            <span>{t('tokenBridge.txAmount', { amount: formatAmount(BigInt(tx.amount), 18) })}</span>
+            <span>{new Date(tx.timestamp).toLocaleString(i18n.language)}</span>
           </div>
           {tx.txHash && (
             <a
@@ -229,7 +234,7 @@ function TransactionHistory({ transactions }: { transactions: BridgeTransaction[
               className="inline-flex items-center gap-1 mt-2 text-xs text-blue-600 hover:text-blue-700"
             >
               <ExternalLink className="h-3 w-3" />
-              View Transaction
+              {t('tokenBridge.viewTransaction')}
             </a>
           )}
         </div>
@@ -239,6 +244,7 @@ function TransactionHistory({ transactions }: { transactions: BridgeTransaction[
 }
 
 export function TokenBridge() {
+  const { t } = useTranslation();
   const [state, setState] = useState<BridgeState>({
     fromChain: SUPPORTED_CHAINS[0],
     toChain: SUPPORTED_CHAINS[1],
@@ -279,10 +285,10 @@ const fromToken = state.fromChain?.token;
 
   const validateAmount = (amount: string): string | null => {
     if (!amount || parseFloat(amount) <= 0) {
-      return 'Please enter a valid amount';
+      return t('tokenBridge.error.validAmount');
     }
     if (parseFloat(amount) > parseFloat(maxAmount)) {
-      return `Insufficient balance. Maximum: ${maxAmount} ${fromToken?.symbol}`;
+      return t('tokenBridge.error.insufficientBalance', { max: maxAmount, symbol: fromToken?.symbol || 'GFT' });
     }
     return null;
   };
@@ -295,7 +301,7 @@ const fromToken = state.fromChain?.token;
     }
 
     if (!state.fromChain || !state.toChain) {
-      setState(prev => ({ ...prev, error: 'Please select both chains' }));
+      setState(prev => ({ ...prev, error: t('tokenBridge.error.selectBothChains') }));
       return;
     }
 
@@ -320,7 +326,12 @@ const fromToken = state.fromChain?.token;
       ...prev,
       isLoading: false,
       amount: '',
-      success: `Successfully bridged ${state.amount} ${fromToken?.symbol} from ${state.fromChain?.name} to ${state.toChain?.name}`,
+      success: t('tokenBridge.success.bridged', {
+        amount: state.amount,
+        symbol: fromToken?.symbol || 'GFT',
+        from: state.fromChain?.name,
+        to: state.toChain?.name,
+      }),
     }));
   };
 
@@ -340,18 +351,18 @@ const fromToken = state.fromChain?.token;
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Token Bridge</h1>
-        <p className="text-gray-500 mt-1">Bridge tokens between chains in the multichain token perimeter</p>
+        <h1 className="text-3xl font-bold text-gray-900">{t('tokenBridge.title')}</h1>
+        <p className="text-gray-500 mt-1">{t('tokenBridge.subtitle')}</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-white rounded-xl border border-gray-200 p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">Bridge Transfer</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('tokenBridge.bridgeTransfer')}</h2>
 
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">From Chain</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{t('tokenBridge.fromChain')}</label>
                 <ChainSelector
                   label="From"
                   chain={state.fromChain}
@@ -366,14 +377,14 @@ const fromToken = state.fromChain?.token;
                   onClick={handleSwapChains}
                   disabled={state.isLoading}
                   className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors disabled:opacity-50"
-                  aria-label="Swap chains"
+                  aria-label={t('tokenBridge.swapChains')}
                 >
                   <ArrowRightLeft className="h-5 w-5" />
                 </button>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">To Chain</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{t('tokenBridge.toChain')}</label>
                 <ChainSelector
                   label="To"
                   chain={state.toChain}
@@ -401,12 +412,12 @@ const fromToken = state.fromChain?.token;
                 {state.isLoading ? (
                   <>
                     <Loader2 className="h-5 w-5 animate-spin" />
-                    Processing...
+                    {t('common.processing')}
                   </>
                 ) : (
                   <>
                     <Send className="h-5 w-5" />
-                    Bridge Tokens
+                    {t('tokenBridge.bridgeTokens')}
                   </>
                 )}
               </button>
@@ -434,34 +445,34 @@ const fromToken = state.fromChain?.token;
 
         <div className="space-y-6">
           <div className="bg-white rounded-xl border border-gray-200 p-6">
-            <h3 className="font-semibold text-gray-900 mb-4">Bridge Info</h3>
+            <h3 className="font-semibold text-gray-900 mb-4">{t('tokenBridge.bridgeInfo')}</h3>
             <div className="space-y-4">
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <div className="flex items-center gap-2 text-blue-800 mb-2">
                   <ArrowDown className="h-5 w-5" />
-                  <span className="font-medium">Master → Slave</span>
+                  <span className="font-medium">{t('tokenBridge.masterToSlave')}</span>
                 </div>
-                <p className="text-sm text-blue-700">Bridge from Master Token (Ethereum) to Slave Tokens on other chains</p>
+                <p className="text-sm text-blue-700">{t('tokenBridge.masterToSlaveDesc')}</p>
               </div>
               <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
                 <div className="flex items-center gap-2 text-purple-800 mb-2">
                   <ArrowUp className="h-5 w-5" />
-                  <span className="font-medium">Slave → Master</span>
+                  <span className="font-medium">{t('tokenBridge.slaveToMaster')}</span>
                 </div>
-                <p className="text-sm text-purple-700">Bridge from Slave Tokens back to Master Token on Ethereum</p>
+                <p className="text-sm text-purple-700">{t('tokenBridge.slaveToMasterDesc')}</p>
               </div>
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                 <div className="flex items-center gap-2 text-gray-800 mb-2">
                   <DollarSign className="h-5 w-5" />
-                  <span className="font-medium">1:1 Ratio</span>
+                  <span className="font-medium">{t('tokenBridge.oneToOneRatio')}</span>
                 </div>
-                <p className="text-sm text-gray-700">Tokens are bridged at a 1:1 ratio with no fees (gas fees apply)</p>
+                <p className="text-sm text-gray-700">{t('tokenBridge.oneToOneRatioDesc')}</p>
               </div>
             </div>
           </div>
 
           <div className="bg-white rounded-xl border border-gray-200 p-6">
-            <h3 className="font-semibold text-gray-900 mb-4">Supported Chains</h3>
+            <h3 className="font-semibold text-gray-900 mb-4">{t('tokenBridge.supportedChains')}</h3>
             <div className="space-y-3">
               {SUPPORTED_CHAINS.filter(c => c.isActive).map(chain => (
                 <div

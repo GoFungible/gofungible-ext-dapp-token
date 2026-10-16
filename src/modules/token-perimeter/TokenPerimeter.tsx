@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Network,
   CheckCircle,
@@ -18,6 +19,7 @@ import mockChains from '@data/chains.json';
 
 function CopyAddress({ address }: { address: string }) {
   const [copied, setCopied] = useState(false);
+  const { t } = useTranslation();
 
   const handleCopy = () => {
     void navigator.clipboard.writeText(address);
@@ -29,8 +31,8 @@ function CopyAddress({ address }: { address: string }) {
     <button
       onClick={handleCopy}
       className="p-1 text-gray-400 hover:text-gray-600"
-      aria-label={copied ? 'Copied' : 'Copy address'}
-      title={copied ? 'Copied!' : 'Copy address'}
+      aria-label={copied ? t('common.copied') : t('dashboard.copyAddress')}
+      title={copied ? t('common.copied') : t('dashboard.copyAddress')}
     >
       {copied ? (
         <CheckCircle className="h-4 w-4 text-green-500" />
@@ -48,6 +50,7 @@ function ChainTokenCard({
   chain: ChainData;
   statusBadge: React.ReactNode;
 }) {
+  const { t } = useTranslation();
   const token = chain.token;
   const priceChange = token?.priceChange24h || 0;
   const isPositive = priceChange >= 0;
@@ -73,7 +76,9 @@ function ChainTokenCard({
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Token Address</p>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+                {t('tokenPerimeter.tokenAddress')}
+              </p>
               <div className="flex items-center gap-2">
                 <code className="text-sm font-mono text-gray-700 flex-1 truncate">
                   {formatAddress(token.address)}
@@ -82,26 +87,36 @@ function ChainTokenCard({
               </div>
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Decimals</p>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+                {t('tokenPerimeter.decimals')}
+              </p>
               <p className="text-lg font-semibold text-gray-900">{token.decimals}</p>
             </div>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Total Supply</p>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+                {t('tokenPerimeter.totalSupply')}
+              </p>
               <p className="text-lg font-semibold text-gray-900">{formatNumber(token.totalSupply)}</p>
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Holders</p>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+                {t('tokenPerimeter.holders')}
+              </p>
               <p className="text-lg font-semibold text-gray-900">{formatNumber(token.holders)}</p>
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Price (USD)</p>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+                {t('tokenPerimeter.priceUsd')}
+              </p>
               <p className="text-lg font-semibold text-gray-900">${token.priceUsd?.toFixed(4) || 'N/A'}</p>
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">24h Change</p>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+                {t('tokenPerimeter.change24h')}
+              </p>
               <p className={`text-lg font-semibold ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
                 {isPositive ? '+' : ''}{priceChange.toFixed(2)}%
               </p>
@@ -116,7 +131,7 @@ function ChainTokenCard({
               className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 font-medium"
             >
               <ExternalLink className="h-4 w-4" />
-              View on Explorer
+              {t('tokenPerimeter.viewOnExplorer')}
             </a>
             <a
               href={chain.blockExplorer}
@@ -125,7 +140,7 @@ function ChainTokenCard({
               className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700"
             >
               <ExternalLink className="h-4 w-4" />
-              Chain Explorer
+              {t('tokenPerimeter.chainExplorer')}
             </a>
           </div>
         </div>
@@ -149,6 +164,7 @@ function BindForm({
   onCancel: () => void;
   isLoading: boolean;
 }) {
+  const { t } = useTranslation();
   const isAddressValid = tokenAddress && isEthereumAddress(tokenAddress);
 
   return (
@@ -156,12 +172,12 @@ function BindForm({
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
           <Plus className="h-5 w-5 text-blue-600" />
-          Bind {chain.name} to Perimeter
+          {t('tokenPerimeter.bindChain', { name: chain.name })}
         </h3>
         <button
           onClick={onCancel}
           className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-          aria-label="Cancel bind"
+          aria-label={t('tokenPerimeter.cancelBind')}
         >
           <X className="h-4 w-4" />
         </button>
@@ -182,20 +198,20 @@ function BindForm({
 
         <div>
           <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
-            Token Contract Address
+            {t('tokenPerimeter.tokenContractAddress')}
           </label>
           <input
             type="text"
             value={tokenAddress}
             onChange={e => onTokenAddressChange(e.target.value)}
-            placeholder="0x..."
+            placeholder={t('common.addressPlaceholder')}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg font-mono text-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none"
             disabled={isLoading}
           />
           {!isAddressValid && tokenAddress && (
             <p className="text-xs text-red-600 mt-1 flex items-center gap-1">
               <AlertCircle className="h-3 w-3" />
-              Invalid Ethereum address
+              {t('tokenPerimeter.invalidAddress')}
             </p>
           )}
         </div>
@@ -207,7 +223,7 @@ function BindForm({
           disabled={isLoading}
           className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50"
         >
-          Cancel
+          {t('common.cancel')}
         </button>
         <button
           onClick={onConfirm}
@@ -217,10 +233,10 @@ function BindForm({
           {isLoading ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
-              Binding...
+              {t('tokenPerimeter.binding')}
             </>
           ) : (
-            'Confirm Bind'
+            t('tokenPerimeter.confirmBind')
           )}
         </button>
       </div>
@@ -241,6 +257,7 @@ function UnbindModal({
   onConfirm: () => void;
   isLoading: boolean;
 }) {
+  const { t } = useTranslation();
   if (!isOpen || !chain) return null;
 
   return (
@@ -249,12 +266,12 @@ function UnbindModal({
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
             <Trash2 className="h-5 w-5 text-red-600" />
-            Unbind Chain
+            {t('tokenPerimeter.unbindChain')}
           </h2>
           <button
             onClick={onClose}
             className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-            aria-label="Close"
+            aria-label={t('common.close')}
           >
             <X className="h-5 w-5" />
           </button>
@@ -264,9 +281,9 @@ function UnbindModal({
           <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
             <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
             <div>
-              <p className="font-medium text-red-900">Warning: This action cannot be undone</p>
+              <p className="font-medium text-red-900">{t('tokenPerimeter.unbindWarning')}</p>
               <p className="text-sm text-red-700 mt-1">
-                Unbinding <strong>{chain.name}</strong> will remove the token on this chain from the multichain token perimeter. Tokens already bridged to this chain will not be burned.
+                {t('tokenPerimeter.unbindDescription', { name: chain.name })}
               </p>
             </div>
           </div>
@@ -278,7 +295,7 @@ function UnbindModal({
             disabled={isLoading}
             className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50"
           >
-            Cancel
+            {t('common.cancel')}
           </button>
           <button
             onClick={onConfirm}
@@ -288,10 +305,10 @@ function UnbindModal({
             {isLoading ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Unbinding...
+                {t('tokenPerimeter.unbinding')}
               </>
             ) : (
-              'Confirm Unbind'
+              t('tokenPerimeter.confirmUnbind')
             )}
           </button>
         </div>
@@ -301,6 +318,7 @@ function UnbindModal({
 }
 
 export function TokenPerimeter() {
+  const { t } = useTranslation();
   const [chains, setChains] = useState<ChainData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
@@ -381,11 +399,11 @@ export function TokenPerimeter() {
         timestamp: Date.now(),
       });
 
-      setSuccess(`Successfully bound ${selectedChain.name} to the multichain token perimeter`);
+      setSuccess(t('tokenPerimeter.successBound', { name: selectedChain.name }));
       setBindFormOpen(false);
       setBindTokenAddress('');
     } catch {
-      setError('Failed to bind chain. Please try again.');
+      setError(t('tokenPerimeter.errorBindFailed'));
     } finally {
       setIsLoading(false);
     }
@@ -410,11 +428,11 @@ export function TokenPerimeter() {
         timestamp: Date.now(),
       });
 
-      setSuccess(`Successfully unbound ${chain.name} from the multichain token perimeter`);
+      setSuccess(t('tokenPerimeter.successUnbound', { name: chain.name }));
       setUnbindModalOpen(false);
       setChainToUnbind(null);
     } catch {
-      setError('Failed to unbind chain. Please try again.');
+      setError(t('tokenPerimeter.errorUnbindFailed'));
     } finally {
       setIsLoading(false);
     }
@@ -428,10 +446,9 @@ export function TokenPerimeter() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Token Perimeter</h1>
+        <h1 className="text-3xl font-bold text-gray-900">{t('tokenPerimeter.title')}</h1>
         <p className="text-gray-500 mt-1">
-          Manage the EVM chains covered by the multichain token.
-          Bind new chains to add them to the token perimeter or unbind existing ones to remove them.
+          {t('tokenPerimeter.subtitle')}
         </p>
       </div>
 
@@ -453,10 +470,10 @@ export function TokenPerimeter() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           <div className="lg:col-span-5">
             <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
-              MASTER CHAIN
+              {t('tokenPerimeter.masterChain')}
             </p>
             <div className="px-3 py-1.5 border border-gray-300 rounded-lg bg-white font-mono text-sm text-gray-700 mb-3">
-              Master Token
+              {t('tokenPerimeter.masterToken')}
             </div>
             {masterChain && (
               <ChainTokenCard
@@ -464,7 +481,7 @@ export function TokenPerimeter() {
                 statusBadge={
                   <span className="flex items-center gap-1 text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
                     <CheckCircle className="h-3 w-3" />
-                    Master
+                    {t('tokenPerimeter.masterBadge')}
                   </span>
                 }
               />
@@ -477,34 +494,34 @@ export function TokenPerimeter() {
                 onClick={handleBindButtonClick}
                 disabled={isLoading || !canBind}
                 className="px-8 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
-                title="Bind selected chain to perimeter"
+                title={t('tokenPerimeter.titleBind')}
               >
                 {isLoading && canBind ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   <Plus className="h-4 w-4" />
                 )}
-                Bind
+                {t('tokenPerimeter.bind')}
               </button>
               <button
                 onClick={() => selectedChain && handleUnbindClick(selectedChain)}
                 disabled={isLoading || !canUnbind}
                 className="px-8 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
-                title="Unbind selected chain from perimeter"
+                title={t('tokenPerimeter.titleUnbind')}
               >
                 {isLoading && canUnbind ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   <Trash2 className="h-4 w-4" />
                 )}
-                Unbind
+                {t('tokenPerimeter.unbind')}
               </button>
             </div>
           </div>
 
           <div className="lg:col-span-5">
             <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
-              CHAIN
+              {t('tokenPerimeter.chain')}
             </p>
             <div className="relative mb-3">
               <select
@@ -515,7 +532,11 @@ export function TokenPerimeter() {
               >
                 {selectableChains.map(chain => (
                   <option key={chain.id} value={chain.id}>
-                    {chain.name} ({chain.symbol}) {chain.isActive ? '— Bound' : '— Available'}
+                    {t('tokenPerimeter.chainOption', {
+                      name: chain.name,
+                      symbol: chain.symbol,
+                      status: chain.isActive ? t('tokenPerimeter.bound') : t('tokenPerimeter.available'),
+                    })}
                   </option>
                 ))}
               </select>
@@ -529,12 +550,12 @@ export function TokenPerimeter() {
                   selectedChainIsActive ? (
                     <span className="flex items-center gap-1 text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">
                       <CheckCircle className="h-3 w-3" />
-                      Active
+                      {t('tokenPerimeter.active')}
                     </span>
                   ) : (
                     <span className="flex items-center gap-1 text-xs font-medium text-gray-500 bg-gray-50 px-2 py-1 rounded-full">
                       <XCircle className="h-3 w-3" />
-                      Available
+                      {t('tokenPerimeter.available')}
                     </span>
                   )
                 }
