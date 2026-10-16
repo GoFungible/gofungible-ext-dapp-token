@@ -7,6 +7,8 @@ export const anvil1 = defineChain({
   name: 'Anvil1',
   nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
   rpcUrls: { default: { http: ['http://127.0.0.1:8545'] } },
+  iconUrl: '/gofungible-ext-dapp-token/icons/anvil1.svg',
+  iconBackground: '#ffffff',
 });
 
 export const anvil2 = defineChain({
@@ -14,6 +16,8 @@ export const anvil2 = defineChain({
   name: 'Anvil2',
   nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
   rpcUrls: { default: { http: ['http://127.0.0.1:8546'] } },
+  iconUrl: '/gofungible-ext-dapp-token/icons/anvil2.svg',
+  iconBackground: '#ffffff',
 });
 
 export const wagmiConfig = getDefaultConfig({
