@@ -1,0 +1,18 @@
+{
+  "id": 1,
+  "name": "Ethereum",
+  "symbol": "ETH",
+  "rpcUrl": "https://eth.llamarpc.com",
+  "blockExplorer": "https://etherscan.io",
+  "isActive": true,
+  "token": {
+    "address": "0x1234567890123456789012345678901234567890",
+    "name": "Gofungible Token",
+    "symbol": "GFT",
+    "decimals": 18,
+    "totalSupply": "1000000000000000000000000",
+    "holders": 15420,
+    "priceUsd": 1.23,
+    "priceChange24h": 2.45
+  }
+}

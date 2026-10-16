@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { ChainData, formatNumber, formatAddress, isEthereumAddress, MASTER_CHAIN_ID } from './types';
 import { eventBus } from '../../core/EventBus';
-import mockChains from '@data/chains.json';
+import mockChains from '@data/chains';
 
 function CopyAddress({ address }: { address: string }) {
   const [copied, setCopied] = useState(false);

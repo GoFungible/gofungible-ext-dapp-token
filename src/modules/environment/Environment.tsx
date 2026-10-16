@@ -17,7 +17,7 @@ import {
   EnvironmentContract,
 } from './types';
 import { eventBus } from '../../core/EventBus';
-import mockChains from '@data/chains.json';
+import mockChains from '@data/chains';
 
 function StatusBadge({ deployed }: { deployed: boolean }) {
   const { t } = useTranslation();

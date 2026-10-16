@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ChainData, formatNumber, formatAddress } from './types';
-import mockChains from '@data/chains.json';
+import mockChains from '@data/chains';
 
 function ChainCard({ chain }: { chain: ChainData }) {
   const { t } = useTranslation();

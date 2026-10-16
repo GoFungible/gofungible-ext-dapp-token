@@ -1,0 +1,18 @@
+{
+  "id": 10,
+  "name": "Optimism",
+  "symbol": "ETH",
+  "rpcUrl": "https://mainnet.optimism.io",
+  "blockExplorer": "https://optimistic.etherscan.io",
+  "isActive": false,
+  "token": {
+    "address": "0x4567890123456789012345678901234567890123",
+    "name": "Gofungible Token",
+    "symbol": "GFT",
+    "decimals": 18,
+    "totalSupply": "100000000000000000000000",
+    "holders": 2100,
+    "priceUsd": 1.21,
+    "priceChange24h": -0.56
+  }
+}

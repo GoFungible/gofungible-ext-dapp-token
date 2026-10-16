@@ -1,0 +1,18 @@
+{
+  "id": 42161,
+  "name": "Arbitrum",
+  "symbol": "ETH",
+  "rpcUrl": "https://arb1.arbitrum.io/rpc",
+  "blockExplorer": "https://arbiscan.io",
+  "isActive": true,
+  "token": {
+    "address": "0x3456789012345678901234567890123456789012",
+    "name": "Gofungible Token",
+    "symbol": "GFT",
+    "decimals": 18,
+    "totalSupply": "200000000000000000000000",
+    "holders": 4560,
+    "priceUsd": 1.24,
+    "priceChange24h": 0.87
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "id": 137,
+  "name": "Polygon",
+  "symbol": "MATIC",
+  "rpcUrl": "https://polygon-rpc.com",
+  "blockExplorer": "https://polygonscan.com",
+  "isActive": true,
+  "token": {
+    "address": "0x2345678901234567890123456789012345678901",
+    "name": "Gofungible Token",
+    "symbol": "GFT",
+    "decimals": 18,
+    "totalSupply": "500000000000000000000000",
+    "holders": 8930,
+    "priceUsd": 1.22,
+    "priceChange24h": -1.23
+  }
+}

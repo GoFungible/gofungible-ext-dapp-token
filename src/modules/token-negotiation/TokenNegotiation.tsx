@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import { NegotiationChainState, ExchangePair, NegotiationEvent, formatUnits, totalUnits } from './types';
 import { eventBus } from '../../core/EventBus';
-import mockChains from '@data/chains.json';
+import mockChains from '@data/chains';
 
 const DEFAULT_EXCHANGES: Record<string, ExchangePair[]> = {
   '1': [
