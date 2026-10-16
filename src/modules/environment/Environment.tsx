@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useChains } from 'wagmi';
 import {
   Network,
   Settings,
@@ -16,6 +17,7 @@ import {
 } from './types';
 import { eventBus } from '../../core/EventBus';
 import mockChains from '@data/chains';
+import { useCreate2Deploy } from './hooks/useCreate2Deploy';
 
 function StatusBadge({ deployed }: { deployed: boolean }) {
   const { t } = useTranslation();
@@ -99,9 +101,8 @@ function TokenDeployment({
   explorer: string;
 }) {
   const { t } = useTranslation();
-  const isCreate2 = form.useCreate2;
   const isAddressValid = form.tokenAddress && /^0x[a-fA-F0-9]{40}$/.test(form.tokenAddress);
-  const isFormValid = isCreate2 ? !!form.create2Salt && isAddressValid : !!isAddressValid;
+  const isFormValid = !form.tokenAddress || isAddressValid;
 
   return (
     <div className="bg-surface rounded-xl border border-gray-200 p-6 space-y-4">
@@ -113,32 +114,7 @@ function TokenDeployment({
         <StatusBadge deployed={state.token.deployed} />
       </div>
 
-      <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-        <div className="flex gap-4">
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              name="deployment-type"
-              checked={!isCreate2}
-              onChange={() => setForm({ ...form, useCreate2: false })}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500"
-              disabled={isLoading}
-            />
-            <span className="text-sm text-foreground">{t('environment.existingTokenAddress')}</span>
-          </label>
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              name="deployment-type"
-              checked={isCreate2}
-              onChange={() => setForm({ ...form, useCreate2: true })}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500"
-              disabled={isLoading}
-            />
-            <span className="text-sm text-foreground">{t('environment.deployViaCreate2')}</span>
-          </label>
-        </div>
-
+       <div className="bg-gray-50 rounded-lg p-4 space-y-3">
         <div>
           <label className="block text-xs font-medium text-muted uppercase tracking-wide mb-1">
             {t('environment.tokenContractAddress')}
@@ -147,7 +123,7 @@ function TokenDeployment({
             type="text"
             value={form.tokenAddress}
             onChange={e => setForm({ ...form, tokenAddress: e.target.value })}
-            placeholder={isCreate2 ? t('environment.leaveEmptyToCompute') : t('common.addressPlaceholder')}
+            placeholder={t('common.addressPlaceholder')}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg font-mono text-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none"
             disabled={isLoading}
           />
@@ -159,21 +135,6 @@ function TokenDeployment({
           )}
         </div>
 
-        {isCreate2 && (
-          <div>
-            <label className="block text-xs font-medium text-muted uppercase tracking-wide mb-1">
-              {t('environment.create2Salt')}
-            </label>
-            <input
-              type="text"
-              value={form.create2Salt}
-              onChange={e => setForm({ ...form, create2Salt: e.target.value })}
-              placeholder={t('environment.create2SaltPlaceholder')}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg font-mono text-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none"
-              disabled={isLoading}
-            />
-          </div>
-        )}
       </div>
 
       {state.token.address && (
@@ -207,7 +168,7 @@ function TokenDeployment({
           ) : (
             <>
             <Plus className="h-4 w-4" />
-            {isCreate2 ? t('environment.deployCreate2Token') : t('environment.confirmTokenAddress')}
+            {t('environment.confirmTokenAddress')}
           </>
           )}
         </button>
@@ -218,11 +179,15 @@ function TokenDeployment({
 
 function FungibleProxyDeployment({
   state,
+  create2Salt,
+  setCreate2Salt,
   onDeploy,
   isLoading,
   explorer,
 }: {
   state: EnvironmentChainState;
+  create2Salt: string;
+  setCreate2Salt: (value: string) => void;
   onDeploy: () => void;
   isLoading: boolean;
   explorer: string;
@@ -241,6 +206,20 @@ function FungibleProxyDeployment({
       <p className="text-sm text-muted">
         {t('environment.fungibleProxyDesc')}
       </p>
+
+      <div>
+        <label className="block text-xs font-medium text-muted uppercase tracking-wide mb-1">
+          {t('environment.create2Salt')}
+        </label>
+        <input
+          type="text"
+          value={create2Salt}
+          onChange={e => setCreate2Salt(e.target.value)}
+          placeholder={t('environment.create2SaltPlaceholder')}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg font-mono text-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none"
+          disabled={isLoading}
+        />
+      </div>
 
       {state.fungibleProxy.address && (
         <div className="bg-gray-50 rounded-lg p-4">
@@ -353,10 +332,6 @@ function FungibleFactoryDeployment({
   );
 }
 
-function deployTokenPlaceholder(chainName: string): string {
-  return `0x${chainName.replace(/\s+/g, '').toLowerCase().slice(0, 40).padEnd(40, '0')}`;
-}
-
 function deployProxyPlaceholder(): string {
   return `0x${'a'.repeat(40)}`;
 }
@@ -377,6 +352,8 @@ export function Environment() {
     useCreate2: true,
     create2Salt: 'fungible-token',
   });
+
+  const { deployCreate2Factory, isDeploying: isDeployingCreate2 } = useCreate2Deploy();
 
   useEffect(() => {
     const initial: EnvironmentChainState[] = mockChains.map(c => ({
@@ -410,34 +387,38 @@ export function Environment() {
     return () => unsubscribe();
   }, []);
 
+  const connectedChains = useChains();
+
+  useEffect(() => {
+    if (!connectedChains || connectedChains.length === 0) return;
+    const chainId = connectedChains[0]?.id ?? mockChains[0].id;
+    setSelectedChainId(chainId);
+  }, [connectedChains]);
+
   const selectedState = chainStates.find(c => c.chainId === selectedChainId);
   const selectedChain = mockChains.find(c => c.id === selectedChainId);
   const explorer = selectedChain?.blockExplorer || '';
 
   const handleDeployToken = async () => {
-    if (!selectedState) return;
+    if (!selectedState || !selectedChain || !deployCreate2Factory) return;
 
     setActiveStep('token');
     setError(undefined);
     setSuccess(undefined);
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const factoryAddress = await deployCreate2Factory(selectedChain.rpcUrl, selectedChainId);
+      if (!factoryAddress) {
+        setError(t('environment.error.deployToken'));
+        return;
+      }
 
       const newState = { ...selectedState };
-      if (form.useCreate2) {
-        newState.token = {
-          address: deployTokenPlaceholder(selectedChain?.name || ''),
-          deployed: true,
-          deploymentType: 'create2',
-        };
-      } else {
-        newState.token = {
-          address: form.tokenAddress,
-          deployed: true,
-          deploymentType: 'existing',
-        };
-      }
+      newState.token = {
+        address: factoryAddress,
+        deployed: true,
+        deploymentType: 'create2',
+      };
 
       setChainStates(prev =>
         prev.map(c => (c.chainId === selectedChainId ? newState : c))
@@ -446,14 +427,12 @@ export function Environment() {
       eventBus.emit('environment:token-deployed', {
         chainId: selectedChainId,
         chainName: selectedChain?.name,
-        deploymentType: newState.token.deploymentType,
+        deploymentType: 'create2',
         timestamp: Date.now(),
       });
 
       setSuccess(
-        form.useCreate2
-          ? t('environment.success.tokenDeployed', { name: selectedChain?.name || '' })
-          : t('environment.success.tokenAddressRegistered', { name: selectedChain?.name || '' })
+        t('environment.success.tokenDeployed', { name: selectedChain?.name || '' })
       );
       setForm({ tokenAddress: '', useCreate2: true, create2Salt: 'fungible-token' });
     } catch {
@@ -623,17 +602,21 @@ export function Environment() {
             </div>
           </div>
 
-          <TokenDeployment
-            state={selectedState}
-            form={form}
-            setForm={setForm}
-            onSubmit={() => { void handleDeployToken(); }}
-            isLoading={activeStep === 'token'}
-            explorer={explorer}
-          />
+          {(selectedChainId === 1111 || selectedChainId === 2222) && (
+            <TokenDeployment
+              state={selectedState}
+              form={form}
+              setForm={setForm}
+              onSubmit={() => { void handleDeployToken(); }}
+              isLoading={activeStep === 'token' || isDeployingCreate2}
+              explorer={explorer}
+            />
+          )}
 
           <FungibleProxyDeployment
             state={selectedState}
+            create2Salt={form.create2Salt}
+            setCreate2Salt={v => setForm({ ...form, create2Salt: v })}
             onDeploy={() => { void handleDeployProxy(); }}
             isLoading={activeStep === 'proxy'}
             explorer={explorer}
