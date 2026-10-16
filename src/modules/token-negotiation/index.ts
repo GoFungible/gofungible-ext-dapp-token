@@ -3,31 +3,9 @@ import { coreFramework } from '../../core/CoreFramework';
 import { eventBus } from '../../core/EventBus';
 import { TokenNegotiation } from './TokenNegotiation';
 
-const manifest: ModuleManifest = {
-  id: 'token-negotiation',
-  name: 'Token Negotiation',
-  version: '1.0.0',
-  description: 'Manage the distribution of Multichain Token units across exchanges on each chain',
-  author: 'Gofungible Team',
-  entryPoint: 'token-negotiation',
-  routes: [
-    {
-      path: '/token-negotiation',
-      component: 'TokenNegotiation',
-      exact: true,
-    },
-  ],
-  sidebarItems: [
-    {
-      id: 'token-negotiation',
-      label: 'nav.token-negotiation',
-      icon: 'file-text',
-      route: '/token-negotiation',
-      order: 4,
-    },
-  ],
-};
 
+import manifestRaw from './manifest.json';
+const manifest: ModuleManifest = manifestRaw as ModuleManifest;
 let tokenNegotiationInstance: ModuleInstance | null = null;
 
 const tokenNegotiationModule: ModuleInstance = {

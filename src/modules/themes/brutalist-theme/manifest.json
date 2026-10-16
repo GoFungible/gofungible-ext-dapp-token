@@ -1,0 +1,18 @@
+{
+  "id": "brutalist-theme",
+  "name": "Neo-Brutalist Theme",
+  "version": "1.0.0",
+  "description": "Neo-brutalist theme with CSS refinements",
+  "author": "Gofungible Team",
+  "entryPoint": "brutalist-theme",
+  "extensionPoints": ["theme"],
+  "theme": {
+    "id": "brutalist",
+    "name": "Neo-Brutalist",
+    "description": "Hard shadows and thick borders",
+    "colors": { "primary": "#000000", "secondary": "#ffe600", "background": "#ffe600", "surface": "#ffffff", "text": "#000000", "accent": "#ff0000", "border": "#000000", "muted": "#333333" },
+    "fonts": { "sans": "'Helvetica Neue','Arial Black',sans-serif", "mono": "'Courier New',monospace", "heading": "'Arial Black','Helvetica Neue',sans-serif" },
+    "radius": "0px",
+    "mode": "light"
+  }
+}

@@ -24,17 +24,9 @@ const theme: ThemeConfig = {
   mode: 'light',
 };
 
-const manifest: ModuleManifest = {
-  id: 'brand-theme',
-  name: 'Brand Theme',
-  version: '1.0.0',
-  description: 'Brand identity theme with purple accent',
-  author: 'Gofungible Team',
-  entryPoint: 'brand-theme',
-  extensionPoints: ['theme'],
-  theme,
-};
 
+import manifestRaw from './manifest.json';
+const manifest: ModuleManifest = manifestRaw as ModuleManifest;
 let instance: ModuleInstance | null = null;
 
 const brandThemeModule: ModuleInstance = {

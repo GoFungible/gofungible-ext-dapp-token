@@ -1,0 +1,11 @@
+{
+  "id": "loader",
+  "name": "Module Loader",
+  "version": "1.0.0",
+  "description": "Load new modules from files, ZIP archives, or URLs",
+  "author": "Gofungible Team",
+  "entryPoint": "loader",
+  "routes": [
+    { "path": "/loader", "component": "LoaderModule", "exact": true }
+  ]
+}

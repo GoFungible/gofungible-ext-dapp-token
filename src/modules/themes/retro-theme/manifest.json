@@ -1,0 +1,18 @@
+{
+  "id": "retro-theme",
+  "name": "Retro 80s Theme",
+  "version": "1.0.0",
+  "description": "Neon retro theme with CSS refinements",
+  "author": "Gofungible Team",
+  "entryPoint": "retro-theme",
+  "extensionPoints": ["theme"],
+  "theme": {
+    "id": "retro",
+    "name": "Retro 80s",
+    "description": "Neon retro aesthetic with monospace font",
+    "colors": { "primary": "#ff00ff", "secondary": "#00ffff", "background": "#1a0033", "surface": "#2d0a4e", "text": "#ffff00", "accent": "#39ff14", "border": "#ff00ff", "muted": "#ff99ff" },
+    "fonts": { "sans": "'Courier New', monospace", "mono": "'Courier New', monospace", "heading": "'Courier New', monospace" },
+    "radius": "0px",
+    "mode": "dark"
+  }
+}

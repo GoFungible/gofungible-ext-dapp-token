@@ -2,22 +2,9 @@ import { ModuleInstance, ModuleManifest } from '../../types';
 import { coreFramework } from '../../core/CoreFramework';
 import { LoaderModule } from './LoaderModule';
 
-const manifest: ModuleManifest = {
-  id: 'loader',
-  name: 'Module Loader',
-  version: '1.0.0',
-  description: 'Load new modules from files, ZIP archives, or URLs',
-  author: 'Gofungible Team',
-  entryPoint: 'loader',
-  routes: [
-    {
-      path: '/loader',
-      component: 'LoaderModule',
-      exact: true,
-    },
-  ],
-};
 
+import manifestRaw from './manifest.json';
+const manifest: ModuleManifest = manifestRaw as ModuleManifest;
 let loaderModuleInstance: ModuleInstance | null = null;
 
 const loaderModule: ModuleInstance = {

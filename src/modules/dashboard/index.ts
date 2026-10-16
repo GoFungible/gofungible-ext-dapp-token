@@ -2,31 +2,9 @@ import { ModuleInstance, ModuleManifest } from '../../types';
 import { coreFramework } from '../../core/CoreFramework';
 import { Dashboard } from './Dashboard';
 
-const manifest: ModuleManifest = {
-  id: 'dashboard',
-  name: 'Dashboard',
-  version: '1.0.0',
-  description: 'Overview of all chains where the multichain token is present and ERC-20 features',
-  author: 'Gofungible Team',
-  entryPoint: 'dashboard',
-  routes: [
-    {
-      path: '/',
-      component: 'Dashboard',
-      exact: true,
-    },
-  ],
-  sidebarItems: [
-    {
-      id: 'dashboard',
-      label: 'nav.dashboard',
-      icon: 'layout-dashboard',
-      route: '/',
-      order: 0,
-    },
-  ],
-};
 
+import manifestRaw from './manifest.json';
+const manifest: ModuleManifest = manifestRaw as ModuleManifest;
 let dashboardInstance: ModuleInstance | null = null;
 
 const dashboardModule: ModuleInstance = {

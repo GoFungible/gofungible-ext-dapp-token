@@ -3,31 +3,9 @@ import { coreFramework } from '../../core/CoreFramework';
 import { eventBus } from '../../core/EventBus';
 import { Environment } from './Environment';
 
-const manifest: ModuleManifest = {
-  id: 'environment',
-  name: 'Environment',
-  version: '1.0.0',
-  description: 'Manage the contract environment of a chain: Create2Token, FungibleProxy, and FungibleFactory',
-  author: 'Gofungible Team',
-  entryPoint: 'environment',
-  routes: [
-    {
-      path: '/environment',
-      component: 'Environment',
-      exact: true,
-    },
-  ],
-  sidebarItems: [
-    {
-      id: 'environment',
-      label: 'nav.environment',
-      icon: 'settings',
-      route: '/environment',
-      order: 1,
-    },
-  ],
-};
 
+import manifestRaw from './manifest.json';
+const manifest: ModuleManifest = manifestRaw as ModuleManifest;
 let environmentInstance: ModuleInstance | null = null;
 
 const environmentModule: ModuleInstance = {

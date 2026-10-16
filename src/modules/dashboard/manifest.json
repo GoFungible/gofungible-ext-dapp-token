@@ -1,0 +1,14 @@
+{
+  "id": "dashboard",
+  "name": "Dashboard",
+  "version": "1.0.0",
+  "description": "Overview of all chains where the multichain token is present and ERC-20 features",
+  "author": "Gofungible Team",
+  "entryPoint": "dashboard",
+  "routes": [
+    { "path": "/", "component": "Dashboard", "exact": true }
+  ],
+  "sidebarItems": [
+    { "id": "dashboard", "label": "nav.dashboard", "icon": "layout-dashboard", "route": "/", "order": 0 }
+  ]
+}

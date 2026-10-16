@@ -1,0 +1,18 @@
+{
+  "id": "glass-theme",
+  "name": "Glass Theme",
+  "version": "1.0.0",
+  "description": "Glass morphism theme with CSS refinements",
+  "author": "Gofungible Team",
+  "entryPoint": "glass-theme",
+  "extensionPoints": ["theme"],
+  "theme": {
+    "id": "glass",
+    "name": "Glass Morphism",
+    "description": "Translucent glass with backdrop blur",
+    "colors": { "primary": "#06b6d4", "secondary": "#8b5cf6", "background": "#e0f2fe", "surface": "rgba(255,255,255,0.6)", "text": "#0f172a", "accent": "#ec4899", "border": "rgba(15,23,42,0.08)", "muted": "#475569" },
+    "fonts": { "sans": "Inter, sans-serif", "mono": "'JetBrains Mono', monospace", "heading": "Inter, sans-serif" },
+    "radius": "1rem",
+    "mode": "light"
+  }
+}

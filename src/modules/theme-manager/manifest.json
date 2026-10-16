@@ -1,0 +1,14 @@
+{
+  "id": "theme-manager",
+  "name": "Theme Manager",
+  "version": "1.0.0",
+  "description": "Manage and switch application themes",
+  "author": "Gofungible Team",
+  "entryPoint": "theme-manager",
+  "routes": [
+    { "path": "/themes", "component": "ThemeManager", "exact": true }
+  ],
+  "topbarItems": [
+    { "id": "theme-manager", "label": "themeManager.navLabel", "icon": "palette", "route": "/themes", "order": 10 }
+  ]
+}

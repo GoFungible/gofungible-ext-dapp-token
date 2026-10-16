@@ -2,31 +2,9 @@ import { ModuleInstance, ModuleManifest } from '../../types';
 import { coreFramework } from '../../core/CoreFramework';
 import { TokenBridge } from './TokenBridge';
 
-const manifest: ModuleManifest = {
-  id: 'token-bridge',
-  name: 'Token Bridge',
-  version: '1.0.0',
-  description: 'Bridge token units between chains in the multichain token perimeter',
-  author: 'Gofungible Team',
-  entryPoint: 'token-bridge',
-  routes: [
-    {
-      path: '/bridge',
-      component: 'TokenBridge',
-      exact: true,
-    },
-  ],
-  sidebarItems: [
-    {
-      id: 'token-bridge',
-      label: 'nav.token-bridge',
-      icon: 'arrow-right-left',
-      route: '/bridge',
-      order: 3,
-    },
-  ],
-};
 
+import manifestRaw from './manifest.json';
+const manifest: ModuleManifest = manifestRaw as ModuleManifest;
 let tokenBridgeInstance: ModuleInstance | null = null;
 
 const tokenBridgeModule: ModuleInstance = {

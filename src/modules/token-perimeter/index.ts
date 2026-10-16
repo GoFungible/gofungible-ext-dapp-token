@@ -3,40 +3,9 @@ import { coreFramework } from '../../core/CoreFramework';
 import { eventBus } from '../../core/EventBus';
 import { TokenPerimeter } from './TokenPerimeter';
 
-const manifest: ModuleManifest = {
-  id: 'token-perimeter',
-  name: 'Token Perimeter',
-  version: '1.0.0',
-  description: 'Manage the EVM chains covered by the multichain token perimeter',
-  author: 'Gofungible Team',
-  entryPoint: 'token-perimeter',
-  routes: [
-    {
-      path: '/perimeter',
-      component: 'TokenPerimeter',
-      exact: true,
-    },
-  ],
-  topbarItems: [
-    {
-      id: 'token-perimeter-refresh',
-      label: 'topbar.refresh',
-      icon: 'refresh-cw',
-      action: 'refresh-token-perimeter',
-      order: 1,
-    },
-  ],
-  sidebarItems: [
-    {
-      id: 'token-perimeter',
-      label: 'nav.token-perimeter',
-      icon: 'network',
-      route: '/perimeter',
-      order: 2,
-    },
-  ],
-};
 
+import manifestRaw from './manifest.json';
+const manifest: ModuleManifest = manifestRaw as ModuleManifest;
 let tokenPerimeterInstance: ModuleInstance | null = null;
 
 const tokenPerimeterModule: ModuleInstance = {

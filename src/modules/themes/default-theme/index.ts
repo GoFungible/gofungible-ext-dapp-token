@@ -24,17 +24,9 @@ const theme: ThemeConfig = {
   mode: 'light',
 };
 
-const manifest: ModuleManifest = {
-  id: 'default-theme',
-  name: 'Default Light Theme',
-  version: '1.0.0',
-  description: 'Default light theme for the application',
-  author: 'Gofungible Team',
-  entryPoint: 'default-theme',
-  extensionPoints: ['theme'],
-  theme,
-};
 
+import manifestRaw from './manifest.json';
+const manifest: ModuleManifest = manifestRaw as ModuleManifest;
 let instance: ModuleInstance | null = null;
 
 const defaultThemeModule: ModuleInstance = {

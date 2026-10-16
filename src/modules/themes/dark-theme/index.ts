@@ -24,17 +24,9 @@ const theme: ThemeConfig = {
   mode: 'dark',
 };
 
-const manifest: ModuleManifest = {
-  id: 'dark-theme',
-  name: 'Dark Theme',
-  version: '1.0.0',
-  description: 'Dark theme for low-light environments',
-  author: 'Gofungible Team',
-  entryPoint: 'dark-theme',
-  extensionPoints: ['theme'],
-  theme,
-};
 
+import manifestRaw from './manifest.json';
+const manifest: ModuleManifest = manifestRaw as ModuleManifest;
 let instance: ModuleInstance | null = null;
 
 const darkThemeModule: ModuleInstance = {

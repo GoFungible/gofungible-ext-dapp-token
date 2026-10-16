@@ -12,8 +12,9 @@ const theme: ThemeConfig = {
   mode: 'light',
 };
 
-const manifest: ModuleManifest = { id: 'brutalist-theme', name: 'Neo-Brutalist Theme', version: '1.0.0', description: 'Neo-brutalist theme with CSS refinements', author: 'Gofungible Team', entryPoint: 'brutalist-theme', extensionPoints: ['theme'], theme };
 
+import manifestRaw from './manifest.json';
+const manifest: ModuleManifest = manifestRaw as ModuleManifest;
 let instance: ModuleInstance | null = null;
 const brutalistThemeModule: ModuleInstance = {
   manifest,

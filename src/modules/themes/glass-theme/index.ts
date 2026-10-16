@@ -12,8 +12,9 @@ const theme: ThemeConfig = {
   mode: 'light',
 };
 
-const manifest: ModuleManifest = { id: 'glass-theme', name: 'Glass Theme', version: '1.0.0', description: 'Glass morphism theme with CSS refinements', author: 'Gofungible Team', entryPoint: 'glass-theme', extensionPoints: ['theme'], theme };
 
+import manifestRaw from './manifest.json';
+const manifest: ModuleManifest = manifestRaw as ModuleManifest;
 let instance: ModuleInstance | null = null;
 const glassThemeModule: ModuleInstance = {
   manifest,

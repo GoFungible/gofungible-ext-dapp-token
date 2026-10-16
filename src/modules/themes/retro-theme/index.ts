@@ -12,8 +12,9 @@ const theme: ThemeConfig = {
   mode: 'dark',
 };
 
-const manifest: ModuleManifest = { id: 'retro-theme', name: 'Retro 80s Theme', version: '1.0.0', description: 'Neon retro theme with CSS refinements', author: 'Gofungible Team', entryPoint: 'retro-theme', extensionPoints: ['theme'], theme };
 
+import manifestRaw from './manifest.json';
+const manifest: ModuleManifest = manifestRaw as ModuleManifest;
 let instance: ModuleInstance | null = null;
 const retroThemeModule: ModuleInstance = {
   manifest,
