@@ -59,19 +59,6 @@ export function Topbar() {
               </button>
             );
           })}
-          <div className="hidden sm:flex items-center gap-1 ml-4">
-            <Network className="h-5 w-5 text-muted" />
-            <select
-              aria-label={t('topbar.network')}
-              className="px-2 py-1 text-sm text-foreground border border-border rounded-lg bg-surface focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="ethereum">{t('topbar.networkEthereumMainnet')}</option>
-              <option value="polygon">{t('topbar.networkPolygon')}</option>
-              <option value="arbitrum">{t('topbar.networkArbitrum')}</option>
-              <option value="optimism">{t('topbar.networkOptimism')}</option>
-              <option value="base">{t('topbar.networkBase')}</option>
-            </select>
-          </div>
           <div className="relative ml-4">
             <select
               value={i18nInstance.language}
@@ -89,15 +76,6 @@ export function Topbar() {
                 </option>
               ))}
             </select>
-          </div>
-          <div className="relative ml-4">
-            <button className="flex items-center gap-2 p-2 text-foreground hover:text-foreground hover:bg-muted/30 rounded-lg transition-colors">
-              <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                <User className="h-5 w-5 text-blue-600" />
-              </div>
-              <span className="hidden md:block text-sm font-medium text-foreground">{t('topbar.adminUser')}</span>
-              <ChevronDown className="h-4 w-4 text-muted" />
-            </button>
           </div>
           <div className="relative ml-4">
             <ConnectButton />
