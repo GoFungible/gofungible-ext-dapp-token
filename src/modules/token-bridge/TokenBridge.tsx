@@ -405,7 +405,7 @@ const fromToken = state.fromChain?.token;
               </div>
 
               <button
-                onClick={handleBridge}
+                onClick={() => { void handleBridge(); }}
                 disabled={state.isLoading || !state.fromChain || !state.toChain || !state.amount}
                 className="w-full py-3 px-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
               >

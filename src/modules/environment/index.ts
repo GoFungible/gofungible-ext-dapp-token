@@ -5,7 +5,7 @@ import { Environment } from './Environment';
 
 
 import manifestRaw from './manifest.json';
-const manifest: ModuleManifest = manifestRaw as ModuleManifest;
+const manifest: ModuleManifest = manifestRaw;
 let environmentInstance: ModuleInstance | null = null;
 
 const environmentModule: ModuleInstance = {

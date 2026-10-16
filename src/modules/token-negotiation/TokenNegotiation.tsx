@@ -7,7 +7,7 @@ import {
   AlertCircle,
   RefreshCw,
 } from 'lucide-react';
-import { NegotiationChainState, ExchangePair, NegotiationEvent, formatUnits, totalUnits } from './types';
+import { NegotiationChainState, ExchangePair, formatUnits, totalUnits } from './types';
 import { eventBus } from '../../core/EventBus';
 import mockChains from '@data/chains';
 
@@ -111,7 +111,7 @@ export function TokenNegotiation() {
         units: newUnits,
         action: 'set-units',
         timestamp: Date.now(),
-      } as NegotiationEvent);
+      });
 
       setSuccess(t('tokenNegotiation.success.updated', { name: pair.exchangeName, units: formatUnits(newUnits), chain: selectedState.chainName }));
       setEditingExchange(null);
@@ -271,7 +271,7 @@ export function TokenNegotiation() {
                     {isEditing(pair) ? (
                       <div className="flex items-center gap-2">
                         <button
-                          onClick={() => handleSaveUnits(pair)}
+                          onClick={() => { void handleSaveUnits(pair); }}
                           disabled={isSaving(pair)}
                           className="px-3 py-1.5 bg-green-600 text-white text-xs font-medium rounded hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >

@@ -13,8 +13,6 @@ import {
 } from 'lucide-react';
 import {
   EnvironmentChainState,
-  EnvironmentToken,
-  EnvironmentContract,
 } from './types';
 import { eventBus } from '../../core/EventBus';
 import mockChains from '@data/chains';
@@ -397,15 +395,15 @@ export function Environment() {
 
   useEffect(() => {
     const unsubscribe = eventBus.on('refresh-environment', () => {
-      const refreshed = mockChains.map(c => ({
+      const refreshed: EnvironmentChainState[] = mockChains.map(c => ({
         chainId: c.id,
         token: {
           address: c.token?.address || null,
           deployed: !!c.token?.address,
           deploymentType: c.token?.address ? 'existing' : null,
-        } as EnvironmentToken,
-        fungibleProxy: { address: null, deployed: false, assigned: false } as EnvironmentContract,
-        fungibleFactory: { address: null, deployed: false, assigned: false } as EnvironmentContract,
+        },
+        fungibleProxy: { address: null, deployed: false, assigned: false },
+        fungibleFactory: { address: null, deployed: false, assigned: false },
       }));
       setChainStates(refreshed);
     });
@@ -629,21 +627,21 @@ export function Environment() {
             state={selectedState}
             form={form}
             setForm={setForm}
-            onSubmit={handleDeployToken}
+            onSubmit={() => { void handleDeployToken(); }}
             isLoading={activeStep === 'token'}
             explorer={explorer}
           />
 
           <FungibleProxyDeployment
             state={selectedState}
-            onDeploy={handleDeployProxy}
+            onDeploy={() => { void handleDeployProxy(); }}
             isLoading={activeStep === 'proxy'}
             explorer={explorer}
           />
 
           <FungibleFactoryDeployment
             state={selectedState}
-            onDeploy={handleDeployFactory}
+            onDeploy={() => { void handleDeployFactory(); }}
             isLoading={activeStep === 'factory'}
             explorer={explorer}
           />

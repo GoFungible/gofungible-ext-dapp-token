@@ -4,7 +4,7 @@ import { Dashboard } from './Dashboard';
 
 
 import manifestRaw from './manifest.json';
-const manifest: ModuleManifest = manifestRaw as ModuleManifest;
+const manifest: ModuleManifest = manifestRaw;
 let dashboardInstance: ModuleInstance | null = null;
 
 const dashboardModule: ModuleInstance = {

@@ -84,7 +84,7 @@ export function ThemeManager() {
             </div>
             <p className="text-sm text-muted">{theme.description}</p>
             <div className="flex gap-2">
-              {Object.values(theme.colors).map((c, i) => (
+              {Object.values(theme.colors).map((c: string, i) => (
                 <div key={i} className="w-6 h-6 rounded-md border border-gray-200" style={{ backgroundColor: c }} />
               ))}
             </div>

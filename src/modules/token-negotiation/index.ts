@@ -5,7 +5,7 @@ import { TokenNegotiation } from './TokenNegotiation';
 
 
 import manifestRaw from './manifest.json';
-const manifest: ModuleManifest = manifestRaw as ModuleManifest;
+const manifest: ModuleManifest = manifestRaw;
 let tokenNegotiationInstance: ModuleInstance | null = null;
 
 const tokenNegotiationModule: ModuleInstance = {

@@ -50,6 +50,7 @@ class ModuleLoader {
       try {
         // eslint-disable-next-line @typescript-eslint/no-implied-eval
         const func = new Function('module', 'exports', 'require', code);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         func(mod, moduleExports, (name: string) => {
           if (name === 'react') return import('react');
           if (name === 'react-dom') return import('react-dom');
@@ -59,11 +60,11 @@ class ModuleLoader {
         });
         resolve();
       } catch (error) {
-        reject(error);
+        reject(error instanceof Error ? error : new Error(String(error)));
       }
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+     
     return mod.exports;
   }
 

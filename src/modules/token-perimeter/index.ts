@@ -5,7 +5,7 @@ import { TokenPerimeter } from './TokenPerimeter';
 
 
 import manifestRaw from './manifest.json';
-const manifest: ModuleManifest = manifestRaw as ModuleManifest;
+const manifest: ModuleManifest = manifestRaw;
 let tokenPerimeterInstance: ModuleInstance | null = null;
 
 const tokenPerimeterModule: ModuleInstance = {

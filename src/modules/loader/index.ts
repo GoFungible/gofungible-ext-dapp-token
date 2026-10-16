@@ -4,7 +4,7 @@ import { LoaderModule } from './LoaderModule';
 
 
 import manifestRaw from './manifest.json';
-const manifest: ModuleManifest = manifestRaw as ModuleManifest;
+const manifest: ModuleManifest = manifestRaw;
 let loaderModuleInstance: ModuleInstance | null = null;
 
 const loaderModule: ModuleInstance = {

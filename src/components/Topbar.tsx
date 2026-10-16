@@ -77,7 +77,7 @@ export function Topbar() {
               value={i18nInstance.language}
               onChange={e => {
                 const code = e.target.value;
-                i18nInstance.changeLanguage(code);
+                void i18nInstance.changeLanguage(code);
                 localStorage.setItem('language', code);
               }}
               className="px-2 py-1 text-sm text-foreground border border-border rounded-lg bg-surface focus:outline-none focus:ring-2 focus:ring-blue-500"

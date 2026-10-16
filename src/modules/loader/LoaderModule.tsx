@@ -126,7 +126,7 @@ export function LoaderModule({ onClose = () => {} }: LoaderModuleProps) {
                   accept=".js,.ts,.jsx,.tsx"
                   className="hidden"
                   id="file-input"
-                  onChange={handleFileSelect}
+                  onChange={(e) => { void handleFileSelect(e); }}
                 />
                 <label htmlFor="file-input" className="inline-flex items-center gap-2 px-6 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-colors">
                   <File className="h-5 w-5 text-muted" />
@@ -148,7 +148,7 @@ export function LoaderModule({ onClose = () => {} }: LoaderModuleProps) {
                   accept=".zip"
                   className="hidden"
                   id="zip-input"
-                  onChange={handleZipSelect}
+                  onChange={(e) => { void handleZipSelect(e); }}
                 />
                 <label htmlFor="zip-input" className="inline-flex items-center gap-2 px-6 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-colors">
                   <FolderOpen className="h-5 w-5 text-muted" />
@@ -180,7 +180,7 @@ export function LoaderModule({ onClose = () => {} }: LoaderModuleProps) {
                 />
               </div>
               <button
-                onClick={handleUrlLoad}
+                onClick={() => { void handleUrlLoad(); }}
                 disabled={loading || !urlInput.trim()}
                 className="w-full px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
               >

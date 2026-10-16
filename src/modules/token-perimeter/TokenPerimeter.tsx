@@ -570,7 +570,7 @@ export function TokenPerimeter() {
           chain={selectedChain}
           tokenAddress={bindTokenAddress}
           onTokenAddressChange={setBindTokenAddress}
-          onConfirm={handleBind}
+          onConfirm={() => { void handleBind(); }}
           onCancel={() => {
             setBindFormOpen(false);
             setBindTokenAddress('');
@@ -586,7 +586,7 @@ export function TokenPerimeter() {
           setChainToUnbind(null);
         }}
         chain={chainToUnbind}
-        onConfirm={() => chainToUnbind && handleUnbind(chainToUnbind)}
+        onConfirm={() => { if (chainToUnbind) { void handleUnbind(chainToUnbind); } }}
         isLoading={isLoading}
       />
     </div>
