@@ -85,7 +85,7 @@
     "deployed": "Desplegado",
     "notDeployed": "No desplegado",
     "viewOnExplorer": "Ver en explorador",
-    "tokenContract": "Contrato de Token (Create2Token)",
+    "tokenContract": "Desplegar Create2Factory",
     "existingTokenAddress": "Dirección de token existente",
     "deployViaCreate2": "Desplegar vía Create2",
     "tokenContractAddress": "Dirección del Contrato de Token",
@@ -128,7 +128,12 @@
     },
     "chainNotAdded": "{{name}} no está agregado a tu billetera. Agreguelo para desplegar contratos.",
     "addChainToWallet": "Agregar {{name}} a la billetera",
-    "addingChain": "Agregando..."
+    "addingChain": "Agregando...",
+    "deployCreate2Factory": "Desplegar Create2Factory",
+    "currentCreate2FactoryAddress": "Direcciones actuales de Create2Factory",
+    "create2FactoryNick": "Nick",
+    "create2FactorySafe": "Safe",
+    "create2FactoryCreatex": "CreateX"
   },
   "tokenPerimeter": {
     "title": "Perímetro de Token",

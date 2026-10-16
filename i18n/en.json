@@ -85,7 +85,7 @@
     "deployed": "Deployed",
     "notDeployed": "Not deployed",
     "viewOnExplorer": "View on explorer",
-    "tokenContract": "Token Contract (Create2Token)",
+    "tokenContract": "Deploy Create2Factory",
     "existingTokenAddress": "Existing token address",
     "deployViaCreate2": "Deploy via Create2",
     "tokenContractAddress": "Token Contract Address",
@@ -128,7 +128,12 @@
     },
     "chainNotAdded": "{{name}} is not added to your wallet. Please add it to deploy contracts.",
     "addChainToWallet": "Add {{name}} to wallet",
-    "addingChain": "Adding..."
+    "addingChain": "Adding...",
+    "deployCreate2Factory": "Deploy Create2Factory",
+    "currentCreate2FactoryAddress": "Current Create2Factory Addresses",
+    "create2FactoryNick": "Nick",
+    "create2FactorySafe": "Safe",
+    "create2FactoryCreatex": "CreateX"
   },
   "tokenPerimeter": {
     "title": "Token Perimeter",
