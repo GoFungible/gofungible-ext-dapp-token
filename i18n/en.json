@@ -123,8 +123,12 @@
     "error": {
       "deployToken": "Failed to deploy token contract. Please try again.",
       "deployProxy": "Failed to deploy FungibleProxy. Please try again.",
-      "deployFactory": "Failed to deploy FungibleFactory. Please try again."
-    }
+      "deployFactory": "Failed to deploy FungibleFactory. Please try again.",
+      "addChainToWallet": "Failed to add {{name}} to wallet. Please approve the request in MetaMask."
+    },
+    "chainNotAdded": "{{name}} is not added to your wallet. Please add it to deploy contracts.",
+    "addChainToWallet": "Add {{name}} to wallet",
+    "addingChain": "Adding..."
   },
   "tokenPerimeter": {
     "title": "Token Perimeter",

@@ -123,8 +123,12 @@
     "error": {
       "deployToken": "Error al desplegar el contrato de token. Inténtelo de nuevo.",
       "deployProxy": "Error al desplegar FungibleProxy. Inténtelo de nuevo.",
-      "deployFactory": "Error al desplegar FungibleFactory. Inténtelo de nuevo."
-    }
+      "deployFactory": "Error al desplegar FungibleFactory. Inténtelo de nuevo.",
+      "addChainToWallet": "No se pudo agregar {{name}} a la billetera. Apruebe la solicitud en MetaMask."
+    },
+    "chainNotAdded": "{{name}} no está agregado a tu billetera. Agreguelo para desplegar contratos.",
+    "addChainToWallet": "Agregar {{name}} a la billetera",
+    "addingChain": "Agregando..."
   },
   "tokenPerimeter": {
     "title": "Perímetro de Token",

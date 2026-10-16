@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useChains } from 'wagmi';
+import type { Chain } from 'viem';
 import {
   Network,
   Settings,
@@ -9,6 +10,7 @@ import {
   Plus,
   Loader2,
   AlertCircle,
+  AlertTriangle,
   ExternalLink,
   RefreshCw,
 } from 'lucide-react';
@@ -18,6 +20,7 @@ import {
 import { eventBus } from '../../core/EventBus';
 import mockChains from '@data/chains';
 import { useCreate2Deploy } from './hooks/useCreate2Deploy';
+import { useAddChain } from './hooks/useAddChain';
 
 function StatusBadge({ deployed }: { deployed: boolean }) {
   const { t } = useTranslation();
@@ -395,9 +398,37 @@ export function Environment() {
     setSelectedChainId(chainId);
   }, [connectedChains]);
 
+  const { addChain, switchChain, isAdding: isAddingChain, error: addChainError } =
+    useAddChain();
+
+  const chainConfigs: Record<number, Chain> = {};
+  mockChains.forEach(c => {
+    chainConfigs[c.id] = {
+      id: c.id,
+      name: c.name,
+      nativeCurrency: { name: c.symbol, symbol: c.symbol, decimals: 18 },
+      rpcUrls: { default: { http: [c.rpcUrl] } },
+    };
+  });
+
   const selectedState = chainStates.find(c => c.chainId === selectedChainId);
   const selectedChain = mockChains.find(c => c.id === selectedChainId);
+  const isChainAdded = selectedChain ? connectedChains.some(c => c.id === selectedChainId) : false;
   const explorer = selectedChain?.blockExplorer || '';
+
+  const handleAddChain = async () => {
+    if (!selectedChain) return;
+    const chain = chainConfigs[selectedChainId];
+    if (!chain) return;
+    setError(undefined);
+    const added = await addChain(chain);
+    if (added) {
+      const switched = await switchChain(selectedChainId);
+      if (!switched) {
+        setError(t('environment.error.addChainToWallet'));
+      }
+    }
+  };
 
   const handleDeployToken = async () => {
     if (!selectedState || !selectedChain || !deployCreate2Factory) return;
@@ -601,6 +632,29 @@ export function Environment() {
               </p>
             </div>
           </div>
+
+          {!isChainAdded && selectedChain && (
+            <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-center gap-3">
+              <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0" />
+              <div>
+                <p className="text-sm text-amber-800">
+                  {t('environment.chainNotAdded', { name: selectedChain.name })}
+                </p>
+                <button
+                  onClick={() => { void handleAddChain(); }}
+                  disabled={isAddingChain}
+                  className="mt-1 text-sm font-medium text-amber-600 hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isAddingChain
+                    ? t('environment.addingChain')
+                    : t('environment.addChainToWallet')}
+                </button>
+                {addChainError && (
+                  <p className="mt-1 text-xs text-red-600">{addChainError}</p>
+                )}
+              </div>
+            </div>
+          )}
 
           {(selectedChainId === 1111 || selectedChainId === 2222) && (
             <TokenDeployment
