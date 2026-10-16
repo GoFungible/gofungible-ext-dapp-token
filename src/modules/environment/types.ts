@@ -15,6 +15,12 @@ export interface EnvironmentContract {
 export interface EnvironmentChainState {
   chainId: number;
   token: EnvironmentToken;
+  create2Factory: {
+    nick: string | null;
+    safe: string | null;
+    createx: string | null;
+    deployed: boolean;
+  };
   fungibleProxy: EnvironmentContract;
   fungibleFactory: EnvironmentContract;
 }

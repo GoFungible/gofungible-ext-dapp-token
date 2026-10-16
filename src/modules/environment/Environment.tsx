@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useChains } from 'wagmi';
+import { useChains, useChainId } from 'wagmi';
 import type { Chain } from 'viem';
 import {
   Network,
@@ -12,7 +12,6 @@ import {
   AlertCircle,
   AlertTriangle,
   ExternalLink,
-  RefreshCw,
 } from 'lucide-react';
 import {
   EnvironmentChainState,
@@ -82,30 +81,16 @@ function AddressRow({
 
 function TokenDeployment({
   state,
-  form,
-  setForm,
-  onSubmit,
+  onDeploy,
   isLoading,
   explorer,
 }: {
   state: EnvironmentChainState;
-  form: {
-    tokenAddress: string;
-    useCreate2: boolean;
-    create2Salt: string;
-  };
-  setForm: (form: {
-    tokenAddress: string;
-    useCreate2: boolean;
-    create2Salt: string;
-  }) => void;
-  onSubmit: () => void;
+  onDeploy: () => void;
   isLoading: boolean;
   explorer: string;
 }) {
   const { t } = useTranslation();
-  const isAddressValid = form.tokenAddress && /^0x[a-fA-F0-9]{40}$/.test(form.tokenAddress);
-  const isFormValid = !form.tokenAddress || isAddressValid;
 
   return (
     <div className="bg-surface rounded-xl border border-gray-200 p-6 space-y-4">
@@ -114,68 +99,74 @@ function TokenDeployment({
           <Plus className="h-5 w-5 text-blue-600" />
           {t('environment.tokenContract')}
         </h3>
-        <StatusBadge deployed={state.token.deployed} />
+        <StatusBadge deployed={state.create2Factory.deployed} />
       </div>
 
-       <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-        <div>
-          <label className="block text-xs font-medium text-muted uppercase tracking-wide mb-1">
-            {t('environment.tokenContractAddress')}
-          </label>
-          <input
-            type="text"
-            value={form.tokenAddress}
-            onChange={e => setForm({ ...form, tokenAddress: e.target.value })}
-            placeholder={t('common.addressPlaceholder')}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg font-mono text-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none"
-            disabled={isLoading}
-          />
-          {form.tokenAddress && !isAddressValid && (
-            <p className="text-xs text-red-600 mt-1 flex items-center gap-1">
-              <AlertCircle className="h-3 w-3" />
-              {t('environment.invalidAddress')}
-            </p>
-          )}
-        </div>
-
-      </div>
-
-      {state.token.address && (
-        <div className="bg-gray-50 rounded-lg p-4">
+      {state.create2Factory.deployed && (
+        <div className="bg-gray-50 rounded-lg p-4 space-y-2">
           <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
-            {t('environment.currentTokenAddress')}
+            {t('environment.currentCreate2FactoryAddress')}
           </p>
-          <AddressRow
-            address={state.token.address}
-            deployed={state.token.deployed}
-            showExplorer={!!explorer}
-            explorer={explorer}
-          />
+          <div className="space-y-1">
+            {state.create2Factory.nick && (
+              <div className="flex items-center gap-1">
+                <span className="text-xs text-muted">{t('environment.create2FactoryNick')}</span>
+                <AddressRow
+                  address={state.create2Factory.nick}
+                  deployed={true}
+                  showExplorer={!!explorer}
+                  explorer={explorer}
+                />
+              </div>
+            )}
+            {state.create2Factory.safe && (
+              <div className="flex items-center gap-1">
+                <span className="text-xs text-muted">{t('environment.create2FactorySafe')}</span>
+                <AddressRow
+                  address={state.create2Factory.safe}
+                  deployed={true}
+                  showExplorer={!!explorer}
+                  explorer={explorer}
+                />
+              </div>
+            )}
+            {state.create2Factory.createx && (
+              <div className="flex items-center gap-1">
+                <span className="text-xs text-muted">{t('environment.create2FactoryCreatex')}</span>
+                <AddressRow
+                  address={state.create2Factory.createx}
+                  deployed={true}
+                  showExplorer={!!explorer}
+                  explorer={explorer}
+                />
+              </div>
+            )}
+          </div>
         </div>
       )}
 
-      <div className="flex justify-end">
-        <button
-          onClick={onSubmit}
-          disabled={isLoading || !isFormValid || state.token.deployed}
-          className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
-          title={t('environment.deployOrRegisterToken')}
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              {t('common.deploying')}
-            </>
-          ) : state.token.deployed ? (
-            t('environment.tokenDeployed')
-          ) : (
-            <>
-            <Plus className="h-4 w-4" />
-            {t('environment.confirmTokenAddress')}
-          </>
-          )}
-        </button>
-      </div>
+      {!state.create2Factory.deployed && (
+        <div className="flex justify-end">
+          <button
+            onClick={onDeploy}
+            disabled={isLoading || state.create2Factory.deployed}
+            className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+            title={t('environment.deployCreate2Factory')}
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                {t('common.deploying')}
+              </>
+            ) : (
+              <>
+                <Plus className="h-4 w-4" />
+                {t('environment.deployCreate2Factory')}
+              </>
+            )}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -359,44 +350,68 @@ export function Environment() {
   const { deployCreate2Factory, isDeploying: isDeployingCreate2 } = useCreate2Deploy();
 
   useEffect(() => {
-    const initial: EnvironmentChainState[] = mockChains.map(c => ({
-      chainId: c.id,
-      token: {
-        address: c.token?.address || null,
-        deployed: !!c.token?.address,
-        deploymentType: c.token?.address ? 'existing' : null,
-      },
-      fungibleProxy: { address: null, deployed: false, assigned: false },
-      fungibleFactory: { address: null, deployed: false, assigned: false },
-    }));
+    const initial: EnvironmentChainState[] = mockChains.map(c => {
+      const cfg = c as { create2Factory?: { nick?: string; safe?: string; createx?: string } };
+      const create2Factory = cfg.create2Factory
+        ? {
+            nick: cfg.create2Factory.nick || null,
+            safe: cfg.create2Factory.safe || null,
+            createx: cfg.create2Factory.createx || null,
+            deployed: true,
+          }
+        : { nick: null, safe: null, createx: null, deployed: false };
+      return {
+        chainId: c.id,
+        token: {
+          address: null,
+          deployed: false,
+          deploymentType: null,
+        },
+        create2Factory,
+        fungibleProxy: { address: null, deployed: false, assigned: false },
+        fungibleFactory: { address: null, deployed: false, assigned: false },
+      };
+    });
     setChainStates(initial);
     setSelectedChainId(initial[0].chainId);
   }, []);
 
   useEffect(() => {
     const unsubscribe = eventBus.on('refresh-environment', () => {
-      const refreshed: EnvironmentChainState[] = mockChains.map(c => ({
-        chainId: c.id,
-        token: {
-          address: c.token?.address || null,
-          deployed: !!c.token?.address,
-          deploymentType: c.token?.address ? 'existing' : null,
-        },
-        fungibleProxy: { address: null, deployed: false, assigned: false },
-        fungibleFactory: { address: null, deployed: false, assigned: false },
-      }));
+      const refreshed: EnvironmentChainState[] = mockChains.map(c => {
+        const cfg = c as { create2Factory?: { nick?: string; safe?: string; createx?: string } };
+        const create2Factory = cfg.create2Factory
+          ? {
+              nick: cfg.create2Factory.nick || null,
+              safe: cfg.create2Factory.safe || null,
+              createx: cfg.create2Factory.createx || null,
+              deployed: true,
+            }
+          : { nick: null, safe: null, createx: null, deployed: false };
+        return {
+          chainId: c.id,
+          token: {
+            address: null,
+            deployed: false,
+            deploymentType: null,
+          },
+          create2Factory,
+          fungibleProxy: { address: null, deployed: false, assigned: false },
+          fungibleFactory: { address: null, deployed: false, assigned: false },
+        };
+      });
       setChainStates(refreshed);
     });
     return () => unsubscribe();
   }, []);
 
   const connectedChains = useChains();
+  const activeChainId = useChainId();
 
   useEffect(() => {
-    if (!connectedChains || connectedChains.length === 0) return;
-    const chainId = connectedChains[0]?.id ?? mockChains[0].id;
-    setSelectedChainId(chainId);
-  }, [connectedChains]);
+    if (!activeChainId) return;
+    setSelectedChainId(Number(activeChainId));
+  }, [activeChainId]);
 
   const { addChain, switchChain, isAdding: isAddingChain, error: addChainError } =
     useAddChain();
@@ -445,10 +460,11 @@ export function Environment() {
       }
 
       const newState = { ...selectedState };
-      newState.token = {
-        address: factoryAddress,
+      newState.create2Factory = {
+        nick: factoryAddress,
+        safe: null,
+        createx: null,
         deployed: true,
-        deploymentType: 'create2',
       };
 
       setChainStates(prev =>
@@ -574,49 +590,6 @@ export function Environment() {
         </div>
       )}
 
-      <div className="bg-surface rounded-xl border border-gray-200 p-6">
-        <div className="flex items-center justify-between mb-4">
-          <label className="block text-xs font-medium text-muted uppercase tracking-wide">
-            {t('environment.selectChain')}
-          </label>
-          <button
-            onClick={() => {
-              setSuccess(undefined);
-              setError(undefined);
-              eventBus.emit('refresh-environment', undefined);
-            }}
-            className="p-1.5 text-muted hover:text-foreground hover:bg-gray-100 rounded-lg transition-colors"
-            aria-label={t('common.refresh')}
-            title={t('common.refresh')}
-          >
-            <RefreshCw className="h-4 w-4" />
-          </button>
-        </div>
-        <select
-          value={selectedChainId}
-          onChange={e => {
-            setSelectedChainId(Number(e.target.value));
-            setSuccess(undefined);
-            setError(undefined);
-            setForm({
-              tokenAddress:
-                chainStates.find(c => c.chainId === Number(e.target.value))
-                  ?.token.address || '',
-              useCreate2: true,
-              create2Salt: 'fungible-token',
-            });
-          }}
-          className="w-full px-3 py-1.5 border border-gray-300 rounded-lg bg-surface focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none font-mono text-sm"
-          disabled={activeStep !== null}
-        >
-          {mockChains.map(chain => (
-            <option key={chain.id} value={chain.id}>
-              {t('environment.chainOption', { name: chain.name, symbol: chain.symbol, id: chain.id })}
-            </option>
-          ))}
-        </select>
-      </div>
-
       {selectedChain && (
         <div className="space-y-6">
           <div className="flex items-center gap-4">
@@ -656,16 +629,12 @@ export function Environment() {
             </div>
           )}
 
-          {(selectedChainId === 1111 || selectedChainId === 2222) && (
-            <TokenDeployment
-              state={selectedState}
-              form={form}
-              setForm={setForm}
-              onSubmit={() => { void handleDeployToken(); }}
-              isLoading={activeStep === 'token' || isDeployingCreate2}
-              explorer={explorer}
-            />
-          )}
+          <TokenDeployment
+            state={selectedState}
+            onDeploy={() => { void handleDeployToken(); }}
+            isLoading={activeStep === 'token' || isDeployingCreate2}
+            explorer={explorer}
+          />
 
           <FungibleProxyDeployment
             state={selectedState}
