@@ -14,5 +14,10 @@
     "holders": 8930,
     "priceUsd": 1.22,
     "priceChange24h": -1.23
-  }
+  },
+  "create2Token": {
+    "nick": "0x4e59b44847b379578588920ca78fbf26c0b4956c",
+    "safe": "0x914d7C52D26757471F884d52469ab126F747414d",
+    "createx": "0xba5Ed099633D3B313e4D5F7bdc1305d3c28ba5Ed"
+	}
 }

@@ -1,0 +1,17 @@
+{
+  "id": 1111,
+  "name": "Anvil1",
+  "symbol": "ETH",
+  "rpcUrl": "http://127.0.0.1:8545",
+  "isActive": true,
+  "token": {
+    "address": "0x5678901234567890123456789012345678901234",
+    "name": "Gofungible Token",
+    "symbol": "GFT",
+    "decimals": 18,
+    "totalSupply": "300000000000000000000000",
+    "holders": 3420,
+    "priceUsd": 1.25,
+    "priceChange24h": 3.12
+  }
+}
