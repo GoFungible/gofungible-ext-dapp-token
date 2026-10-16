@@ -4,6 +4,7 @@ import { useLayout } from './LayoutProvider';
 import { eventBus } from '../core/EventBus';
 import { Menu, Settings, Bell, User, ChevronDown, Network, RefreshCw, Palette } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   'menu': Menu,
@@ -97,6 +98,9 @@ export function Topbar() {
               <span className="hidden md:block text-sm font-medium text-foreground">{t('topbar.adminUser')}</span>
               <ChevronDown className="h-4 w-4 text-muted" />
             </button>
+          </div>
+          <div className="relative ml-4">
+            <ConnectButton />
           </div>
         </div>
       </div>
