@@ -14,5 +14,8 @@
     "holders": 3420,
     "priceUsd": 1.25,
     "priceChange24h": 3.12
-  }
+  },
+	"create2Factory": {
+ 	},
+  "FungibleProxy": ""
 }
