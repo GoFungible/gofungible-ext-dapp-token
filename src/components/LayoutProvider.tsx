@@ -9,6 +9,8 @@ interface LayoutContextType {
   sidebarOpen: boolean;
   toggleSidebar: () => void;
   closeSidebar: () => void;
+  sidebarCollapsed: boolean;
+  toggleSidebarCollapsed: () => void;
   sidebarItems: SidebarItem[];
   topbarItems: TopbarItem[];
   showLoader: boolean;
@@ -20,6 +22,7 @@ const LayoutContext = createContext<LayoutContextType | undefined>(undefined);
 
 export function LayoutProvider({ children }: { children: ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [sidebarItems, setSidebarItems] = useState<SidebarItem[]>([]);
   const [topbarItems, setTopbarItems] = useState<TopbarItem[]>([]);
   const [showLoader, setShowLoader] = useState(false);
@@ -45,12 +48,15 @@ export function LayoutProvider({ children }: { children: ReactNode }) {
   const closeSidebar = () => setSidebarOpen(false);
   const openLoader = () => setShowLoader(true);
   const closeLoader = () => setShowLoader(false);
+  const toggleSidebarCollapsed = () => setSidebarCollapsed(prev => !prev);
 
   return (
     <LayoutContext.Provider value={{
       sidebarOpen,
       toggleSidebar,
       closeSidebar,
+      sidebarCollapsed,
+      toggleSidebarCollapsed,
       sidebarItems,
       topbarItems,
       showLoader,

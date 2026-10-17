@@ -43,7 +43,9 @@
     "loadModuleToSeeNav": "Cargue un módulo para ver los elementos de navegación",
     "loadNewModule": "Cargar Nuevo Módulo",
     "loadNewModuleAria": "Cargar nuevo módulo",
-    "version": "Gofungible Ext DApp Token v1.0.0"
+    "version": "Gofungible Ext DApp Token v1.0.0",
+    "collapseSidebar": "Contraer barra lateral",
+    "expandSidebar": "Expandir barra lateral"
   },
   "dashboard": {
     "title": "Panel",
