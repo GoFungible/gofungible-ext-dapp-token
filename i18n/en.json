@@ -36,6 +36,12 @@
     "networkOptimism": "Optimism",
     "networkBase": "Base"
   },
+  "debugState": {
+    "title": "Application State (Debug)",
+    "collecting": "Collecting module state...",
+    "copy": "Copy JSON",
+    "copied": "Copied!"
+  },
   "sidebar": {
     "appTitle": "Fungible Standard",
     "closeSidebar": "Close sidebar",
