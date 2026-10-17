@@ -68,7 +68,7 @@ export function Sidebar() {
 
   return (
     <aside
-      className={`fixed inset-y-0 left-0 z-50 bg-surface border-r border-border transform transition-all duration-200 ease-in-out lg:static lg:translate-x-0 ${
+      className={`fixed inset-y-0 left-0 z-50 bg-surface border-r border-border transform transition-all duration-200 ease-in-out lg:translate-x-0 ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       } ${collapsed ? 'w-16' : 'w-64'}`}
       aria-label={t('sidebar.closeSidebar')}
@@ -89,7 +89,7 @@ export function Sidebar() {
             </svg>
           </button>
         </div>
-        <nav className="flex-1 overflow-y-auto p-4 space-y-2" aria-label="Main navigation">
+        <nav className="flex-1 p-4 space-y-2 max-h-full" aria-label="Main navigation">
           {sidebarItems.length === 0 ? (
             <div className="text-center text-muted py-8">
               <p className="text-sm">{t('sidebar.noModulesLoaded')}</p>

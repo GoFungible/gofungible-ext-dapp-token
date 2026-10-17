@@ -65,7 +65,7 @@ export function LayoutProvider({ children }: { children: ReactNode }) {
     }}>
       <div className="min-h-screen bg-background flex">
         <Sidebar />
-        <div className="flex-1 flex flex-col min-w-0">
+          <div className={`flex-1 flex flex-col min-w-0 ${sidebarCollapsed ? 'lg:pl-16' : 'lg:pl-64'}`}>
           <Topbar />
           <main className="flex-1 p-6 lg:p-8 text-foreground">
             {children}
