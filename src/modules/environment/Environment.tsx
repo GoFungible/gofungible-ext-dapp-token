@@ -20,6 +20,7 @@ import { eventBus } from '../../core/EventBus';
 import mockChains from '@data/chains';
 import { useCreate2Deploy } from './hooks/useCreate2Deploy';
 import { useDeployFungibleProxy } from './hooks/useDeployFungibleProxy';
+import { useDeployFungibleFactory } from './hooks/useDeployFungibleFactory';
 import { useAddChain } from './hooks/useAddChain';
 import { useChainStore, type ChainJson } from '../../core/ChainStore';
 
@@ -362,10 +363,6 @@ function FungibleFactoryDeployment({
   );
 }
 
-function deployFactoryPlaceholder(): string {
-  return `0x${'b'.repeat(40)}`;
-}
-
 export function Environment() {
   const { t } = useTranslation();
   const [chainStates, setChainStates] = useState<EnvironmentChainState[]>([]);
@@ -383,6 +380,7 @@ export function Environment() {
 
   const { deployCreate2Factory, isDeploying: isDeployingCreate2 } = useCreate2Deploy();
   const { deployFungibleProxy, isDeploying: isDeployingProxy } = useDeployFungibleProxy();
+  const { deployFungibleFactory, isDeploying: isDeployingFactory } = useDeployFungibleFactory();
 
   function buildCreate2Factory(
   cfg: { create2Factory?: Record<string, { address?: string; desc?: string }> } | null,
@@ -595,16 +593,23 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
   };
 
   const handleDeployFactory = async () => {
-    if (!selectedState) return;
+    if (!selectedState || !selectedChain) return;
+    if (!isChainAdded) {
+      setError(t('environment.chainNotAdded', { name: selectedChain.name }));
+      return;
+    }
 
     setActiveStep('factory');
     setError(undefined);
     setSuccess(undefined);
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const factoryAddress = await deployFungibleFactory(selectedChain.rpcUrl);
+      if (!factoryAddress) {
+        setError(t('environment.error.deployFactory'));
+        return;
+      }
 
-      const factoryAddress = deployFactoryPlaceholder();
       const newState = { ...selectedState };
       newState.fungibleFactory = {
         address: factoryAddress,
@@ -774,7 +779,7 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
             state={selectedState}
             onDeploy={() => { void handleDeployFactory(); }}
             onSetInFactory={() => { void handleSetInFactory(); }}
-            isDeploying={activeStep === 'factory'}
+            isDeploying={activeStep === 'factory' || isDeployingFactory}
             isSetInLoading={activeStep === 'setInFactory'}
             explorer={explorer}
           />
