@@ -84,11 +84,13 @@ function TokenDeployment({
   onDeploy,
   isLoading,
   explorer,
+  chainAdded,
 }: {
   state: EnvironmentChainState;
   onDeploy: () => void;
   isLoading: boolean;
   explorer: string;
+  chainAdded: boolean;
 }) {
   const { t } = useTranslation();
 
@@ -126,7 +128,7 @@ function TokenDeployment({
       <div className="flex justify-end">
         <button
           onClick={onDeploy}
-          disabled={isLoading}
+          disabled={isLoading || !chainAdded}
           className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
           title={t('environment.deployCreate2Factory')}
         >
@@ -467,13 +469,17 @@ export function Environment() {
 
   const handleDeployToken = async () => {
     if (!selectedState || !selectedChain || !deployCreate2Factory) return;
+    if (!isChainAdded) {
+      setError(t('environment.chainNotAdded', { name: selectedChain.name }));
+      return;
+    }
 
     setActiveStep('token');
     setError(undefined);
     setSuccess(undefined);
 
     try {
-      const factoryAddress = await deployCreate2Factory(selectedChain.rpcUrl, selectedChainId);
+      const factoryAddress = await deployCreate2Factory(selectedChain.rpcUrl);
       if (!factoryAddress) {
         setError(t('environment.error.deployToken'));
         return;
@@ -652,6 +658,7 @@ export function Environment() {
             onDeploy={() => { void handleDeployToken(); }}
             isLoading={activeStep === 'token' || isDeployingCreate2}
             explorer={explorer}
+            chainAdded={isChainAdded}
           />
 
           <FungibleProxyDeployment
