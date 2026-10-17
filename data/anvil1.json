@@ -17,5 +17,18 @@
   },
 	"create2Factory": {
  	},
-  "FungibleProxy": ""
+	"FungibleProxy": "",
+	"FungibleFactory": "",
+	"FungibleToken": {
+
+	},
+	"Relayers": {
+		
+	},
+	"PaymentTokens": {
+		
+	},
+	"Exchanges": {
+		
+	}
 }
