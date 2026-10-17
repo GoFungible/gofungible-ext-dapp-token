@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { coreFramework } from './core/CoreFramework';
+import { ChainStoreProvider } from './core/ChainStore';
 import { LayoutProvider } from './components/LayoutProvider';
 import { TokenPerimeter } from './modules/token-perimeter/TokenPerimeter';
 import { LoaderModule } from './modules/loader/LoaderModule';
@@ -215,7 +216,8 @@ function App() {
 
   return (
     <BrowserRouter basename="/gofungible-ext-dapp-token/">
-      <LayoutProvider>
+      <ChainStoreProvider>
+        <LayoutProvider>
         {!modulesLoaded ? (
           <div className="min-h-screen flex items-center justify-center">
             <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
@@ -226,7 +228,8 @@ function App() {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         )}
-      </LayoutProvider>
+        </LayoutProvider>
+      </ChainStoreProvider>
     </BrowserRouter>
   );
 }

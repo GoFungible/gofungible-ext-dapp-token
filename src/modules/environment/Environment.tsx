@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useChains, useChainId } from 'wagmi';
-import type { Chain } from 'viem';
 import {
   Network,
   Settings,
@@ -20,6 +19,7 @@ import { eventBus } from '../../core/EventBus';
 import mockChains from '@data/chains';
 import { useCreate2Deploy } from './hooks/useCreate2Deploy';
 import { useAddChain } from './hooks/useAddChain';
+import { useChainStore } from '../../core/ChainStore';
 
 function StatusBadge({ deployed }: { deployed: boolean }) {
   const { t } = useTranslation();
@@ -347,8 +347,8 @@ function deployFactoryPlaceholder(): string {
 export function Environment() {
   const { t } = useTranslation();
   const [chainStates, setChainStates] = useState<EnvironmentChainState[]>([]);
-  const [selectedChainId, setSelectedChainId] = useState<number>(0);
   const [activeStep, setActiveStep] = useState<string | null>(null);
+  const { selectedChainId, selectedChain, selectChain } = useChainStore();
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const [form, setForm] = useState({
@@ -392,8 +392,8 @@ export function Environment() {
       };
     });
     setChainStates(initial);
-    setSelectedChainId(initial[0].chainId);
-  }, []);
+    void selectChain(initial[0].chainId);
+  }, [selectChain]);
 
   useEffect(() => {
     const unsubscribe = eventBus.on('refresh-environment', () => {
@@ -422,33 +422,19 @@ export function Environment() {
 
   useEffect(() => {
     if (!activeChainId) return;
-    setSelectedChainId(Number(activeChainId));
-  }, [activeChainId]);
+    void selectChain(Number(activeChainId));
+  }, [activeChainId, selectChain]);
 
   const { addChain, switchChain, isAdding: isAddingChain, error: addChainError } =
     useAddChain();
 
-  const chainConfigs: Record<number, Chain> = {};
-  mockChains.forEach(c => {
-    chainConfigs[c.id] = {
-      id: c.id,
-      name: c.name,
-      nativeCurrency: { name: c.symbol, symbol: c.symbol, decimals: 18 },
-      rpcUrls: { default: { http: [c.rpcUrl] } },
-    };
-  });
-
   const selectedState = chainStates.find(c => c.chainId === selectedChainId);
-  const selectedChain = mockChains.find(c => c.id === selectedChainId);
   const isChainAdded = selectedChain ? connectedChains.some(c => c.id === selectedChainId) : false;
   const explorer = selectedChain?.blockExplorer || '';
 
   const availableFactories: { label: string; address: string; desc?: string }[] = [];
-  const selectedCfg = mockChains.find(c => c.id === selectedChainId) as
-    | { create2Factory?: Record<string, { address?: string; desc?: string }> }
-    | undefined;
-  if (selectedCfg?.create2Factory) {
-    for (const [key, val] of Object.entries(selectedCfg.create2Factory)) {
+  if (selectedChain?.create2Factory) {
+    for (const [key, val] of Object.entries(selectedChain.create2Factory)) {
       if (val?.address) {
         availableFactories.push({ label: key, address: val.address, desc: val.desc });
       }
@@ -457,8 +443,12 @@ export function Environment() {
 
   const handleAddChain = async () => {
     if (!selectedChain) return;
-    const chain = chainConfigs[selectedChainId];
-    if (!chain) return;
+    const chain = {
+      id: selectedChain.id,
+      name: selectedChain.name,
+      nativeCurrency: { name: selectedChain.symbol, symbol: selectedChain.symbol, decimals: 18 },
+      rpcUrls: { default: { http: [selectedChain.rpcUrl] } },
+    };
     setError(undefined);
     const added = await addChain(chain);
     if (added) {

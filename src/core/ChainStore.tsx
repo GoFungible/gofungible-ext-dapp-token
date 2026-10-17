@@ -1,0 +1,87 @@
+import { createContext, useContext, useCallback, useState, ReactNode } from 'react';
+
+export interface ChainToken {
+  address: string;
+  name: string;
+  symbol: string;
+  decimals: number;
+  totalSupply: string;
+  holders: number;
+  priceUsd?: number;
+  priceChange24h?: number;
+}
+
+export interface ChainJson {
+  id: number;
+  name: string;
+  symbol: string;
+  rpcUrl: string;
+  blockExplorer: string;
+  isActive: boolean;
+  token?: ChainToken;
+  create2Factory?: Record<string, { address?: string; desc?: string }>;
+}
+
+interface ChainStoreContextType {
+  selectedChainId: number;
+  selectedChain: ChainJson | null;
+  chainCache: Record<number, ChainJson>;
+  selectChain: (chainId: number) => void;
+}
+
+const ChainStoreContext = createContext<ChainStoreContextType | undefined>(undefined);
+
+const CHAIN_LOADERS: Record<string, () => Promise<{ default?: ChainJson }>> = import.meta.glob(
+  '/data/*.json',
+  { eager: false },
+) as Record<string, () => Promise<{ default?: ChainJson }>>;
+
+const chainIdToLoader: Record<number, () => Promise<{ default?: ChainJson }>> = {};
+
+void (async () => {
+  for (const loader of Object.values(CHAIN_LOADERS)) {
+    const mod = await loader();
+    const chain = (mod.default ?? mod) as ChainJson;
+    chainIdToLoader[chain.id] = loader;
+  }
+})();
+
+export function ChainStoreProvider({ children }: { children: ReactNode }) {
+  const [selectedChainId, setSelectedChainId] = useState<number>(0);
+  const [chainCache, setChainCache] = useState<Record<number, ChainJson>>({});
+
+  const selectedChain = selectedChainId > 0 ? (chainCache[selectedChainId] ?? null) : null;
+
+  const selectChain = useCallback(
+    (chainId: number) => {
+      setSelectedChainId(chainId);
+      if (chainCache[chainId]) return;
+      const loader = chainIdToLoader[chainId];
+      if (!loader) return;
+      void loader().then(mod => {
+        const chain = (mod.default ?? mod) as ChainJson;
+        setChainCache(prev => ({ ...prev, [chainId]: chain }));
+      }).catch(() => {});
+    },
+    [chainCache],
+  );
+
+  const value: ChainStoreContextType = {
+    selectedChainId,
+    selectedChain,
+    chainCache,
+    selectChain,
+  };
+
+  return (
+    <ChainStoreContext.Provider value={value}>{children}</ChainStoreContext.Provider>
+  );
+}
+
+export function useChainStore() {
+  const context = useContext(ChainStoreContext);
+  if (!context) {
+    throw new Error('useChainStore must be used within a ChainStoreProvider');
+  }
+  return context;
+}

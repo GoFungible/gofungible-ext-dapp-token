@@ -10,6 +10,7 @@ import {
 import { NegotiationChainState, ExchangePair, formatUnits, totalUnits } from './types';
 import { eventBus } from '../../core/EventBus';
 import mockChains from '@data/chains';
+import { useChainStore } from '../../core/ChainStore';
 
 const DEFAULT_EXCHANGES: Record<string, ExchangePair[]> = {
   '1': [
@@ -42,7 +43,7 @@ const DEFAULT_EXCHANGES: Record<string, ExchangePair[]> = {
 export function TokenNegotiation() {
   const { t } = useTranslation();
   const [chainStates, setChainStates] = useState<NegotiationChainState[]>([]);
-  const [selectedChainId, setSelectedChainId] = useState<number>(0);
+  const { selectedChainId, selectedChain, selectChain } = useChainStore();
   const [editingExchange, setEditingExchange] = useState<string | null>(null);
   const [editValue, setEditValue] = useState('');
   const [error, setError] = useState<string | undefined>();
@@ -57,8 +58,8 @@ export function TokenNegotiation() {
       exchanges: DEFAULT_EXCHANGES[String(c.id)] || [],
     }));
     setChainStates(initial);
-    setSelectedChainId(initial[0].chainId);
-  }, []);
+    void selectChain(initial[0].chainId);
+  }, [selectChain]);
 
   useEffect(() => {
     const unsubscribe = eventBus.on('refresh-token-negotiation', () => {
@@ -74,7 +75,6 @@ export function TokenNegotiation() {
   }, []);
 
   const selectedState = chainStates.find(c => c.chainId === selectedChainId);
-  const selectedChain = mockChains.find(c => c.id === selectedChainId);
 
   const isEditing = (pair: ExchangePair) => editingExchange === pair.exchangeId;
   const isSaving = (pair: ExchangePair) => savingExchange === pair.exchangeId;
@@ -204,7 +204,7 @@ export function TokenNegotiation() {
         <select
           value={selectedChainId}
           onChange={e => {
-            setSelectedChainId(Number(e.target.value));
+            void selectChain(Number(e.target.value));
             setSuccess(undefined);
             setError(undefined);
             setEditingExchange(null);

@@ -16,6 +16,7 @@ import {
 import { ChainData, formatNumber, formatAddress, isEthereumAddress, MASTER_CHAIN_ID } from './types';
 import { eventBus } from '../../core/EventBus';
 import mockChains from '@data/chains';
+import { useChainStore } from '../../core/ChainStore';
 
 function CopyAddress({ address }: { address: string }) {
   const [copied, setCopied] = useState(false);
@@ -324,15 +325,14 @@ export function TokenPerimeter() {
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
 
-  const [selectedChainId, setSelectedChainId] = useState<number>(0);
   const [bindFormOpen, setBindFormOpen] = useState(false);
   const [bindTokenAddress, setBindTokenAddress] = useState('');
   const [unbindModalOpen, setUnbindModalOpen] = useState(false);
   const [chainToUnbind, setChainToUnbind] = useState<ChainData | null>(null);
+  const { selectedChainId, selectedChain, selectChain } = useChainStore();
 
   const masterChain = chains.find(c => c.id === MASTER_CHAIN_ID);
   const selectableChains = chains.filter(c => c.id !== MASTER_CHAIN_ID);
-  const selectedChain = selectableChains.find(c => c.id === selectedChainId);
   const selectedChainIsActive = selectedChain?.isActive ?? false;
   const canBind = !!selectedChain && !selectedChainIsActive;
   const canUnbind = !!selectedChain && selectedChainIsActive;
@@ -353,9 +353,9 @@ export function TokenPerimeter() {
 
   useEffect(() => {
     if (selectableChains.length > 0 && !selectedChainId) {
-      setSelectedChainId(selectableChains[0].id);
+      void selectChain(selectableChains[0].id);
     }
-  }, [selectableChains, selectedChainId]);
+  }, [selectableChains, selectedChainId, selectChain]);
 
   const handleBindButtonClick = () => {
     if (!selectedChain) return;
@@ -526,7 +526,7 @@ export function TokenPerimeter() {
             <div className="relative mb-3">
               <select
                 value={selectedChainId}
-                onChange={e => setSelectedChainId(Number(e.target.value))}
+                onChange={e => void selectChain(Number(e.target.value))}
                 className="w-full px-3 py-1.5 border border-gray-300 rounded-lg bg-surface focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none appearance-none font-mono text-sm pr-8"
                 disabled={isLoading}
               >
