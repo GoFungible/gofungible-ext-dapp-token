@@ -21,7 +21,7 @@ import mockChains from '@data/chains';
 import { useCreate2Deploy } from './hooks/useCreate2Deploy';
 import { useDeployFungibleProxy } from './hooks/useDeployFungibleProxy';
 import { useAddChain } from './hooks/useAddChain';
-import { useChainStore } from '../../core/ChainStore';
+import { useChainStore, type ChainJson } from '../../core/ChainStore';
 
 function StatusBadge({ deployed }: { deployed: boolean }) {
   const { t } = useTranslation();
@@ -370,7 +370,7 @@ export function Environment() {
   const { t } = useTranslation();
   const [chainStates, setChainStates] = useState<EnvironmentChainState[]>([]);
   const [activeStep, setActiveStep] = useState<string | null>(null);
-  const { selectedChainId, selectedChain, selectChain, updateChainCreate2Factory } = useChainStore();
+  const { selectedChainId, selectedChain, selectChain, updateChainCreate2Factory, updateChainFungibleProxy, updateChainFungibleFactory, chainCache } = useChainStore();
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const [form, setForm] = useState({
@@ -399,49 +399,45 @@ export function Environment() {
   return { entries, deployed: Object.keys(entries).length > 0 };
 }
 
+function buildEnvironmentState(c: ChainJson): EnvironmentChainState {
+  const cfg = c as { create2Factory?: Record<string, { address?: string; desc?: string }> };
+  const create2Factory = buildCreate2Factory(cfg);
+  const proxyAddress = typeof c.FungibleProxy === 'string' && c.FungibleProxy ? c.FungibleProxy : null;
+  const factoryAddress = typeof c.FungibleFactory === 'string' && c.FungibleFactory ? c.FungibleFactory : null;
+  return {
+    chainId: c.id,
+    token: {
+      address: null,
+      deployed: false,
+      deploymentType: null,
+    },
+    create2Factory,
+    fungibleProxy: { address: proxyAddress, deployed: !!proxyAddress, assigned: !!proxyAddress },
+    fungibleFactory: { address: factoryAddress, deployed: !!factoryAddress, assigned: !!factoryAddress },
+  };
+}
+
   useEffect(() => {
     if (environmentInitializedRef.current) return;
     environmentInitializedRef.current = true;
-    const initial: EnvironmentChainState[] = mockChains.map(c => {
-      const cfg = c as { create2Factory?: Record<string, { address?: string; desc?: string }> };
-      const create2Factory = buildCreate2Factory(cfg);
-      return {
-        chainId: c.id,
-        token: {
-          address: null,
-          deployed: false,
-          deploymentType: null,
-        },
-        create2Factory,
-        fungibleProxy: { address: null, deployed: false, assigned: false },
-        fungibleFactory: { address: null, deployed: false, assigned: false },
-      };
+    const initial: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
+      const cached = chainCache[c.id];
+      return buildEnvironmentState(cached ?? c);
     });
     setChainStates(initial);
     void selectChain(initial[0].chainId);
-  }, [selectChain]);
+  }, [selectChain, chainCache]);
 
   useEffect(() => {
     const unsubscribe = eventBus.on('refresh-environment', () => {
-      const refreshed: EnvironmentChainState[] = mockChains.map(c => {
-        const cfg = c as { create2Factory?: Record<string, { address?: string; desc?: string }> };
-        const create2Factory = buildCreate2Factory(cfg);
-        return {
-          chainId: c.id,
-          token: {
-            address: null,
-            deployed: false,
-            deploymentType: null,
-          },
-          create2Factory,
-          fungibleProxy: { address: null, deployed: false, assigned: false },
-          fungibleFactory: { address: null, deployed: false, assigned: false },
-        };
-      });
+const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
+      const cached = chainCache[c.id];
+      return buildEnvironmentState(cached ?? c);
+    });
       setChainStates(refreshed);
     });
     return () => unsubscribe();
-  }, []);
+  }, [chainCache]);
 
   const connectedChains = useChains();
   const activeChainId = useChainId();
@@ -578,6 +574,8 @@ export function Environment() {
         assigned: true,
       };
 
+      updateChainFungibleProxy(selectedChainId, proxyAddress);
+
       setChainStates(prev =>
         prev.map(c => (c.chainId === selectedChainId ? newState : c))
       );
@@ -606,12 +604,15 @@ export function Environment() {
     try {
       await new Promise(resolve => setTimeout(resolve, 2000));
 
+      const factoryAddress = deployFactoryPlaceholder();
       const newState = { ...selectedState };
       newState.fungibleFactory = {
-        address: deployFactoryPlaceholder(),
+        address: factoryAddress,
         deployed: true,
         assigned: false,
       };
+
+      updateChainFungibleFactory(selectedChainId, factoryAddress);
 
       setChainStates(prev =>
         prev.map(c => (c.chainId === selectedChainId ? newState : c))

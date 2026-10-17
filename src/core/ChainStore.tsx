@@ -20,6 +20,8 @@ export interface ChainJson {
   isActive: boolean;
   token?: ChainToken;
   create2Factory?: Record<string, { address?: string; desc?: string }>;
+  FungibleProxy?: string;
+  FungibleFactory?: string;
 }
 
 interface ChainStoreContextType {
@@ -28,6 +30,8 @@ interface ChainStoreContextType {
   chainCache: Record<number, ChainJson>;
   selectChain: (chainId: number) => void;
   updateChainCreate2Factory: (chainId: number, entries: Record<string, { address?: string; desc?: string }>) => void;
+  updateChainFungibleProxy: (chainId: number, address: string) => void;
+  updateChainFungibleFactory: (chainId: number, address: string) => void;
 }
 
 const ChainStoreContext = createContext<ChainStoreContextType | undefined>(undefined);
@@ -85,12 +89,42 @@ export function ChainStoreProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  const updateChainFungibleProxy = useCallback(
+    (chainId: number, address: string) => {
+      setChainCache(prev => {
+        const existing = prev[chainId];
+        if (!existing) return prev;
+        return {
+          ...prev,
+          [chainId]: { ...existing, FungibleProxy: address },
+        };
+      });
+    },
+    [],
+  );
+
+  const updateChainFungibleFactory = useCallback(
+    (chainId: number, address: string) => {
+      setChainCache(prev => {
+        const existing = prev[chainId];
+        if (!existing) return prev;
+        return {
+          ...prev,
+          [chainId]: { ...existing, FungibleFactory: address },
+        };
+      });
+    },
+    [],
+  );
+
   const value: ChainStoreContextType = {
     selectedChainId,
     selectedChain,
     chainCache,
     selectChain,
     updateChainCreate2Factory,
+    updateChainFungibleProxy,
+    updateChainFungibleFactory,
   };
 
   return (
