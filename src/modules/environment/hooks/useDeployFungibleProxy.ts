@@ -39,6 +39,9 @@ export function useDeployFungibleProxy(): UseDeployFungibleProxyReturn {
 
     setIsDeploying(true);
     try {
+      if (!params.implementation) {
+        throw new Error('Missing implementation address for FungibleProxy deployment');
+      }
       const publicClient = createPublicClient({
         transport: http(params.rpcUrl),
       });

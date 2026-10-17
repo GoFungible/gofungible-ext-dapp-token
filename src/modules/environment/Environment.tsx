@@ -484,6 +484,11 @@ export function Environment() {
       });
 
       const newState = { ...selectedState };
+      newState.token = {
+        address: factoryAddress,
+        deployed: true,
+        deploymentType: 'create2',
+      };
       newState.create2Factory = {
         entries: {
           ...selectedState.create2Factory.entries,
