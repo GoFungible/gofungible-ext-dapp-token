@@ -109,12 +109,14 @@
     "deployFungibleProxy": "Deploy FungibleProxy",
     "proxyDeployed": "Proxy Deployed",
     "fungibleFactoryContract": "Deploy FungibleFactory",
-    "fungibleFactoryDesc": "Deploy a FungibleFactory contract and assign it to the FungibleProxy. The factory gates creation of new Fungible Standard Tokens on this chain.",
+    "fungibleFactoryDesc": "Deploy a FungibleFactory contract on this chain, then set it into the FungibleProxy. The factory gates creation of new Fungible Standard Tokens on this chain.",
     "fungibleFactory": "FungibleFactory",
     "assignedToProxy": "Assigned to FungibleProxy",
     "notAssignedToProxy": "Not assigned to FungibleProxy",
-    "deployAndAssignFactory": "Deploy & Assign Factory",
+    "deployFactory": "Deploy Factory",
+    "setInFactory": "Set In Factory",
     "factoryDeployed": "Factory Deployed",
+    "factoryAssigned": "Factory Assigned",
     "selectChain": "Select Chain",
     "chainOption": "{{name}} ({{symbol}}) • Chain ID: {{id}}",
     "chainHeader": "{{name}} • Chain ID: {{id}}",
@@ -122,13 +124,15 @@
       "tokenDeployed": "Create2Token deployed on {{name}}",
       "tokenAddressRegistered": "Token address registered on {{name}}",
       "proxyDeployed": "FungibleProxy deployed on {{name}}",
-      "factoryDeployed": "FungibleFactory deployed and assigned to FungibleProxy on {{name}}"
+      "factoryDeployed": "FungibleFactory deployed on {{name}}",
+      "factoryAssigned": "FungibleFactory assigned to FungibleProxy on {{name}}"
     },
     "error": {
       "deployToken": "Failed to deploy token contract. Please try again.",
       "deployProxy": "Failed to deploy FungibleProxy. Please try again.",
       "selectFactory": "Please select a Create2Factory before deploying.",
       "deployFactory": "Failed to deploy FungibleFactory. Please try again.",
+      "setInFactory": "Failed to assign FungibleFactory to FungibleProxy. Please try again.",
       "addChainToWallet": "Failed to add {{name}} to wallet. Please approve the request in MetaMask."
     },
     "chainNotAdded": "{{name}} is not added to your wallet. Please add it to deploy contracts.",

@@ -109,11 +109,13 @@
     "deployFungibleProxy": "Desplegar FungibleProxy",
     "proxyDeployed": "Proxy Desplegado",
     "fungibleFactoryContract": "Desplegar FungibleFactory",
-    "fungibleFactoryDesc": "Despliegue un contrato FungibleFactory y asígnelo al FungibleProxy. La fábrica controla la creación de nuevos Tokens Fungible Estándar en esta cadena.",
+    "fungibleFactoryDesc": "Despliegue un contrato FungibleFactory en esta cadena y luego incorpórelo al FungibleProxy. La fábrica controla la creación de nuevos Tokens Fungible Estándar en esta cadena.",
     "fungibleFactory": "FungibleFactory",
     "assignedToProxy": "Asignado a FungibleProxy",
     "notAssignedToProxy": "No asignado a FungibleProxy",
-    "deployAndAssignFactory": "Desplegar y Asignar Fábrica",
+    "deployFactory": "Desplegar Factory",
+    "setInFactory": "Incorporar en Factory",
+    "factoryAssigned": "Fábrica Asignada",
     "factoryDeployed": "Fábrica Desplegada",
     "selectChain": "Seleccionar Cadena",
     "chainOption": "{{name}} ({{symbol}}) • ID de Cadena: {{id}}",
@@ -122,13 +124,15 @@
       "tokenDeployed": "Create2Token desplegado en {{name}}",
       "tokenAddressRegistered": "Dirección de token registrada en {{name}}",
       "proxyDeployed": "FungibleProxy desplegado en {{name}}",
-      "factoryDeployed": "FungibleFactory desplegado y asignado a FungibleProxy en {{name}}"
+      "factoryDeployed": "FungibleFactory desplegado en {{name}}",
+      "factoryAssigned": "FungibleFactory asignado a FungibleProxy en {{name}}"
     },
     "error": {
       "deployToken": "Error al desplegar el contrato de token. Inténtelo de nuevo.",
       "deployProxy": "Error al desplegar FungibleProxy. Inténtelo de nuevo.",
       "selectFactory": "Seleccione un Create2Factory antes de desplegar.",
       "deployFactory": "Error al desplegar FungibleFactory. Inténtelo de nuevo.",
+      "setInFactory": "Error al asignar FungibleFactory a FungibleProxy. Inténtelo de nuevo.",
       "addChainToWallet": "No se pudo agregar {{name}} a la billetera. Apruebe la solicitud en MetaMask."
     },
     "chainNotAdded": "{{name}} no está agregado a tu billetera. Agreguelo para desplegar contratos.",

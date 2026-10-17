@@ -270,12 +270,16 @@ function FungibleProxyDeployment({
 function FungibleFactoryDeployment({
   state,
   onDeploy,
-  isLoading,
+  onSetInFactory,
+  isDeploying,
+  isSetInLoading,
   explorer,
 }: {
   state: EnvironmentChainState;
   onDeploy: () => void;
-  isLoading: boolean;
+  onSetInFactory: () => void;
+  isDeploying: boolean;
+  isSetInLoading: boolean;
   explorer: string;
 }) {
   const { t } = useTranslation();
@@ -312,14 +316,14 @@ function FungibleFactoryDeployment({
         </div>
       </div>
 
-      <div className="flex justify-end">
+      <div className="flex flex-wrap justify-end gap-2">
         <button
           onClick={onDeploy}
-          disabled={isLoading || !state.fungibleProxy.deployed || state.fungibleFactory.deployed}
+          disabled={isDeploying || !state.fungibleProxy.deployed || state.fungibleFactory.deployed}
           className="px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
-          title={t('environment.deployAndAssignFactory')}
+          title={t('environment.deployFactory')}
         >
-          {isLoading ? (
+          {isDeploying ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
               {t('common.deploying')}
@@ -328,8 +332,28 @@ function FungibleFactoryDeployment({
             t('environment.factoryDeployed')
           ) : (
             <>
-            <Plus className="h-4 w-4" />
-            {t('environment.deployAndAssignFactory')}
+              <Plus className="h-4 w-4" />
+              {t('environment.deployFactory')}
+            </>
+          )}
+        </button>
+        <button
+          onClick={onSetInFactory}
+          disabled={isSetInLoading || !state.fungibleFactory.deployed || state.fungibleFactory.assigned}
+          className="px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+          title={t('environment.setInFactory')}
+        >
+          {isSetInLoading ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              {t('common.deploying')}
+            </>
+          ) : state.fungibleFactory.assigned ? (
+            t('environment.factoryAssigned')
+          ) : (
+            <>
+              <Plus className="h-4 w-4" />
+              {t('environment.setInFactory')}
             </>
           )}
         </button>
@@ -586,7 +610,7 @@ export function Environment() {
       newState.fungibleFactory = {
         address: deployFactoryPlaceholder(),
         deployed: true,
-        assigned: true,
+        assigned: false,
       };
 
       setChainStates(prev =>
@@ -602,6 +626,40 @@ export function Environment() {
       setSuccess(t('environment.success.factoryDeployed', { name: selectedChain?.name || '' }));
     } catch {
       setError(t('environment.error.deployFactory'));
+    } finally {
+      setActiveStep(null);
+    }
+  };
+
+  const handleSetInFactory = async () => {
+    if (!selectedState || !selectedState.fungibleFactory.deployed) return;
+
+    setActiveStep('setInFactory');
+    setError(undefined);
+    setSuccess(undefined);
+
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      const newState = { ...selectedState };
+      newState.fungibleFactory = {
+        ...newState.fungibleFactory,
+        assigned: true,
+      };
+
+      setChainStates(prev =>
+        prev.map(c => (c.chainId === selectedChainId ? newState : c))
+      );
+
+      eventBus.emit('environment:factory-assigned', {
+        chainId: selectedChainId,
+        chainName: selectedChain?.name,
+        timestamp: Date.now(),
+      });
+
+      setSuccess(t('environment.success.factoryAssigned', { name: selectedChain?.name || '' }));
+    } catch {
+      setError(t('environment.error.setInFactory'));
     } finally {
       setActiveStep(null);
     }
@@ -714,7 +772,9 @@ export function Environment() {
           <FungibleFactoryDeployment
             state={selectedState}
             onDeploy={() => { void handleDeployFactory(); }}
-            isLoading={activeStep === 'factory'}
+            onSetInFactory={() => { void handleSetInFactory(); }}
+            isDeploying={activeStep === 'factory'}
+            isSetInLoading={activeStep === 'setInFactory'}
             explorer={explorer}
           />
         </div>
