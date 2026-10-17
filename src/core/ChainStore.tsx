@@ -27,6 +27,7 @@ interface ChainStoreContextType {
   selectedChain: ChainJson | null;
   chainCache: Record<number, ChainJson>;
   selectChain: (chainId: number) => void;
+  updateChainCreate2Factory: (chainId: number, entries: Record<string, { address?: string; desc?: string }>) => void;
 }
 
 const ChainStoreContext = createContext<ChainStoreContextType | undefined>(undefined);
@@ -66,11 +67,30 @@ export function ChainStoreProvider({ children }: { children: ReactNode }) {
     [chainCache],
   );
 
+  const updateChainCreate2Factory = useCallback(
+    (chainId: number, entries: Record<string, { address?: string; desc?: string }>) => {
+      setChainCache(prev => {
+        const existing = prev[chainId];
+        if (!existing) return prev;
+        const existingFactory = existing.create2Factory ?? {};
+        return {
+          ...prev,
+          [chainId]: {
+            ...existing,
+            create2Factory: { ...existingFactory, ...entries },
+          },
+        };
+      });
+    },
+    [],
+  );
+
   const value: ChainStoreContextType = {
     selectedChainId,
     selectedChain,
     chainCache,
     selectChain,
+    updateChainCreate2Factory,
   };
 
   return (

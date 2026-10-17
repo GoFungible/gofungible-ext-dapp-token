@@ -242,7 +242,7 @@ function FungibleProxyDeployment({
       <div className="flex justify-end">
         <button
           onClick={onDeploy}
-          disabled={isLoading || !state.token.deployed || state.fungibleProxy.deployed}
+          disabled={isLoading || !selectedFactory || !create2Salt}
           className="px-4 py-2 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
           title={t('environment.deployFungibleProxy')}
         >
@@ -348,7 +348,7 @@ export function Environment() {
   const { t } = useTranslation();
   const [chainStates, setChainStates] = useState<EnvironmentChainState[]>([]);
   const [activeStep, setActiveStep] = useState<string | null>(null);
-  const { selectedChainId, selectedChain, selectChain } = useChainStore();
+  const { selectedChainId, selectedChain, selectChain, updateChainCreate2Factory } = useChainStore();
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const [form, setForm] = useState({
@@ -477,9 +477,16 @@ export function Environment() {
         return;
       }
 
+      updateChainCreate2Factory(selectedChainId, {
+        [factoryAddress]: { address: factoryAddress },
+      });
+
       const newState = { ...selectedState };
       newState.create2Factory = {
-        entries: { [factoryAddress]: { address: factoryAddress } },
+        entries: {
+          ...selectedState.create2Factory.entries,
+          [factoryAddress]: { address: factoryAddress },
+        },
         deployed: true,
       };
 
