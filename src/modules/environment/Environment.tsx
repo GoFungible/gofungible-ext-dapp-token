@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useChains, useChainId } from 'wagmi';
 import type { Address } from 'viem';
@@ -355,6 +355,7 @@ export function Environment() {
     create2Salt: 'fungible-token',
     selectedCreate2Factory: '',
   });
+  const environmentInitializedRef = useRef(false);
 
   const { deployCreate2Factory, isDeploying: isDeployingCreate2 } = useCreate2Deploy();
   const { deployFungibleProxy, isDeploying: isDeployingProxy } = useDeployFungibleProxy();
@@ -375,6 +376,8 @@ export function Environment() {
 }
 
   useEffect(() => {
+    if (environmentInitializedRef.current) return;
+    environmentInitializedRef.current = true;
     const initial: EnvironmentChainState[] = mockChains.map(c => {
       const cfg = c as { create2Factory?: Record<string, { address?: string; desc?: string }> };
       const create2Factory = buildCreate2Factory(cfg);
