@@ -104,26 +104,28 @@ function TokenDeployment({
         <StatusBadge deployed={state.create2Factory.deployed} />
       </div>
 
-      {state.create2Factory.deployed && (
-        <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+      <div className="bg-gray-50 rounded-lg p-4 space-y-2">
           <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
             {t('environment.currentCreate2FactoryAddress')}
           </p>
           <div className="space-y-1">
-            {Object.entries(state.create2Factory.entries).map(([key, entry]) => (
-              <div key={key} className="flex items-center gap-1">
-                <span className="text-xs text-muted">{key}</span>
-                <AddressRow
-                  address={entry.address}
-                  deployed={true}
-                  showExplorer={!!explorer}
-                  explorer={explorer}
-                />
-              </div>
-            ))}
+            {Object.keys(state.create2Factory.entries).length > 0 ? (
+              Object.entries(state.create2Factory.entries).map(([key, entry]) => (
+                <div key={key} className="flex items-center gap-1">
+                  <span className="text-xs text-muted">{key}</span>
+                  <AddressRow
+                    address={entry.address}
+                    deployed={true}
+                    showExplorer={!!explorer}
+                    explorer={explorer}
+                  />
+                </div>
+              ))
+            ) : (
+              <span className="text-xs text-muted">{t('environment.noCreate2FactoryAddresses')}</span>
+            )}
           </div>
         </div>
-      )}
 
       <div className="flex justify-end">
         <button

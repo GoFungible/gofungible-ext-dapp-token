@@ -133,9 +133,7 @@
     "addingChain": "Agregando...",
     "deployCreate2Factory": "Desplegar Create2Factory",
     "currentCreate2FactoryAddress": "Direcciones actuales de Create2Factory",
-    "create2FactoryNick": "Nick",
-    "create2FactorySafe": "Safe",
-    "create2FactoryCreatex": "CreateX"
+    "noCreate2FactoryAddresses": "No se encontraron direcciones Create2Factory."
   },
   "tokenPerimeter": {
     "title": "Perímetro de Token",
