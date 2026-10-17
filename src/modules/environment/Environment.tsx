@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useChains, useChainId } from 'wagmi';
+import type { Address } from 'viem';
 import {
   Network,
   Settings,
@@ -18,6 +19,7 @@ import {
 import { eventBus } from '../../core/EventBus';
 import mockChains from '@data/chains';
 import { useCreate2Deploy } from './hooks/useCreate2Deploy';
+import { useDeployFungibleProxy } from './hooks/useDeployFungibleProxy';
 import { useAddChain } from './hooks/useAddChain';
 import { useChainStore } from '../../core/ChainStore';
 
@@ -336,10 +338,6 @@ function FungibleFactoryDeployment({
   );
 }
 
-function deployProxyPlaceholder(): string {
-  return `0x${'a'.repeat(40)}`;
-}
-
 function deployFactoryPlaceholder(): string {
   return `0x${'b'.repeat(40)}`;
 }
@@ -359,6 +357,7 @@ export function Environment() {
   });
 
   const { deployCreate2Factory, isDeploying: isDeployingCreate2 } = useCreate2Deploy();
+  const { deployFungibleProxy, isDeploying: isDeployingProxy } = useDeployFungibleProxy();
 
   function buildCreate2Factory(
   cfg: { create2Factory?: Record<string, { address?: string; desc?: string }> } | null,
@@ -513,18 +512,36 @@ export function Environment() {
   };
 
   const handleDeployProxy = async () => {
-    if (!selectedState) return;
+    if (!selectedState || !selectedChain) return;
+    if (!isChainAdded) {
+      setError(t('environment.chainNotAdded', { name: selectedChain.name }));
+      return;
+    }
+    if (!form.selectedCreate2Factory) {
+      setError(t('environment.error.selectFactory'));
+      return;
+    }
 
     setActiveStep('proxy');
     setError(undefined);
     setSuccess(undefined);
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const proxyAddress = await deployFungibleProxy({
+        factoryAddress: form.selectedCreate2Factory as Address,
+        rpcUrl: selectedChain.rpcUrl,
+        implementation: selectedState.token.address as Address,
+        salt: form.create2Salt,
+      });
+
+      if (!proxyAddress) {
+        setError(t('environment.error.deployProxy'));
+        return;
+      }
 
       const newState = { ...selectedState };
       newState.fungibleProxy = {
-        address: deployProxyPlaceholder(),
+        address: proxyAddress,
         deployed: true,
         assigned: true,
       };
@@ -679,7 +696,7 @@ export function Environment() {
             create2Salt={form.create2Salt}
             setCreate2Salt={v => setForm({ ...form, create2Salt: v })}
             onDeploy={() => { void handleDeployProxy(); }}
-            isLoading={activeStep === 'proxy'}
+            isLoading={activeStep === 'proxy' || isDeployingProxy}
             explorer={explorer}
             factories={availableFactories}
             selectedFactory={form.selectedCreate2Factory}

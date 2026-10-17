@@ -127,6 +127,7 @@
     "error": {
       "deployToken": "Failed to deploy token contract. Please try again.",
       "deployProxy": "Failed to deploy FungibleProxy. Please try again.",
+      "selectFactory": "Please select a Create2Factory before deploying.",
       "deployFactory": "Failed to deploy FungibleFactory. Please try again.",
       "addChainToWallet": "Failed to add {{name}} to wallet. Please approve the request in MetaMask."
     },
