@@ -605,14 +605,28 @@ export function Environment() {
       {error && (
         <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3 text-red-800">
           <AlertCircle className="h-5 w-5 flex-shrink-0" />
-          <p className="text-sm">{error}</p>
+          <p className="text-sm flex-1">{error}</p>
+          <button
+            onClick={() => setError(undefined)}
+            className="text-red-400 hover:text-red-600 flex-shrink-0"
+            aria-label={t('common.close')}
+          >
+            <XCircle className="h-5 w-5" />
+          </button>
         </div>
       )}
 
       {success && (
         <div className="p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3 text-green-800">
           <CheckCircle className="h-5 w-5 flex-shrink-0" />
-          <p className="text-sm">{success}</p>
+          <p className="text-sm flex-1">{success}</p>
+          <button
+            onClick={() => setSuccess(undefined)}
+            className="text-green-400 hover:text-green-600 flex-shrink-0"
+            aria-label={t('common.close')}
+          >
+            <XCircle className="h-5 w-5" />
+          </button>
         </div>
       )}
 
