@@ -12,13 +12,16 @@ export interface EnvironmentContract {
   assigned: boolean;
 }
 
+export interface Create2FactoryEntry {
+  address: string;
+  desc?: string;
+}
+
 export interface EnvironmentChainState {
   chainId: number;
   token: EnvironmentToken;
   create2Factory: {
-    nick: string | null;
-    safe: string | null;
-    createx: string | null;
+    entries: Record<string, Create2FactoryEntry>;
     deployed: boolean;
   };
   fungibleProxy: EnvironmentContract;

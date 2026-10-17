@@ -108,65 +108,41 @@ function TokenDeployment({
             {t('environment.currentCreate2FactoryAddress')}
           </p>
           <div className="space-y-1">
-            {state.create2Factory.nick && (
-              <div className="flex items-center gap-1">
-                <span className="text-xs text-muted">{t('environment.create2FactoryNick')}</span>
+            {Object.entries(state.create2Factory.entries).map(([key, entry]) => (
+              <div key={key} className="flex items-center gap-1">
+                <span className="text-xs text-muted">{key}</span>
                 <AddressRow
-                  address={state.create2Factory.nick}
+                  address={entry.address}
                   deployed={true}
                   showExplorer={!!explorer}
                   explorer={explorer}
                 />
               </div>
-            )}
-            {state.create2Factory.safe && (
-              <div className="flex items-center gap-1">
-                <span className="text-xs text-muted">{t('environment.create2FactorySafe')}</span>
-                <AddressRow
-                  address={state.create2Factory.safe}
-                  deployed={true}
-                  showExplorer={!!explorer}
-                  explorer={explorer}
-                />
-              </div>
-            )}
-            {state.create2Factory.createx && (
-              <div className="flex items-center gap-1">
-                <span className="text-xs text-muted">{t('environment.create2FactoryCreatex')}</span>
-                <AddressRow
-                  address={state.create2Factory.createx}
-                  deployed={true}
-                  showExplorer={!!explorer}
-                  explorer={explorer}
-                />
-              </div>
-            )}
+            ))}
           </div>
         </div>
       )}
 
-      {!state.create2Factory.deployed && (
-        <div className="flex justify-end">
-          <button
-            onClick={onDeploy}
-            disabled={isLoading || state.create2Factory.deployed}
-            className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
-            title={t('environment.deployCreate2Factory')}
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                {t('common.deploying')}
-              </>
-            ) : (
-              <>
-                <Plus className="h-4 w-4" />
-                {t('environment.deployCreate2Factory')}
-              </>
-            )}
-          </button>
-        </div>
-      )}
+      <div className="flex justify-end">
+        <button
+          onClick={onDeploy}
+          disabled={isLoading}
+          className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+          title={t('environment.deployCreate2Factory')}
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              {t('common.deploying')}
+            </>
+          ) : (
+            <>
+              <Plus className="h-4 w-4" />
+              {t('environment.deployCreate2Factory')}
+            </>
+          )}
+        </button>
+      </div>
     </div>
   );
 }
@@ -178,6 +154,9 @@ function FungibleProxyDeployment({
   onDeploy,
   isLoading,
   explorer,
+  factories,
+  selectedFactory,
+  setSelectedFactory,
 }: {
   state: EnvironmentChainState;
   create2Salt: string;
@@ -185,6 +164,9 @@ function FungibleProxyDeployment({
   onDeploy: () => void;
   isLoading: boolean;
   explorer: string;
+  factories: { label: string; address: string; desc?: string }[];
+  selectedFactory: string;
+  setSelectedFactory: (value: string) => void;
 }) {
   const { t } = useTranslation();
   return (
@@ -200,6 +182,30 @@ function FungibleProxyDeployment({
       <p className="text-sm text-muted">
         {t('environment.fungibleProxyDesc')}
       </p>
+
+      <div>
+        <label className="block text-xs font-medium text-muted uppercase tracking-wide mb-1">
+          {t('environment.create2FactorySelect')}
+        </label>
+        <select
+          value={selectedFactory}
+          onChange={e => setSelectedFactory(e.target.value)}
+          disabled={isLoading}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none bg-white"
+        >
+          <option value="">{t('environment.create2FactorySelectPlaceholder')}</option>
+          {factories.map(f => (
+            <option key={f.address} value={f.address}>
+              {f.label} - {f.address.slice(0, 10)}...{f.address.slice(-8)}
+            </option>
+          ))}
+        </select>
+        {selectedFactory && (
+          <p className="mt-2 text-xs text-muted">
+            {factories.find(f => f.address === selectedFactory)?.desc}
+          </p>
+        )}
+      </div>
 
       <div>
         <label className="block text-xs font-medium text-muted uppercase tracking-wide mb-1">
@@ -345,21 +351,30 @@ export function Environment() {
     tokenAddress: '',
     useCreate2: true,
     create2Salt: 'fungible-token',
+    selectedCreate2Factory: '',
   });
 
   const { deployCreate2Factory, isDeploying: isDeployingCreate2 } = useCreate2Deploy();
 
+  function buildCreate2Factory(
+  cfg: { create2Factory?: Record<string, { address?: string; desc?: string }> } | null,
+): EnvironmentChainState['create2Factory'] {
+  if (!cfg?.create2Factory) {
+    return { entries: {}, deployed: false };
+  }
+  const entries: Record<string, { address: string; desc?: string }> = {};
+  for (const [key, val] of Object.entries(cfg.create2Factory)) {
+    if (val?.address) {
+      entries[key] = { address: val.address, desc: val.desc };
+    }
+  }
+  return { entries, deployed: Object.keys(entries).length > 0 };
+}
+
   useEffect(() => {
     const initial: EnvironmentChainState[] = mockChains.map(c => {
-      const cfg = c as { create2Factory?: { nick?: string; safe?: string; createx?: string } };
-      const create2Factory = cfg.create2Factory
-        ? {
-            nick: cfg.create2Factory.nick || null,
-            safe: cfg.create2Factory.safe || null,
-            createx: cfg.create2Factory.createx || null,
-            deployed: true,
-          }
-        : { nick: null, safe: null, createx: null, deployed: false };
+      const cfg = c as { create2Factory?: Record<string, { address?: string; desc?: string }> };
+      const create2Factory = buildCreate2Factory(cfg);
       return {
         chainId: c.id,
         token: {
@@ -379,15 +394,8 @@ export function Environment() {
   useEffect(() => {
     const unsubscribe = eventBus.on('refresh-environment', () => {
       const refreshed: EnvironmentChainState[] = mockChains.map(c => {
-        const cfg = c as { create2Factory?: { nick?: string; safe?: string; createx?: string } };
-        const create2Factory = cfg.create2Factory
-          ? {
-              nick: cfg.create2Factory.nick || null,
-              safe: cfg.create2Factory.safe || null,
-              createx: cfg.create2Factory.createx || null,
-              deployed: true,
-            }
-          : { nick: null, safe: null, createx: null, deployed: false };
+        const cfg = c as { create2Factory?: Record<string, { address?: string; desc?: string }> };
+        const create2Factory = buildCreate2Factory(cfg);
         return {
           chainId: c.id,
           token: {
@@ -431,6 +439,18 @@ export function Environment() {
   const isChainAdded = selectedChain ? connectedChains.some(c => c.id === selectedChainId) : false;
   const explorer = selectedChain?.blockExplorer || '';
 
+  const availableFactories: { label: string; address: string; desc?: string }[] = [];
+  const selectedCfg = mockChains.find(c => c.id === selectedChainId) as
+    | { create2Factory?: Record<string, { address?: string; desc?: string }> }
+    | undefined;
+  if (selectedCfg?.create2Factory) {
+    for (const [key, val] of Object.entries(selectedCfg.create2Factory)) {
+      if (val?.address) {
+        availableFactories.push({ label: key, address: val.address, desc: val.desc });
+      }
+    }
+  }
+
   const handleAddChain = async () => {
     if (!selectedChain) return;
     const chain = chainConfigs[selectedChainId];
@@ -461,9 +481,7 @@ export function Environment() {
 
       const newState = { ...selectedState };
       newState.create2Factory = {
-        nick: factoryAddress,
-        safe: null,
-        createx: null,
+        entries: { [factoryAddress]: { address: factoryAddress } },
         deployed: true,
       };
 
@@ -481,7 +499,7 @@ export function Environment() {
       setSuccess(
         t('environment.success.tokenDeployed', { name: selectedChain?.name || '' })
       );
-      setForm({ tokenAddress: '', useCreate2: true, create2Salt: 'fungible-token' });
+      setForm({ tokenAddress: '', useCreate2: true, create2Salt: 'fungible-token', selectedCreate2Factory: '' });
     } catch {
       setError(t('environment.error.deployToken'));
     } finally {
@@ -643,6 +661,9 @@ export function Environment() {
             onDeploy={() => { void handleDeployProxy(); }}
             isLoading={activeStep === 'proxy'}
             explorer={explorer}
+            factories={availableFactories}
+            selectedFactory={form.selectedCreate2Factory}
+            setSelectedFactory={v => setForm({ ...form, selectedCreate2Factory: v })}
           />
 
           <FungibleFactoryDeployment
