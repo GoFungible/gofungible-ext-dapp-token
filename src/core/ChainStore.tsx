@@ -26,6 +26,11 @@ export interface Exchange {
   address: string;
 }
 
+export interface Lender {
+  name: string;
+  address: string;
+}
+
 export interface ChainJson {
   id: number;
   name: string;
@@ -41,6 +46,7 @@ export interface ChainJson {
   PaymentTokens?: Record<string, PaymentToken>;
   Relayers?: Record<string, Relay>;
   Exchanges?: Record<string, Exchange>;
+  Lenders?: Record<string, Lender>;
 }
 
 interface ChainStoreContextType {
@@ -55,6 +61,7 @@ interface ChainStoreContextType {
   updateChainPaymentTokens: (chainId: number, tokens: Record<string, PaymentToken>) => void;
   updateChainRelayers: (chainId: number, relayers: Record<string, Relay>) => void;
   updateChainExchanges: (chainId: number, exchanges: Record<string, Exchange>) => void;
+  updateChainLenders: (chainId: number, lenders: Record<string, Lender>) => void;
 }
 
 const ChainStoreContext = createContext<ChainStoreContextType | undefined>(undefined);
@@ -196,6 +203,20 @@ export function ChainStoreProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  const updateChainLenders = useCallback(
+    (chainId: number, lenders: Record<string, Lender>) => {
+      setChainCache(prev => {
+        const existing = prev[chainId];
+        if (!existing) return prev;
+        return {
+          ...prev,
+          [chainId]: { ...existing, Lenders: lenders },
+        };
+      });
+    },
+    [],
+  );
+
   const value: ChainStoreContextType = {
     selectedChainId,
     selectedChain,
@@ -208,6 +229,7 @@ export function ChainStoreProvider({ children }: { children: ReactNode }) {
     updateChainPaymentTokens,
     updateChainRelayers,
     updateChainExchanges,
+    updateChainLenders,
   };
 
   return (
