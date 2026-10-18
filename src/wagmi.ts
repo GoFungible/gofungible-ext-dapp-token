@@ -1,6 +1,6 @@
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { defineChain } from 'viem';
-import { mainnet, polygon, arbitrum, optimism, base, sepolia } from 'wagmi/chains';
+import { mainnet, polygon, arbitrum, optimism, base, sepolia, bsc } from 'wagmi/chains';
 
 export const anvil1 = defineChain({
   id: 1111,
@@ -23,6 +23,6 @@ export const anvil2 = defineChain({
 export const wagmiConfig = getDefaultConfig({
   appName: 'Gofungible Ext DApp Token',
   projectId: import.meta.env.VITE_WALLET_CONNECT_PROJECT_ID ?? 'YOUR_PROJECT_ID',
-  chains: [mainnet, polygon, arbitrum, optimism, base, sepolia, anvil1, anvil2],
+  chains: [mainnet, polygon, arbitrum, optimism, base, sepolia, bsc, anvil1, anvil2],
   ssr: true,
 });

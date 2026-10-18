@@ -88,7 +88,7 @@
     "tableFeature": "Feature"
   },
   "environment": {
-    "title": "Environment",
+    "title": "Environment in {{name}}",
     "subtitle": "Manage the contract environment of a chain. Deploy a Create2Token, a FungibleProxy, and a FungibleFactory, then assign the factory to the proxy.",
     "deployed": "Deployed",
     "notDeployed": "Not deployed",

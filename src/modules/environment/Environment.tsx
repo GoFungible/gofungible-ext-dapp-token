@@ -860,7 +860,7 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-foreground">{t('environment.title')}</h1>
+        <h1 className="text-3xl font-bold text-foreground">{t('environment.title', { name: selectedChain.name })}</h1>
         <p className="text-muted mt-1">
           {t('environment.subtitle')}
         </p>

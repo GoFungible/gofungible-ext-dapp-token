@@ -1,4 +1,4 @@
-export const SUPPORTED_CHAIN_IDS = [1, 137, 42161, 10, 8453];
+export const SUPPORTED_CHAIN_IDS = [1, 137, 42161, 10, 8453, 56];
 
 export interface EnvironmentToken {
   address: string | null;

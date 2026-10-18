@@ -88,7 +88,7 @@
     "tableFeature": "Característica"
   },
   "environment": {
-    "title": "Entorno",
+    "title": "Entorno en {{name}}",
     "subtitle": "Gestione el entorno contractual de una cadena. Despliegue un Create2Token, un FungibleProxy y un FungibleFactory, y asigne la fábrica al proxy.",
     "deployed": "Desplegado",
     "notDeployed": "No desplegado",
