@@ -31,7 +31,37 @@
 		
 	},
 	"PaymentTokens": {
-		
+		"WBNB": "",
+
+		"BTCB": "",
+		"WETH": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
+		"ETH": "",
+		"XRP": "",
+		"XLM": "",
+		"ADA": "",
+		"WHBAR": "",
+		"SUI": "",
+		"MATIC": "",
+		"DOT": "",
+		"ATOM": "",
+		"LTC": "",
+		"AVAX": "",
+
+		"CAKE": "",
+		"DODO": "",
+
+		"USDT": "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9",
+		"BUSD": "",
+		"USDC": "0x2ce2f7dcf2f724c688ee05a6bdc3002a108e5831",
+		"DAI": "",
+
+		"PEPE": "",
+		"FLOKY": "",
+		"WIF": "",
+		"TURBO": "",
+		"TRUMP": "",
+		"DOGE": "",
+		"SHIB": ""
 	},
 	"Exchanges": {
 		
