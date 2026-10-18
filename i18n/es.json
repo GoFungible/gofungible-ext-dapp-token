@@ -143,7 +143,9 @@
         "paymentTokenAdded": "Método de pago agregado en {{name}}",
         "paymentTokenRemoved": "Método de pago eliminado en {{name}}",
         "relayerAdded": "Relayer agregado en {{name}}",
-        "relayerRemoved": "Relayer eliminado en {{name}}"
+        "relayerRemoved": "Relayer eliminado en {{name}}",
+        "exchangeAdded": "Exchange agregado en {{name}}",
+        "exchangeRemoved": "Exchange eliminado en {{name}}"
     },
     "error": {
       "deployToken": "Error al desplegar el contrato de token. Inténtelo de nuevo.",
@@ -172,7 +174,14 @@
     "relayerAddress": "Dirección del relayer",
     "addRelayer": "Agregar Relayer",
     "removeRelayer": "Eliminar",
-    "noRelayers": "No hay relayers configurados."
+    "noRelayers": "No hay relayers configurados.",
+    "exchanges": "Exchanges",
+    "exchangesDesc": "Exchanges que se pueden utilizar en esta cadena.",
+    "exchangeName": "Nombre del exchange",
+    "exchangeAddress": "Dirección del exchange",
+    "addExchange": "Agregar Exchange",
+    "removeExchange": "Eliminar",
+    "noExchanges": "No hay exchanges configurados."
   },
   "tokenPerimeter": {
     "title": "Perímetro de Token",

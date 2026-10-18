@@ -143,7 +143,9 @@
         "paymentTokenAdded": "Payment method added on {{name}}",
         "paymentTokenRemoved": "Payment method removed on {{name}}",
         "relayerAdded": "Relayer added on {{name}}",
-        "relayerRemoved": "Relayer removed on {{name}}"
+        "relayerRemoved": "Relayer removed on {{name}}",
+        "exchangeAdded": "Exchange added on {{name}}",
+        "exchangeRemoved": "Exchange removed on {{name}}"
     },
     "error": {
       "deployToken": "Failed to deploy token contract. Please try again.",
@@ -174,7 +176,14 @@
     "relayerAddress": "Relayer address",
     "addRelayer": "Add Relayer",
     "removeRelayer": "Remove",
-    "noRelayers": "No relayers configured."
+    "noRelayers": "No relayers configured.",
+    "exchanges": "Exchanges",
+    "exchangesDesc": "Exchanges that can be used on this chain.",
+    "exchangeName": "Exchange name",
+    "exchangeAddress": "Exchange address",
+    "addExchange": "Add Exchange",
+    "removeExchange": "Remove",
+    "noExchanges": "No exchanges configured."
   },
   "tokenPerimeter": {
     "title": "Token Perimeter",
