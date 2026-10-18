@@ -159,7 +159,7 @@ function FungibleProxyDeployment({
   state,
   create2Salt,
   setCreate2Salt,
-  onDeploy,
+	onDeploy,
   isLoading,
   explorer,
   factories,
@@ -181,7 +181,7 @@ function FungibleProxyDeployment({
     <div className="bg-surface rounded-xl border border-gray-200 p-6 space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
-          <Settings className="h-5 w-5 text-purple-600" />
+          <Settings className="h-5 w-5 text-blue-600" />
           {t('environment.fungibleProxyContract')}
         </h3>
         <StatusBadge deployed={state.fungibleProxy.deployed} />
@@ -247,7 +247,7 @@ function FungibleProxyDeployment({
         <button
           onClick={onDeploy}
           disabled={isLoading || !selectedFactory || !create2Salt}
-          className="px-4 py-2 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+          className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
           title={t('environment.deployFungibleProxy')}
         >
           {isLoading ? (
@@ -380,7 +380,7 @@ function FungibleEnvironmentDeployment({
     <div className="bg-surface rounded-xl border border-gray-200 p-6 space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
-          <Network className="h-5 w-5 text-teal-600" />
+          <Network className="h-5 w-5 text-blue-600" />
           {t('environment.fungibleEnvironmentContract')}
         </h3>
         <StatusBadge deployed={state.fungibleEnvironment.deployed} />
@@ -403,7 +403,7 @@ function FungibleEnvironmentDeployment({
         <button
           onClick={onDeploy}
           disabled={isDeploying || state.fungibleEnvironment.deployed}
-          className="px-4 py-2 bg-teal-600 text-white font-medium rounded-lg hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+          className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
           title={t('environment.deployFungibleEnvironment')}
         >
           {isDeploying ? (
