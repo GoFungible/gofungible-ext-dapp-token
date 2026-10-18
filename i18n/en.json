@@ -147,7 +147,9 @@
         "exchangeAdded": "Exchange added on {{name}}",
         "exchangeRemoved": "Exchange removed on {{name}}",
         "lenderAdded": "Lending platform added on {{name}}",
-        "lenderRemoved": "Lending platform removed on {{name}}"
+        "lenderRemoved": "Lending platform removed on {{name}}",
+        "fungibleTokenAdded": "Fungible token added on {{name}}",
+        "fungibleTokenRemoved": "Fungible token removed on {{name}}"
     },
     "error": {
       "deployToken": "Failed to deploy token contract. Please try again.",
@@ -192,7 +194,14 @@
     "lenderAddress": "Lending platform address",
     "addLender": "Add Lending Platform",
     "removeLender": "Remove",
-    "noLenders": "No lending platforms configured."
+    "noLenders": "No lending platforms configured.",
+    "fungibleTokens": "Fungible Tokens",
+    "fungibleTokensDesc": "Fungible tokens that can be used on this chain.",
+    "fungibleTokenName": "Token name",
+    "fungibleTokenAddress": "Token address",
+    "addFungibleToken": "Add Fungible Token",
+    "removeFungibleToken": "Remove",
+    "noFungibleTokens": "No fungible tokens configured."
   },
   "tokenPerimeter": {
     "title": "Token Perimeter",

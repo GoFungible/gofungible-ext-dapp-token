@@ -147,7 +147,9 @@
         "exchangeAdded": "Exchange agregado en {{name}}",
         "exchangeRemoved": "Exchange eliminado en {{name}}",
         "lenderAdded": "Lender agregado en {{name}}",
-        "lenderRemoved": "Lender eliminado en {{name}}"
+        "lenderRemoved": "Lender eliminado en {{name}}",
+        "fungibleTokenAdded": "Token Fungible agregado en {{name}}",
+        "fungibleTokenRemoved": "Token Fungible eliminado en {{name}}"
     },
     "error": {
       "deployToken": "Error al desplegar el contrato de token. Inténtelo de nuevo.",
@@ -190,7 +192,14 @@
     "lenderAddress": "Dirección del Lender",
     "addLender": "Agregar Lender",
     "removeLender": "Eliminar",
-    "noLenders": "No hay Lenders configurados."
+    "noLenders": "No hay Lenders configurados.",
+    "fungibleTokens": "Fungible Tokens",
+    "fungibleTokensDesc": "Fungible Tokens que se pueden utilizar en esta cadena.",
+    "fungibleTokenName": "Nombre del token Fungible",
+    "fungibleTokenAddress": "Dirección del token Fungible",
+    "addFungibleToken": "Agregar Token Fungible",
+    "removeFungibleToken": "Eliminar",
+    "noFungibleTokens": "No hay tokens Fungible configurados."
   },
   "tokenPerimeter": {
     "title": "Perímetro de Token",
