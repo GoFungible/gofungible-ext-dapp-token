@@ -436,7 +436,7 @@ function FungibleEnvironmentDeployment({
         </button>
         <button
           onClick={onSetInEnvironment}
-          disabled={isSetInLoading || !state.fungibleEnvironment.deployed || state.fungibleEnvironment.assigned}
+          disabled={isSetInLoading || state.fungibleEnvironment.assigned}
           className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
           title={t('environment.setInEnvironment')}
         >
@@ -597,7 +597,7 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
       }
 
       updateChainCreate2Factory(selectedChainId, {
-        [factoryAddress]: { address: factoryAddress },
+        deployed: { address: factoryAddress, desc: 'Create2Factory deployed from this dApp' },
       });
 
       const newState = { ...selectedState };
@@ -609,7 +609,7 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
       newState.create2Factory = {
         entries: {
           ...selectedState.create2Factory.entries,
-          [factoryAddress]: { address: factoryAddress },
+          deployed: { address: factoryAddress, desc: 'Create2Factory deployed from this dApp' },
         },
         deployed: true,
       };
@@ -771,7 +771,7 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
   };
 
   const handleSetInEnvironment = async () => {
-    if (!selectedState || !selectedState.fungibleEnvironment.deployed) return;
+    if (!selectedState) return;
 
     setActiveStep('setInEnvironment');
     setError(undefined);
@@ -826,7 +826,7 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
       newState.fungibleEnvironment = {
         address: environmentAddress,
         deployed: true,
-        assigned: true,
+        assigned: false,
       };
 
       updateChainFungibleEnvironment(selectedChainId, environmentAddress);
