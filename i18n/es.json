@@ -127,6 +127,8 @@
     "fungibleEnvironmentDesc": "Despliegue un contrato FungibleEnvironment en esta cadena para gestionar tokens de pago y feeds de precios para el ecosistema de tokens.",
     "deployFungibleEnvironment": "Deploy",
     "environmentDeployed": "Entorno Desplegado",
+    "setInEnvironment": "Asignar a Proxy",
+    "environmentAssigned": "Entorno Asignado",
     "selectChain": "Seleccionar Cadena",
     "chainOption": "{{name}} ({{symbol}}) • ID de Cadena: {{id}}",
     "chainHeader": "{{name}} • ID de Cadena: {{id}}",

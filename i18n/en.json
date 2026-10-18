@@ -127,6 +127,8 @@
     "fungibleEnvironmentDesc": "Deploy a FungibleEnvironment contract on this chain to manage payment tokens and price feeds for the token ecosystem.",
     "deployFungibleEnvironment": "Deploy",
     "environmentDeployed": "Environment Deployed",
+    "setInEnvironment": "Set To Proxy",
+    "environmentAssigned": "Environment Assigned",
     "selectChain": "Select Chain",
     "chainOption": "{{name}} ({{symbol}}) • Chain ID: {{id}}",
     "chainHeader": "{{name}} • Chain ID: {{id}}",
@@ -136,7 +138,8 @@
       "proxyDeployed": "FungibleProxy deployed on {{name}}",
       "factoryDeployed": "FungibleFactory deployed on {{name}}",
       "factoryAssigned": "FungibleFactory assigned to FungibleProxy on {{name}}",
-        "environmentDeployed": "FungibleEnvironment deployed on {{name}}"
+        "environmentDeployed": "FungibleEnvironment deployed on {{name}}",
+        "environmentAssigned": "FungibleEnvironment assigned to FungibleProxy on {{name}}"
     },
     "error": {
       "deployToken": "Failed to deploy token contract. Please try again.",
@@ -144,6 +147,7 @@
       "selectFactory": "Please select a Create2Factory before deploying.",
       "deployFactory": "Failed to deploy FungibleFactory. Please try again.",
       "setInFactory": "Failed to assign FungibleFactory to FungibleProxy. Please try again.",
+      "setInEnvironment": "Failed to assign FungibleEnvironment to FungibleProxy. Please try again.",
       "deployEnvironment": "Failed to deploy FungibleEnvironment. Please try again.",
       "addChainToWallet": "Failed to add {{name}} to wallet. Please approve the request in MetaMask."
     },

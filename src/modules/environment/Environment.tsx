@@ -99,7 +99,7 @@ function TokenDeployment({
   const { t } = useTranslation();
 
   return (
-    <div className="bg-surface rounded-xl border border-gray-200 p-6 space-y-4">
+    <div className="bg-surface rounded-xl border border-gray-200 p-6 flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
           <Plus className="h-5 w-5 text-blue-600" />
@@ -131,7 +131,7 @@ function TokenDeployment({
           </div>
         </div>
 
-      <div className="flex justify-end">
+      <div className="flex justify-end mt-auto">
         <button
           onClick={onDeploy}
           disabled={isLoading || !chainAdded}
@@ -178,7 +178,7 @@ function FungibleProxyDeployment({
 }) {
   const { t } = useTranslation();
   return (
-    <div className="bg-surface rounded-xl border border-gray-200 p-6 space-y-4">
+    <div className="bg-surface rounded-xl border border-gray-200 p-6 flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
           <Settings className="h-5 w-5 text-blue-600" />
@@ -243,7 +243,7 @@ function FungibleProxyDeployment({
         </div>
       )}
 
-      <div className="flex justify-end">
+      <div className="flex justify-end mt-auto">
         <button
           onClick={onDeploy}
           disabled={isLoading || !selectedFactory || !create2Salt}
@@ -367,17 +367,21 @@ function FungibleFactoryDeployment({
 function FungibleEnvironmentDeployment({
   state,
   onDeploy,
+  onSetInEnvironment,
   isDeploying,
+  isSetInLoading,
   explorer,
 }: {
   state: EnvironmentChainState;
   onDeploy: () => void;
+  onSetInEnvironment: () => void;
   isDeploying: boolean;
+  isSetInLoading: boolean;
   explorer: string;
 }) {
   const { t } = useTranslation();
   return (
-    <div className="bg-surface rounded-xl border border-gray-200 p-6 space-y-4">
+    <div className="bg-surface rounded-xl border border-gray-200 p-6 flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
           <Network className="h-5 w-5 text-blue-600" />
@@ -397,9 +401,19 @@ function FungibleEnvironmentDeployment({
           showExplorer={!!explorer}
           explorer={explorer}
         />
+        <div className="flex items-center gap-2 mt-2">
+          <div className={state.fungibleEnvironment.assigned ? 'text-green-600' : 'text-muted'}>
+            {state.fungibleEnvironment.assigned ? <CheckCircle className="h-4 w-4 inline" /> : <XCircle className="h-4 w-4 inline" />}
+          </div>
+          <span className="text-sm text-muted">
+            {state.fungibleEnvironment.assigned
+              ? t('environment.assignedToProxy')
+              : t('environment.notAssignedToProxy')}
+          </span>
+        </div>
       </div>
 
-      <div className="flex justify-end">
+      <div className="flex flex-wrap justify-end gap-2 mt-auto">
         <button
           onClick={onDeploy}
           disabled={isDeploying || state.fungibleEnvironment.deployed}
@@ -417,6 +431,26 @@ function FungibleEnvironmentDeployment({
             <>
               <Plus className="h-4 w-4" />
               {t('environment.deployFungibleEnvironment')}
+            </>
+          )}
+        </button>
+        <button
+          onClick={onSetInEnvironment}
+          disabled={isSetInLoading || !state.fungibleEnvironment.deployed || state.fungibleEnvironment.assigned}
+          className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+          title={t('environment.setInEnvironment')}
+        >
+          {isSetInLoading ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              {t('common.deploying')}
+            </>
+          ) : state.fungibleEnvironment.assigned ? (
+            t('environment.environmentAssigned')
+          ) : (
+            <>
+              <Plus className="h-4 w-4" />
+              {t('environment.setInEnvironment')}
             </>
           )}
         </button>
@@ -736,6 +770,40 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
     }
   };
 
+  const handleSetInEnvironment = async () => {
+    if (!selectedState || !selectedState.fungibleEnvironment.deployed) return;
+
+    setActiveStep('setInEnvironment');
+    setError(undefined);
+    setSuccess(undefined);
+
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      const newState = { ...selectedState };
+      newState.fungibleEnvironment = {
+        ...newState.fungibleEnvironment,
+        assigned: true,
+      };
+
+      setChainStates(prev =>
+        prev.map(c => (c.chainId === selectedChainId ? newState : c))
+      );
+
+      eventBus.emit('environment:environment-assigned', {
+        chainId: selectedChainId,
+        chainName: selectedChain?.name,
+        timestamp: Date.now(),
+      });
+
+      setSuccess(t('environment.success.environmentAssigned', { name: selectedChain?.name || '' }));
+    } catch {
+      setError(t('environment.error.setInEnvironment'));
+    } finally {
+      setActiveStep(null);
+    }
+  };
+
   const handleDeployEnvironment = async () => {
     if (!selectedState || !selectedChain) return;
     if (!isChainAdded) {
@@ -865,7 +933,7 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
             </div>
           )}
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
             <TokenDeployment
               state={selectedState}
               onDeploy={() => { void handleDeployToken(); }}
@@ -889,7 +957,9 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
             <FungibleEnvironmentDeployment
               state={selectedState}
               onDeploy={() => { void handleDeployEnvironment(); }}
+              onSetInEnvironment={() => { void handleSetInEnvironment(); }}
               isDeploying={activeStep === 'environment' || isDeployingEnvironment}
+              isSetInLoading={activeStep === 'setInEnvironment'}
               explorer={explorer}
             />
           </div>
