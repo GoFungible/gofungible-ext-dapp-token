@@ -23,10 +23,6 @@
 	},
 	"FungibleProxy": "",
 	"FungibleEnvironment": "",
-	"FungibleFactory": "",
-	"FungibleToken": {
-
-	},
 	"Relayers": {
 		
 	},
@@ -35,5 +31,12 @@
 	},
 	"Exchanges": {
 		
+	},
+	"Lenders": {
+		
+	},
+	"FungibleFactory": "",
+	"FungibleTokens": {
+
 	}
 }

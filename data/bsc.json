@@ -23,8 +23,6 @@
   },
   "FungibleProxy": "",
   "FungibleEnvironment": "",
-  "FungibleFactory": "",
-  "FungibleToken": {},
   "Relayers": {},
   "PaymentTokens": {
 		"WBNB": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
@@ -59,5 +57,10 @@
 		"DOGE": "0xba2ae424d960c26247dd6c32edc70b295c744c43",
 		"SHIB": "0xdf0816cc717216c8b0863af8d4f0fc20bc65d643"
 	},
-  "Exchanges": {}
+  "Exchanges": {},
+	"Lenders": {
+		
+	},
+	"FungibleFactory": "",
+  "FungibleTokens": {}
 }

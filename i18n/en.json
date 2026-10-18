@@ -145,7 +145,9 @@
         "relayerAdded": "Relayer added on {{name}}",
         "relayerRemoved": "Relayer removed on {{name}}",
         "exchangeAdded": "Exchange added on {{name}}",
-        "exchangeRemoved": "Exchange removed on {{name}}"
+        "exchangeRemoved": "Exchange removed on {{name}}",
+        "lenderAdded": "Lending platform added on {{name}}",
+        "lenderRemoved": "Lending platform removed on {{name}}"
     },
     "error": {
       "deployToken": "Failed to deploy token contract. Please try again.",
@@ -183,7 +185,14 @@
     "exchangeAddress": "Exchange address",
     "addExchange": "Add Exchange",
     "removeExchange": "Remove",
-    "noExchanges": "No exchanges configured."
+    "noExchanges": "No exchanges configured.",
+    "lendingPlatforms": "Lending Platforms",
+    "lendingPlatformsDesc": "Lending platforms that can be used on this chain.",
+    "lenderName": "Lending platform name",
+    "lenderAddress": "Lending platform address",
+    "addLender": "Add Lending Platform",
+    "removeLender": "Remove",
+    "noLenders": "No lending platforms configured."
   },
   "tokenPerimeter": {
     "title": "Token Perimeter",
