@@ -139,7 +139,11 @@
       "factoryDeployed": "FungibleFactory deployed on {{name}}",
       "factoryAssigned": "FungibleFactory assigned to FungibleProxy on {{name}}",
         "environmentDeployed": "FungibleEnvironment deployed on {{name}}",
-        "environmentAssigned": "FungibleEnvironment assigned to FungibleProxy on {{name}}"
+        "environmentAssigned": "FungibleEnvironment assigned to FungibleProxy on {{name}}",
+        "paymentTokenAdded": "Payment method added on {{name}}",
+        "paymentTokenRemoved": "Payment method removed on {{name}}",
+        "relayerAdded": "Relayer added on {{name}}",
+        "relayerRemoved": "Relayer removed on {{name}}"
     },
     "error": {
       "deployToken": "Failed to deploy token contract. Please try again.",
@@ -156,7 +160,21 @@
     "addingChain": "Adding...",
     "deployCreate2Factory": "Deploy",
     "currentCreate2FactoryAddress": "Current Create2Factory Addresses",
-    "noCreate2FactoryAddresses": "No Create2Factory addresses found."
+    "noCreate2FactoryAddresses": "No Create2Factory addresses found.",
+    "paymentTokens": "Payment Methods",
+    "paymentTokensDesc": "Tokens that can be used as payment method on this chain.",
+    "paymentTokenName": "Token name",
+    "paymentTokenAddress": "Token address",
+    "addPaymentToken": "Add Payment Method",
+    "removePaymentToken": "Remove",
+    "noPaymentTokens": "No payment methods configured.",
+    "relayers": "Relayers",
+    "relayersDesc": "Relayers that can be used on this chain.",
+    "relayerName": "Relayer name",
+    "relayerAddress": "Relayer address",
+    "addRelayer": "Add Relayer",
+    "removeRelayer": "Remove",
+    "noRelayers": "No relayers configured."
   },
   "tokenPerimeter": {
     "title": "Token Perimeter",

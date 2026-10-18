@@ -11,6 +11,16 @@ export interface ChainToken {
   priceChange24h?: number;
 }
 
+export interface PaymentToken {
+  name: string;
+  address: string;
+}
+
+export interface Relay {
+  name: string;
+  address: string;
+}
+
 export interface ChainJson {
   id: number;
   name: string;
@@ -23,6 +33,8 @@ export interface ChainJson {
   FungibleProxy?: string;
   FungibleFactory?: string;
   FungibleEnvironment?: string;
+  PaymentTokens?: Record<string, PaymentToken>;
+  Relayers?: Record<string, Relay>;
 }
 
 interface ChainStoreContextType {
@@ -34,6 +46,8 @@ interface ChainStoreContextType {
   updateChainFungibleProxy: (chainId: number, address: string) => void;
   updateChainFungibleFactory: (chainId: number, address: string) => void;
   updateChainFungibleEnvironment: (chainId: number, address: string) => void;
+  updateChainPaymentTokens: (chainId: number, tokens: Record<string, PaymentToken>) => void;
+  updateChainRelayers: (chainId: number, relayers: Record<string, Relay>) => void;
 }
 
 const ChainStoreContext = createContext<ChainStoreContextType | undefined>(undefined);
@@ -133,6 +147,34 @@ export function ChainStoreProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  const updateChainPaymentTokens = useCallback(
+    (chainId: number, tokens: Record<string, PaymentToken>) => {
+      setChainCache(prev => {
+        const existing = prev[chainId];
+        if (!existing) return prev;
+        return {
+          ...prev,
+          [chainId]: { ...existing, PaymentTokens: tokens },
+        };
+      });
+    },
+    [],
+  );
+
+  const updateChainRelayers = useCallback(
+    (chainId: number, relayers: Record<string, Relay>) => {
+      setChainCache(prev => {
+        const existing = prev[chainId];
+        if (!existing) return prev;
+        return {
+          ...prev,
+          [chainId]: { ...existing, Relayers: relayers },
+        };
+      });
+    },
+    [],
+  );
+
   const value: ChainStoreContextType = {
     selectedChainId,
     selectedChain,
@@ -142,6 +184,8 @@ export function ChainStoreProvider({ children }: { children: ReactNode }) {
     updateChainFungibleProxy,
     updateChainFungibleFactory,
     updateChainFungibleEnvironment,
+    updateChainPaymentTokens,
+    updateChainRelayers,
   };
 
   return (

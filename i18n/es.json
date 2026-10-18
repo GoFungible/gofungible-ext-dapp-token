@@ -123,7 +123,7 @@
     "setInFactory": "Asignar en Entorno",
     "factoryAssigned": "Fábrica Asignada",
     "factoryDeployed": "Fábrica Desplegada",
-    "fungibleEnvironmentContract": "Desplegar FungibleEnvironment",
+    "fungibleEnvironmentContract": "Entorno Fungible",
     "fungibleEnvironmentDesc": "Despliegue un contrato FungibleEnvironment en esta cadena para gestionar tokens de pago y feeds de precios para el ecosistema de tokens.",
     "deployFungibleEnvironment": "Deploy",
     "environmentDeployed": "Desplegado",
@@ -138,7 +138,12 @@
       "proxyDeployed": "FungibleProxy desplegado en {{name}}",
       "factoryDeployed": "FungibleFactory desplegado en {{name}}",
       "factoryAssigned": "FungibleFactory asignado a FungibleProxy en {{name}}",
-        "environmentDeployed": "FungibleEnvironment desplegado en {{name}}"
+        "environmentDeployed": "FungibleEnvironment desplegado en {{name}}",
+        "environmentAssigned": "FungibleEnvironment asignado a FungibleProxy en {{name}}",
+        "paymentTokenAdded": "Método de pago agregado en {{name}}",
+        "paymentTokenRemoved": "Método de pago eliminado en {{name}}",
+        "relayerAdded": "Relayer agregado en {{name}}",
+        "relayerRemoved": "Relayer eliminado en {{name}}"
     },
     "error": {
       "deployToken": "Error al desplegar el contrato de token. Inténtelo de nuevo.",
@@ -153,7 +158,21 @@
     "addingChain": "Agregando...",
     "deployCreate2Factory": "Deploy",
     "currentCreate2FactoryAddress": "Direcciones actuales de Create2Factory",
-    "noCreate2FactoryAddresses": "No se encontraron direcciones Create2Factory."
+    "noCreate2FactoryAddresses": "No se encontraron direcciones Create2Factory.",
+    "paymentTokens": "Métodos de Pago",
+    "paymentTokensDesc": "Tokens que se pueden utilizar como método de pago en esta cadena.",
+    "paymentTokenName": "Nombre del token",
+    "paymentTokenAddress": "Dirección del token",
+    "addPaymentToken": "Aggregate Método de Pago",
+    "removePaymentToken": "Eliminar",
+    "noPaymentTokens": "No hay métodos de pago configurados.",
+    "relayers": "Relayers",
+    "relayersDesc": "Relayers que se pueden utilizar en esta cadena.",
+    "relayerName": "Nombre del relayer",
+    "relayerAddress": "Dirección del relayer",
+    "addRelayer": "Agregar Relayer",
+    "removeRelayer": "Eliminar",
+    "noRelayers": "No hay relayers configurados."
   },
   "tokenPerimeter": {
     "title": "Perímetro de Token",

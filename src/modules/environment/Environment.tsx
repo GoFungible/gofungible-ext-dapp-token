@@ -459,11 +459,284 @@ function FungibleEnvironmentDeployment({
   );
 }
 
+function PaymentTokens({
+  tokens,
+  explorer,
+  onAdd,
+  onRemove,
+}: {
+  tokens: Record<string, { name: string; address: string }>;
+  explorer: string;
+  onAdd: (name: string, address: string) => void;
+  onRemove: (name: string) => void;
+}) {
+  const { t } = useTranslation();
+  const [adding, setAdding] = useState(false);
+  const [newName, setNewName] = useState('');
+  const [newAddress, setNewAddress] = useState('');
+
+  const handleAdd = () => {
+    if (!newName.trim() || !newAddress.trim()) return;
+    onAdd(newName.trim(), newAddress.trim());
+    setNewName('');
+    setNewAddress('');
+    setAdding(false);
+  };
+
+  return (
+    <div className="bg-surface rounded-xl border border-gray-200 p-6 flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+          <Network className="h-5 w-5 text-blue-600" />
+          {t('environment.paymentTokens')}
+        </h3>
+        <span className="text-xs font-medium text-muted bg-gray-50 px-2 py-1 rounded-full">
+          {Object.keys(tokens).length}
+        </span>
+      </div>
+
+      <p className="text-sm text-muted">
+        {t('environment.paymentTokensDesc')}
+      </p>
+
+      <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+        {Object.keys(tokens).length > 0 ? (
+          Object.entries(tokens).map(([key, token]) => {
+            const tokenObj =
+              typeof token === 'string'
+                ? { name: key, address: token }
+                : (token as { name?: string; address?: string });
+            if (!tokenObj?.address || typeof tokenObj.address !== 'string' || tokenObj.address.length === 0) {
+              return null;
+            }
+            const addr = tokenObj.address;
+            const name = tokenObj.name || key;
+            if (!addr) return null;
+            return (
+              <div key={key} className="flex items-center justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-foreground truncate">{name}</p>
+                  <code className="text-xs font-mono text-muted">
+                    {addr && addr.length > 8 ? `${addr.slice(0, 10)}...${addr.slice(-8)}` : addr}
+                  </code>
+                </div>
+                <div className="flex items-center gap-1">
+                  {explorer && addr && (
+                    <a
+                      href={`${explorer}/address/${addr}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-muted hover:text-blue-600"
+                      aria-label={t('environment.viewOnExplorer')}
+                      title={t('environment.viewOnExplorer')}
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
+                  )}
+                  <button
+                    onClick={() => onRemove(key)}
+                    className="text-red-500 hover:text-red-700"
+                    title={t('environment.removePaymentToken')}
+                  >
+                    <XCircle className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            );
+          })
+        ) : (
+          <span className="text-xs text-muted">{t('environment.noPaymentTokens')}</span>
+        )}
+      </div>
+
+      {adding ? (
+        <div className="space-y-2">
+          <input
+            type="text"
+            value={newName}
+            onChange={e => setNewName(e.target.value)}
+            placeholder={t('environment.paymentTokenName')}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none"
+          />
+          <input
+            type="text"
+            value={newAddress}
+            onChange={e => setNewAddress(e.target.value)}
+            placeholder={t('environment.paymentTokenAddress')}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm font-mono focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none"
+          />
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => { setAdding(false); setNewName(''); setNewAddress(''); }}
+              className="px-3 py-1.5 text-sm text-muted hover:text-foreground"
+            >
+              {t('common.cancel')}
+            </button>
+            <button
+              onClick={handleAdd}
+              disabled={!newName.trim() || !newAddress.trim()}
+              className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+            >
+              <Plus className="h-4 w-4" />
+              {t('environment.addPaymentToken')}
+            </button>
+          </div>
+        </div>
+) : (
+        <div className="flex justify-end">
+          <button
+            onClick={() => setAdding(true)}
+            className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+            title={t('environment.addPaymentToken')}
+          >
+            <Plus className="h-4 w-4" />
+            {t('environment.addPaymentToken')}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Relayers({
+  relayers,
+  explorer,
+  onAdd,
+  onRemove,
+}: {
+  relayers: Record<string, { name: string; address: string }>;
+  explorer: string;
+  onAdd: (name: string, address: string) => void;
+  onRemove: (name: string) => void;
+}) {
+  const { t } = useTranslation();
+  const [adding, setAdding] = useState(false);
+  const [newName, setNewName] = useState('');
+  const [newAddress, setNewAddress] = useState('');
+
+  const handleAdd = () => {
+    if (!newName.trim() || !newAddress.trim()) return;
+    onAdd(newName.trim(), newAddress.trim());
+    setNewName('');
+    setNewAddress('');
+    setAdding(false);
+  };
+
+  return (
+    <div className="bg-surface rounded-xl border border-gray-200 p-6 flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+          <Network className="h-5 w-5 text-blue-600" />
+          {t('environment.relayers')}
+        </h3>
+        <span className="text-xs font-medium text-muted bg-gray-50 px-2 py-1 rounded-full">
+          {Object.keys(relayers).length}
+        </span>
+      </div>
+
+      <p className="text-sm text-muted">
+        {t('environment.relayersDesc')}
+      </p>
+
+      <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+        {Object.keys(relayers).length > 0 ? (
+          Object.entries(relayers).map(([key, relay]) => {
+            if (!relay?.address || typeof relay.address !== 'string' || relay.address.length === 0) {
+              return null;
+            }
+            const addr = relay.address;
+            const name = relay.name || key;
+            return (
+              <div key={key} className="flex items-center justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-foreground truncate">{name}</p>
+                  <code className="text-xs font-mono text-muted">
+                    {addr && addr.length > 8 ? `${addr.slice(0, 10)}...${addr.slice(-8)}` : addr}
+                  </code>
+                </div>
+                <div className="flex items-center gap-1">
+                  {explorer && addr && (
+                    <a
+                      href={`${explorer}/address/${addr}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-muted hover:text-blue-600"
+                      aria-label={t('environment.viewOnExplorer')}
+                      title={t('environment.viewOnExplorer')}
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
+                  )}
+                  <button
+                    onClick={() => onRemove(key)}
+                    className="text-red-500 hover:text-red-700"
+                    title={t('environment.removeRelayer')}
+                  >
+                    <XCircle className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            );
+          })
+        ) : (
+          <span className="text-xs text-muted">{t('environment.noRelayers')}</span>
+        )}
+      </div>
+
+      {adding ? (
+        <div className="space-y-2">
+          <input
+            type="text"
+            value={newName}
+            onChange={e => setNewName(e.target.value)}
+            placeholder={t('environment.relayerName')}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none"
+          />
+          <input
+            type="text"
+            value={newAddress}
+            onChange={e => setNewAddress(e.target.value)}
+            placeholder={t('environment.relayerAddress')}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm font-mono focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none"
+          />
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => { setAdding(false); setNewName(''); setNewAddress(''); }}
+              className="px-3 py-1.5 text-sm text-muted hover:text-foreground"
+            >
+              {t('common.cancel')}
+            </button>
+            <button
+              onClick={handleAdd}
+              disabled={!newName.trim() || !newAddress.trim()}
+              className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+            >
+              <Plus className="h-4 w-4" />
+              {t('environment.addRelayer')}
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="flex justify-end">
+          <button
+            onClick={() => setAdding(true)}
+            className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+            title={t('environment.addRelayer')}
+          >
+            <Plus className="h-4 w-4" />
+            {t('environment.addRelayer')}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function Environment() {
   const { t } = useTranslation();
   const [chainStates, setChainStates] = useState<EnvironmentChainState[]>([]);
   const [activeStep, setActiveStep] = useState<string | null>(null);
-  const { selectedChainId, selectedChain, selectChain, updateChainCreate2Factory, updateChainFungibleProxy, updateChainFungibleFactory, updateChainFungibleEnvironment, chainCache } = useChainStore();
+  const { selectedChainId, selectedChain, selectChain, updateChainCreate2Factory, updateChainFungibleProxy, updateChainFungibleFactory, updateChainFungibleEnvironment, updateChainPaymentTokens, updateChainRelayers, chainCache } = useChainStore();
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const [form, setForm] = useState({
@@ -849,6 +1122,46 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
     }
   };
 
+  const handleAddPaymentToken = (name: string, address: string) => {
+    if (!selectedChain) return;
+    const existing = selectedChain.PaymentTokens ?? {};
+    const updated = {
+      ...existing,
+      [name]: { name, address },
+    };
+    updateChainPaymentTokens(selectedChainId, updated);
+    setSuccess(t('environment.success.paymentTokenAdded', { name: selectedChain.name }));
+  };
+
+  const handleRemovePaymentToken = (name: string) => {
+    if (!selectedChain) return;
+    const existing = selectedChain.PaymentTokens ?? {};
+    const { [name]: _removed, ...rest } = existing;
+    void _removed;
+    updateChainPaymentTokens(selectedChainId, rest);
+    setSuccess(t('environment.success.paymentTokenRemoved', { name: selectedChain.name }));
+  };
+
+  const handleAddRelayer = (name: string, address: string) => {
+    if (!selectedChain) return;
+    const existing = selectedChain.Relayers ?? {};
+    const updated = {
+      ...existing,
+      [name]: { name, address },
+    };
+    updateChainRelayers(selectedChainId, updated);
+    setSuccess(t('environment.success.relayerAdded', { name: selectedChain.name }));
+  };
+
+  const handleRemoveRelayer = (name: string) => {
+    if (!selectedChain) return;
+    const existing = selectedChain.Relayers ?? {};
+    const { [name]: _removed, ...rest } = existing;
+    void _removed;
+    updateChainRelayers(selectedChainId, rest);
+    setSuccess(t('environment.success.relayerRemoved', { name: selectedChain.name }));
+  };
+
   if (!selectedState || !selectedChain) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -971,6 +1284,20 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
             isDeploying={activeStep === 'factory' || isDeployingFactory}
             isSetInLoading={activeStep === 'setInFactory'}
             explorer={explorer}
+          />
+
+          <PaymentTokens
+            tokens={selectedChain.PaymentTokens ?? {}}
+            explorer={explorer}
+            onAdd={handleAddPaymentToken}
+            onRemove={handleRemovePaymentToken}
+          />
+
+          <Relayers
+            relayers={selectedChain.Relayers ?? {}}
+            explorer={explorer}
+            onAdd={handleAddRelayer}
+            onRemove={handleRemoveRelayer}
           />
         </div>
       )}
