@@ -2,7 +2,6 @@ import {
   Network, 
   DollarSign, 
   Users, 
-  TrendingUp, 
   Activity,
   CheckCircle,
   XCircle,
@@ -181,108 +180,6 @@ export function Dashboard() {
         </div>
       </div>
 
-      <div className="bg-surface rounded-xl border border-gray-200 p-6">
-        <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-blue-600" />
-          {t('dashboard.erc20Overview')}
-        </h2>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-gray-200">
-                <th className="text-left py-3 px-4 text-sm font-medium text-muted">{t('dashboard.tableFeature')}</th>
-                {mockChains.map(c => (
-                  <th key={c.id} className="text-left py-3 px-4 text-sm font-medium text-muted">
-                    {c.name}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-b border-gray-100">
-                <td className="py-3 px-4 text-sm font-medium text-foreground">{t('dashboard.features.standardErc20')}</td>
-                {mockChains.map(c => (
-                  <td key={c.id} className="py-3 px-4 text-sm text-muted">
-                    <CheckCircle className="h-4 w-4 text-green-500 inline" />
-                  </td>
-                ))}
-              </tr>
-              <tr className="border-b border-gray-100">
-                <td className="py-3 px-4 text-sm font-medium text-foreground">{t('dashboard.features.mintable')}</td>
-                {mockChains.map(c => (
-                  <td key={c.id} className="py-3 px-4 text-sm text-muted">
-                    <CheckCircle className="h-4 w-4 text-green-500 inline" />
-                  </td>
-                ))}
-              </tr>
-              <tr className="border-b border-gray-100">
-                <td className="py-3 px-4 text-sm font-medium text-foreground">{t('dashboard.features.burnable')}</td>
-                {mockChains.map(c => (
-                  <td key={c.id} className="py-3 px-4 text-sm text-muted">
-                    <CheckCircle className="h-4 w-4 text-green-500 inline" />
-                  </td>
-                ))}
-              </tr>
-              <tr className="border-b border-gray-100">
-                <td className="py-3 px-4 text-sm font-medium text-foreground">{t('dashboard.features.pausable')}</td>
-                {mockChains.map((c, i) => (
-                  <td key={c.id} className="py-3 px-4 text-sm text-muted">
-                    {i < 3 ? (
-                      <CheckCircle className="h-4 w-4 text-green-500 inline" />
-                    ) : (
-                      <XCircle className="h-4 w-4 text-gray-300 inline" />
-                    )}
-                  </td>
-                ))}
-              </tr>
-              <tr className="border-b border-gray-100">
-                <td className="py-3 px-4 text-sm font-medium text-foreground">{t('dashboard.features.permitEip2612')}</td>
-                {mockChains.map((c, i) => (
-                  <td key={c.id} className="py-3 px-4 text-sm text-muted">
-                    {i < 4 ? (
-                      <CheckCircle className="h-4 w-4 text-green-500 inline" />
-                    ) : (
-                      <XCircle className="h-4 w-4 text-gray-300 inline" />
-                    )}
-                  </td>
-                ))}
-              </tr>
-              <tr className="border-b border-gray-100">
-                <td className="py-3 px-4 text-sm font-medium text-foreground">{t('dashboard.features.votesEip5805')}</td>
-                {mockChains.map((c, i) => (
-                  <td key={c.id} className="py-3 px-4 text-sm text-muted">
-                    {i === 0 ? (
-                      <CheckCircle className="h-4 w-4 text-green-500 inline" />
-                    ) : (
-                      <XCircle className="h-4 w-4 text-gray-300 inline" />
-                    )}
-                  </td>
-                ))}
-              </tr>
-              <tr className="border-b border-gray-100">
-                <td className="py-3 px-4 text-sm font-medium text-foreground">{t('dashboard.features.flashMinting')}</td>
-                {mockChains.map(c => (
-                  <td key={c.id} className="py-3 px-4 text-sm text-muted">
-                    <XCircle className="h-4 w-4 text-gray-300 inline" />
-                  </td>
-                ))}
-              </tr>
-              <tr>
-                <td className="py-3 px-4 text-sm font-medium text-foreground">{t('dashboard.features.bridgeEnabled')}</td>
-                {mockChains.map((c, i) => (
-                  <td key={c.id} className="py-3 px-4 text-sm text-muted">
-                    {i < 4 ? (
-                      <CheckCircle className="h-4 w-4 text-green-500 inline" />
-                    ) : (
-                      <XCircle className="h-4 w-4 text-gray-300 inline" />
-                    )}
-                  </td>
-                ))}
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
     </div>
   );
 }
