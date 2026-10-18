@@ -23,7 +23,10 @@ export interface Relay {
 
 export interface Exchange {
   name: string;
-  address: string;
+  factory?: string;
+  router?: string;
+  factorys?: string;
+  address?: string;
 }
 
 export interface Lender {

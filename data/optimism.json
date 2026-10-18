@@ -30,7 +30,9 @@
 		
 	},
 	"Exchanges": {
-		
+		"uniswap": { "name": "uniswap", "factory": "0x0c3c1c532F1e39EdF36BE9Fe0bE1410313E074Bf", "router": "0x4A7b5Da61326A6379179b40d00F57E5bbDC962c2" },
+		"sushiswap": { "name": "sushiswap", "factory": "0xFbc12984689e5f15626Bad03Ad60160Fe98B303C", "router": "0x2ABf469074dc0b54d793850807E6eb5Faf2625b1" },
+		"fraxswap": { "name": "fraxswap", "factory": "0x67a1412d2D6CbF211bb71F8e851b4393b491B10f", "router": "0xB9A55F455e46e8D717eEA5E47D2c449416A0437F" }
 	},
 	"Lenders": {
 		

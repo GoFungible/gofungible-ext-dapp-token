@@ -60,7 +60,15 @@
 		"SHIB": ""
 	},
 	"Exchanges": {
-		
+		"uniswap": { "name": "uniswap", "factory": "0xf1D7CC64Fb4452F05c498126312eBE29f30Fbcf9", "router": "0x4752ba5dbc23f44d87826276bf6fd6b1c372ad24" },
+		"sushiswap": { "name": "sushiswap", "factory": "0xc35DADB65012eC5796536bD9864eD8773aBc74C4", "router": "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506" },
+		"pancakeswap": { "name": "pancakeswap", "factory": "0x02a84c1b3BBD7401a5f7fa98a384EBC70bB5749E", "router": "0x8cFe327CEc66d1C090Dd72bd0FF11d690C33a2Eb" },
+		"diamondswap": { "name": "diamondswap", "factory": "0xE56d7e0344C68D0C5A2456eed229115B4071DB5e", "router": "0xeAa3ff4F434EFe6eFBB148075EfF2e37D311568F" },
+		"fraxswap": { "name": "fraxswap", "factory": "0x8374A74A728f06bEa6B7259C68AA7BBB732bfeaD", "router": "0xCAAaB0A72f781B92bA63Af27477aA46aB8F653E7" },
+		"apeswap": { "name": "apeswap", "factory": "0xCf083Be4164828f00cAE704EC15a36D711491284", "router": "0x7d13268144adcdbEBDf94F654085CC15502849Ff" },
+		"camelot": { "name": "camelot", "factory": "0x6EcCab422D763aC031210895C81787E87B43A652", "router": "0xc873fEcbd354f5A56E00E710B90EF4201db2448d" },
+		"magicswap": { "name": "magicswap", "factory": "0x77fa938998e196701c324149f771efd6e980df0a", "router": "0xb740d5804ea2061432469119cfa40cbb4586dd17" }
+
 	},
 	"Lenders": {
 		

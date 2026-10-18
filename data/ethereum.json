@@ -30,7 +30,17 @@
 		
 	},
 	"Exchanges": {
-		
+		"uniswap": { "name": "uniswap", "factory": "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f", "router": "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D" },
+		"sushiswap": { "name": "sushiswap", "factory": "0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac", "router": "0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F" },
+		"ethervista": { "name": "ethervista", "factory": "0x9a27cb5ae0B2cEe0bb71f9A85C0D60f3920757B4", "router": "0xCEDd366065A146a039B92Db35756ecD7688FCC77" },
+		"shibaswap": { "name": "shibaswap", "factory": "0x115934131916C8b277DD010Ee02de363c09d037c", "router": "" },
+		"pancakeswap": { "name": "pancakeswap", "factory": "0x1097053Fd2ea711dad45caCcc45EfF7548fCB362", "router": "0xEfF92A263d31888d860bD50809A8D171709b7b1c" },
+		"diamondswap": { "name": "diamondswap", "factory": "0xE1046fcB1057ef82B68f3A6B8eBb0e411Cf334E0", "router": "0x57712F6FDb7e8be144a9157f5E7958B1Dc612480" },
+		"plasmaswap": { "name": "plasmaswap", "factory": "0xd87Ad19db2c4cCbf897106dE034D52e3DD90ea60", "router": "0x5ec243F1F7ECFC137e98365C30c9A28691d86132" },
+		"fraxswap": { "name": "fraxswap", "factory": "0x43eC799eAdd63848443E2347C49f5f52e8Fe0F6f", "router": "0xC14d550632db8592D1243Edc8B95b0Ad06703867" },
+		"apeswap": { "name": "apeswap", "factory": "0xBAe5dc9B19004883d0377419FeF3c2C8832d7d7B", "router": "0x5f509a3C3F16dF2Fba7bF84dEE1eFbce6BB85587" },
+		"swipeswap": { "name": "swipeswap", "factory": "0x8a93B6865C4492fF17252219B87eA6920848EdC0", "router": "0xCB0cb2d22C529FdC9F6EFff2ED21086104b21a79" },
+		"vvs": { "name": "vvs", "factory": "0x54Ff509102D51Bf4e0d06184A051c1e917333254", "router": "0x2e5dbaa86FcA7cb73F060300C55B51C72f1B8554" }
 	},
 	"Lenders": {
 		

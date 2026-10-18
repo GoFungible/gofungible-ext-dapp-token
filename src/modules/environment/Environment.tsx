@@ -738,7 +738,7 @@ function Exchanges({
   onAdd,
   onRemove,
 }: {
-  exchanges: Record<string, { name: string; address: string }>;
+  exchanges: Record<string, Exchange>;
   explorer: string;
   onAdd: (name: string, address: string) => void;
   onRemove: (name: string) => void;
@@ -775,11 +775,12 @@ function Exchanges({
       <div className="bg-gray-50 rounded-lg p-4 space-y-2">
         {Object.keys(exchanges).length > 0 ? (
           Object.entries(exchanges).map(([key, exchange]) => {
-            if (!exchange?.address || typeof exchange.address !== 'string' || exchange.address.length === 0) {
+            const ex = exchange as Record<string, unknown>;
+            const addr = (ex.address as string | undefined) || (ex.factory as string | undefined) || (ex.router as string | undefined) || (ex.factorys as string | undefined) || '';
+            if (!addr || typeof addr !== 'string' || addr.length === 0) {
               return null;
             }
-            const addr = exchange.address;
-            const name = exchange.name || key;
+            const name = (ex.name as string | undefined) || key;
             return (
               <div key={key} className="flex items-center justify-between gap-2">
                 <div className="min-w-0">
