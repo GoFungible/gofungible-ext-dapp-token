@@ -26,6 +26,7 @@ export interface EnvironmentChainState {
   };
   fungibleProxy: EnvironmentContract;
   fungibleFactory: EnvironmentContract;
+  fungibleEnvironment: EnvironmentContract;
 }
 
 export interface EnvironmentState {
