@@ -18,6 +18,7 @@
 	"create2Factory": {
  	},
 	"FungibleProxy": "",
+	"FungibleEnvironment": "",
 	"FungibleFactory": "",
 	"FungibleToken": {
 
