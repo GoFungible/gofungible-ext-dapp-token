@@ -1,0 +1,14 @@
+{
+  "id": "token-distribution",
+  "name": "Token Distribution",
+  "version": "1.0.0",
+  "description": "Configure and run airdrop campaigns to distribute Multichain Token units to holders",
+  "author": "Gofungible Team",
+  "entryPoint": "token-distribution",
+  "routes": [
+    { "path": "/token-distribution", "component": "TokenDistribution", "exact": true }
+  ],
+  "sidebarItems": [
+    { "id": "token-distribution", "label": "nav.token-distribution", "icon": "gift", "route": "/token-distribution", "order": 5 }
+  ]
+}

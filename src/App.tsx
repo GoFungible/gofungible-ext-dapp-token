@@ -11,6 +11,7 @@ import { Dashboard } from './modules/dashboard/Dashboard';
 import { Environment } from './modules/environment/Environment';
 import { TokenNegotiation } from './modules/token-negotiation/TokenNegotiation';
 import { TokenFundraising } from './modules/token-fundraising/TokenFundraising';
+import { TokenDistribution } from './modules/token-distribution/TokenDistribution';
 import { ThemeManager } from './modules/theme-manager/ThemeManager';
 import { Loader2 } from 'lucide-react';
 import './index.css';
@@ -23,6 +24,7 @@ const componentRegistry: Record<string, React.ComponentType> = {
   'Environment': Environment,
   'TokenNegotiation': TokenNegotiation,
   'TokenFundraising': TokenFundraising,
+  'TokenDistribution': TokenDistribution,
   'ThemeManager': ThemeManager,
 };
 
@@ -39,6 +41,7 @@ function App() {
     await loadEnvironmentModule();
     await loadTokenNegotiationModule();
     await loadTokenFundraisingModule();
+    await loadTokenDistributionModule();
     await loadTokenPerimeterModule();
     await loadLoaderModule();
     await loadTokenBridgeModule();
@@ -136,6 +139,19 @@ function App() {
       }
     } catch (error) {
       console.error('Failed to load token-fundraising module:', error);
+    }
+  };
+
+  const loadTokenDistributionModule = async () => {
+    try {
+      const mod = await import('./modules/token-distribution/index');
+      console.log('TokenDistribution module loaded:', mod);
+      if (mod.default && typeof mod.default.initialize === 'function') {
+        await mod.default.initialize(coreFramework);
+        console.log('TokenDistribution module initialized successfully');
+      }
+    } catch (error) {
+      console.error('Failed to load token-distribution module:', error);
     }
   };
 

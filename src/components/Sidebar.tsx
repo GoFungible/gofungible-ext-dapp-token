@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLayout } from './LayoutProvider';
 import { SidebarItem } from '../types';
-import { ChevronDown, LayoutDashboard, Settings, Network, FileText, Plus, ArrowRightLeft, Palette, Coins, PanelLeftClose, PanelLeftOpen, Rocket } from 'lucide-react';
+import { ChevronDown, LayoutDashboard, Settings, Network, FileText, Plus, ArrowRightLeft, Palette, Coins, PanelLeftClose, PanelLeftOpen, Rocket, Gift } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -14,6 +14,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   'arrow-right-left': ArrowRightLeft,
   'palette': Palette,
   'rocket': Rocket,
+  'gift': Gift,
 };
 
 function SidebarItemComponent({ item, level = 0, collapsed }: { item: SidebarItem; level?: number; collapsed: boolean }) {

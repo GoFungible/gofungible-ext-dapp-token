@@ -73,6 +73,36 @@ export interface IcoOffering {
   createdAt: number;
 }
 
+export type AirdropRecipientStatus = 'pending' | 'sent' | 'claimed';
+
+export type AirdropClaimMode = 'claim' | 'push';
+
+export type AirdropStatus = 'live' | 'closed';
+
+export interface AirdropRecipient {
+  address: string;
+  amount: number;
+  status: AirdropRecipientStatus;
+}
+
+export interface AirdropCampaign {
+  id: string;
+  name: string;
+  chainId: number;
+  chainName: string;
+  tokenAddress: string;
+  tokenSymbol: string;
+  totalAmount: number;
+  distributed: number;
+  minBalance: number;
+  claimMode: AirdropClaimMode;
+  deadline: string;
+  recipients: AirdropRecipient[];
+  claims: number;
+  status: AirdropStatus;
+  createdAt: number;
+}
+
 export interface ChainJson {
   id: number;
   name: string;
@@ -91,6 +121,7 @@ export interface ChainJson {
   Lenders?: Record<string, Lender>;
   FungibleTokens?: Record<string, FungibleToken>;
   ICOs?: Record<string, IcoOffering>;
+  Airdrops?: Record<string, AirdropCampaign>;
 }
 
 interface ChainStoreContextType {
@@ -108,6 +139,7 @@ interface ChainStoreContextType {
   updateChainLenders: (chainId: number, lenders: Record<string, Lender>) => void;
   updateChainFungibleTokens: (chainId: number, tokens: Record<string, FungibleToken>) => void;
   updateChainICOs: (chainId: number, icos: Record<string, IcoOffering>) => void;
+  updateChainAirdrops: (chainId: number, airdrops: Record<string, AirdropCampaign>) => void;
 }
 
 const ChainStoreContext = createContext<ChainStoreContextType | undefined>(undefined);
@@ -291,6 +323,20 @@ export function ChainStoreProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  const updateChainAirdrops = useCallback(
+    (chainId: number, airdrops: Record<string, AirdropCampaign>) => {
+      setChainCache(prev => {
+        const existing = prev[chainId];
+        if (!existing) return prev;
+        return {
+          ...prev,
+          [chainId]: { ...existing, Airdrops: airdrops },
+        };
+      });
+    },
+    [],
+  );
+
   const value: ChainStoreContextType = {
     selectedChainId,
     selectedChain,
@@ -306,6 +352,7 @@ export function ChainStoreProvider({ children }: { children: ReactNode }) {
     updateChainLenders,
     updateChainFungibleTokens,
     updateChainICOs,
+    updateChainAirdrops,
   };
 
   return (
