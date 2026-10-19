@@ -131,6 +131,19 @@ function NodeStatusBadge({
     );
   }
 
+  if (status === 'mismatch') {
+    return (
+      <button
+        onClick={onRecheck}
+        className="flex items-center gap-1.5 text-xs font-medium text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full hover:bg-amber-100"
+        title={t('environment.retryNodeCheck')}
+      >
+        <AlertTriangle className="h-3 w-3" />
+        {t('environment.nodeMismatchBadge')}
+      </button>
+    );
+  }
+
   return (
     <button
       onClick={onRecheck}
@@ -1313,7 +1326,7 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
     useAddChain();
 
   const { health: nodeHealth, isChecking: isCheckingNode, check: checkNode } =
-    useChainHealth(selectedChain?.rpcUrl);
+    useChainHealth(selectedChain?.rpcUrl, selectedChain?.id);
 
   const selectedState = chainStates.find(c => c.chainId === selectedChainId);
   const isChainAdded = selectedChain ? connectedChains.some(c => c.id === selectedChainId) : false;
@@ -1804,6 +1817,29 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
                   onClick={checkNode}
                   disabled={isCheckingNode}
                   className="mt-2 text-sm font-medium text-red-700 hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isCheckingNode ? t('environment.checkingNode') : t('environment.retryNodeCheck')}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {nodeHealth?.status === 'mismatch' && (
+            <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-3">
+              <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <p className="text-sm text-amber-800">
+                  {t('environment.nodeMismatch', {
+                    name: selectedChain.name,
+                    url: selectedChain.rpcUrl,
+                    expected: nodeHealth.expectedChainId ?? '',
+                    actual: nodeHealth.chainId ?? '',
+                  })}
+                </p>
+                <button
+                  onClick={checkNode}
+                  disabled={isCheckingNode}
+                  className="mt-2 text-sm font-medium text-amber-700 hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isCheckingNode ? t('environment.checkingNode') : t('environment.retryNodeCheck')}
                 </button>

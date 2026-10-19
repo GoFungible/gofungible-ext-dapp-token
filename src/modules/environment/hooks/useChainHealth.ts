@@ -7,7 +7,10 @@ interface UseChainHealthReturn {
   check: () => void;
 }
 
-export function useChainHealth(rpcUrl: string | undefined): UseChainHealthReturn {
+export function useChainHealth(
+  rpcUrl: string | undefined,
+  expectedChainId?: number
+): UseChainHealthReturn {
   const [health, setHealth] = useState<ChainHealth | null>(null);
   const [isChecking, setIsChecking] = useState(false);
 
@@ -18,12 +21,12 @@ export function useChainHealth(rpcUrl: string | undefined): UseChainHealthReturn
     }
     setIsChecking(true);
     try {
-      const result = await probeChain(rpcUrl);
+      const result = await probeChain(rpcUrl, expectedChainId);
       setHealth(result);
     } finally {
       setIsChecking(false);
     }
-  }, [rpcUrl]);
+  }, [rpcUrl, expectedChainId]);
 
   useEffect(() => {
     void check();

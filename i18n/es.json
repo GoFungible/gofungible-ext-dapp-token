@@ -216,7 +216,9 @@
     "nodeUnknown": "Estado del nodo desconocido",
     "checkingNode": "Verificando nodo...",
     "retryNodeCheck": "Verificar de nuevo",
-    "nodeOffline": "{{name}} no responde en {{url}}. Es posible que la cadena esté caída, por lo que las acciones de contrato fallarán hasta que vuelva."
+    "nodeOffline": "{{name}} no responde en {{url}}. Es posible que la cadena esté caída, por lo que las acciones de contrato fallarán hasta que vuelva.",
+    "nodeMismatchBadge": "Cadena incorrecta",
+    "nodeMismatch": "El RPC en {{url}} informa el ID de cadena {{actual}}, pero {{name}} es la cadena ID {{expected}}. La URL del RPC en la configuración apunta a la red equivocada."
   },
   "tokenPerimeter": {
     "title": "Perímetro de Token",

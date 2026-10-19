@@ -2,7 +2,7 @@
   "id": 137,
   "name": "Polygon",
   "symbol": "MATIC",
-  "rpcUrl": "https://polygon-rpc.com",
+  "rpcUrl": "https://polygon-bor-rpc.publicnode.com",
   "blockExplorer": "https://polygonscan.com",
   "isActive": true,
   "token": {

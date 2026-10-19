@@ -218,7 +218,9 @@
     "nodeUnknown": "Node status unknown",
     "checkingNode": "Checking node...",
     "retryNodeCheck": "Check again",
-    "nodeOffline": "{{name}} is not responding at {{url}}. The chain may be down, so contract actions will fail until it is back."
+    "nodeOffline": "{{name}} is not responding at {{url}}. The chain may be down, so contract actions will fail until it is back.",
+    "nodeMismatchBadge": "Wrong chain",
+    "nodeMismatch": "The RPC at {{url}} reports chain ID {{actual}}, but {{name}} is chain ID {{expected}}. The RPC URL in the chain configuration points to the wrong network."
   },
   "tokenPerimeter": {
     "title": "Token Perimeter",

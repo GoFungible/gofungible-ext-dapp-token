@@ -212,12 +212,22 @@ const CHAIN_LOADERS: Record<string, () => Promise<{ default?: ChainJson }>> = im
 ) as Record<string, () => Promise<{ default?: ChainJson }>>;
 
 const chainIdToLoader: Record<number, () => Promise<{ default?: ChainJson }>> = {};
+const chainIdToPath: Record<number, string> = {};
 
-void (async () => {
-  for (const loader of Object.values(CHAIN_LOADERS)) {
+const loadersReady = (async () => {
+  for (const [path, loader] of Object.entries(CHAIN_LOADERS)) {
     const mod = await loader();
     const chain = (mod.default ?? mod) as ChainJson;
+    const existingPath = chainIdToPath[chain.id];
+    if (existingPath) {
+      console.error(
+        `ChainStore: duplicate chain id ${chain.id} in ${path} (already defined in ${existingPath}). ` +
+          `Ignoring ${path}.`
+      );
+      continue;
+    }
     chainIdToLoader[chain.id] = loader;
+    chainIdToPath[chain.id] = path;
   }
 })();
 
@@ -231,12 +241,16 @@ export function ChainStoreProvider({ children }: { children: ReactNode }) {
     (chainId: number) => {
       setSelectedChainId(chainId);
       if (chainCache[chainId]) return;
-      const loader = chainIdToLoader[chainId];
-      if (!loader) return;
-      void loader().then(mod => {
-        const chain = (mod.default ?? mod) as ChainJson;
-        setChainCache(prev => ({ ...prev, [chainId]: chain }));
-      }).catch(() => {});
+      void loadersReady
+        .then(() => {
+          const loader = chainIdToLoader[chainId];
+          if (!loader) return;
+          return loader().then(mod => {
+            const chain = (mod.default ?? mod) as ChainJson;
+            setChainCache(prev => ({ ...prev, [chainId]: chain }));
+          });
+        })
+        .catch(() => {});
     },
     [chainCache],
   );

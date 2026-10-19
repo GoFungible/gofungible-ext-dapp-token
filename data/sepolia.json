@@ -1,9 +1,9 @@
 {
-  "id": 1,
+  "id": 11155111,
   "name": "Sepolia",
   "symbol": "ETH",
-  "rpcUrl": "https://eth.llamarpc.com",
-  "blockExplorer": "https://etherscan.io",
+  "rpcUrl": "https://ethereum-sepolia-rpc.publicnode.com",
+  "blockExplorer": "https://sepolia.etherscan.io",
   "isActive": true,
   "token": {
     "address": "0x1234567890123456789012345678901234567890",
