@@ -9,6 +9,7 @@
     { "path": "/environment", "component": "Environment", "exact": true }
   ],
   "sidebarItems": [
-    { "id": "environment", "label": "nav.environment", "icon": "settings", "route": "/environment", "order": 1 }
+    { "id": "group-configuration", "label": "nav.groupConfiguration", "separator": true, "order": -1 },
+    { "id": "environment", "label": "nav.environment", "icon": "settings", "route": "/environment", "order": 0 }
   ]
 }

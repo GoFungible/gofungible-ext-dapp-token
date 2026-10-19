@@ -12,6 +12,6 @@
     { "id": "token-perimeter-refresh", "label": "topbar.refresh", "icon": "refresh-cw", "action": "refresh-token-perimeter", "order": 1 }
   ],
   "sidebarItems": [
-    { "id": "token-perimeter", "label": "nav.token-perimeter", "icon": "network", "route": "/perimeter", "order": 2 }
+    { "id": "token-perimeter", "label": "nav.token-perimeter", "icon": "network", "route": "/perimeter", "order": 1 }
   ]
 }

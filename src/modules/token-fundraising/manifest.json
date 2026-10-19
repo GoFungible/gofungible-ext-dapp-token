@@ -9,6 +9,7 @@
     { "path": "/token-fundraising", "component": "TokenFundraising", "exact": true }
   ],
   "sidebarItems": [
+    { "id": "group-lifecycle", "label": "nav.groupLifecycle", "separator": true, "order": 3 },
     { "id": "token-fundraising", "label": "nav.token-fundraising", "icon": "rocket", "route": "/token-fundraising", "order": 4 }
   ]
 }

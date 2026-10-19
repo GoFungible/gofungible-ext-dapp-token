@@ -86,6 +86,7 @@ export interface SidebarItem {
   route?: string;
   children?: SidebarItem[];
   order?: number;
+  separator?: boolean;
 }
 
 export interface ExtensionPoint {

@@ -22,9 +22,23 @@ function SidebarItemComponent({ item, level = 0, collapsed }: { item: SidebarIte
   const { closeSidebar } = useLayout();
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const Icon = item.icon ? iconMap[item.icon] : LayoutDashboard;
   const hasChildren = item.children && item.children.length > 0;
   const [expanded, setExpanded] = React.useState(false);
+
+  if (item.separator) {
+    return (
+      <div className="py-2" role="separator" aria-orientation="horizontal">
+        <div className="border-t border-gray-200" />
+        {!collapsed && (
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-muted mt-2 px-3">
+            {t(item.label)}
+          </p>
+        )}
+      </div>
+    );
+  }
+
+  const Icon = item.icon ? iconMap[item.icon] : LayoutDashboard;
 
   const handleClick = (e: React.MouseEvent) => {
     if (!hasChildren && item.route) {

@@ -9,6 +9,6 @@
     { "path": "/", "component": "Dashboard", "exact": true }
   ],
   "sidebarItems": [
-    { "id": "dashboard", "label": "nav.dashboard", "icon": "layout-dashboard", "route": "/", "order": 0 }
+    { "id": "dashboard", "label": "nav.dashboard", "icon": "layout-dashboard", "route": "/", "order": -2 }
   ]
 }

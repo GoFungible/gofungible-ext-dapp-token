@@ -9,6 +9,6 @@
     { "path": "/bridge", "component": "TokenBridge", "exact": true }
   ],
   "sidebarItems": [
-    { "id": "token-bridge", "label": "nav.token-bridge", "icon": "arrow-right-left", "route": "/bridge", "order": 3 }
+    { "id": "token-bridge", "label": "nav.token-bridge", "icon": "arrow-right-left", "route": "/bridge", "order": 2 }
   ]
 }

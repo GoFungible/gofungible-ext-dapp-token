@@ -26,7 +26,9 @@
     "token-negotiation": "Negociación de Token",
     "token-fundraising": "Financiación de Token",
     "token-distribution": "Distribución de Token",
-    "token-lending": "Préstamos de Token"
+    "token-lending": "Préstamos de Token",
+    "groupConfiguration": "Configuración de Token",
+    "groupLifecycle": "Ciclo de Vida del Token"
   },
   "topbar": {
     "openSidebar": "Abrir menú lateral",
