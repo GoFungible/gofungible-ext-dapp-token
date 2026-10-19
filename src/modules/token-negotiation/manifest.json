@@ -9,6 +9,6 @@
     { "path": "/token-negotiation", "component": "TokenNegotiation", "exact": true }
   ],
   "sidebarItems": [
-    { "id": "token-negotiation", "label": "nav.token-negotiation", "icon": "file-text", "route": "/token-negotiation", "order": 4 }
+    { "id": "token-negotiation", "label": "nav.token-negotiation", "icon": "file-text", "route": "/token-negotiation", "order": 5 }
   ]
 }

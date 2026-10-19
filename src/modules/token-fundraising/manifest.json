@@ -9,6 +9,6 @@
     { "path": "/token-fundraising", "component": "TokenFundraising", "exact": true }
   ],
   "sidebarItems": [
-    { "id": "token-fundraising", "label": "nav.token-fundraising", "icon": "rocket", "route": "/token-fundraising", "order": 5 }
+    { "id": "token-fundraising", "label": "nav.token-fundraising", "icon": "rocket", "route": "/token-fundraising", "order": 4 }
   ]
 }
