@@ -103,6 +103,31 @@ export interface AirdropCampaign {
   createdAt: number;
 }
 
+export type LendingOfferStatus = 'open' | 'active' | 'repaid' | 'closed';
+
+export interface LendingOffer {
+  id: string;
+  name: string;
+  chainId: number;
+  chainName: string;
+  tokenAddress: string;
+  tokenSymbol: string;
+  lender: string;
+  lenderAddress: string;
+  borrower: string;
+  principal: number;
+  interestRate: number;
+  termDays: number;
+  collateral: number;
+  accruedInterest: number;
+  repaid: number;
+  outstanding: number;
+  status: LendingOfferStatus;
+  createdAt: number;
+  fundedAt?: number;
+  repaidAt?: number;
+}
+
 export interface ChainJson {
   id: number;
   name: string;
@@ -122,6 +147,7 @@ export interface ChainJson {
   FungibleTokens?: Record<string, FungibleToken>;
   ICOs?: Record<string, IcoOffering>;
   Airdrops?: Record<string, AirdropCampaign>;
+  LendingOffers?: Record<string, LendingOffer>;
 }
 
 interface ChainStoreContextType {
@@ -140,6 +166,7 @@ interface ChainStoreContextType {
   updateChainFungibleTokens: (chainId: number, tokens: Record<string, FungibleToken>) => void;
   updateChainICOs: (chainId: number, icos: Record<string, IcoOffering>) => void;
   updateChainAirdrops: (chainId: number, airdrops: Record<string, AirdropCampaign>) => void;
+  updateChainLendingOffers: (chainId: number, offers: Record<string, LendingOffer>) => void;
 }
 
 const ChainStoreContext = createContext<ChainStoreContextType | undefined>(undefined);
@@ -337,6 +364,20 @@ export function ChainStoreProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  const updateChainLendingOffers = useCallback(
+    (chainId: number, offers: Record<string, LendingOffer>) => {
+      setChainCache(prev => {
+        const existing = prev[chainId];
+        if (!existing) return prev;
+        return {
+          ...prev,
+          [chainId]: { ...existing, LendingOffers: offers },
+        };
+      });
+    },
+    [],
+  );
+
   const value: ChainStoreContextType = {
     selectedChainId,
     selectedChain,
@@ -353,6 +394,7 @@ export function ChainStoreProvider({ children }: { children: ReactNode }) {
     updateChainFungibleTokens,
     updateChainICOs,
     updateChainAirdrops,
+    updateChainLendingOffers,
   };
 
   return (
