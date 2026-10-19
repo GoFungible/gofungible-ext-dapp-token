@@ -23,7 +23,7 @@ import { useDeployFungibleProxy } from './hooks/useDeployFungibleProxy';
 import { useDeployFungibleFactory } from './hooks/useDeployFungibleFactory';
 import { useDeployFungibleEnvironment } from './hooks/useDeployFungibleEnvironment';
 import { useAddChain } from './hooks/useAddChain';
-import { useChainStore, type ChainJson } from '../../core/ChainStore';
+import { useChainStore, type ChainJson, type Exchange } from '../../core/ChainStore';
 
 function StatusBadge({ deployed }: { deployed: boolean }) {
   const { t } = useTranslation();
@@ -775,7 +775,7 @@ function Exchanges({
       <div className="bg-gray-50 rounded-lg p-4 space-y-2">
         {Object.keys(exchanges).length > 0 ? (
           Object.entries(exchanges).map(([key, exchange]) => {
-            const ex = exchange as Record<string, unknown>;
+            const ex = exchange as unknown as Record<string, unknown>;
             const addr = (ex.address as string | undefined) || (ex.factory as string | undefined) || (ex.router as string | undefined) || (ex.factorys as string | undefined) || '';
             if (!addr || typeof addr !== 'string' || addr.length === 0) {
               return null;

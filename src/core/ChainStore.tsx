@@ -39,6 +39,40 @@ export interface FungibleToken {
   address: string;
 }
 
+export interface IcoTier {
+  name: string;
+  price: number;
+  allocation: number;
+  maxPerWallet: number;
+}
+
+export type IcoStatus = 'live' | 'closed';
+
+export interface IcoOffering {
+  id: string;
+  name: string;
+  chainId: number;
+  chainName: string;
+  tokenAddress: string;
+  tokenSymbol: string;
+  paymentTokenSymbol: string;
+  paymentTokenAddress: string;
+  price: number;
+  hardCap: number;
+  softCap: number;
+  minContribution: number;
+  maxContribution: number;
+  startDate: string;
+  endDate: string;
+  tgeDate: string;
+  tiers: IcoTier[];
+  raised: number;
+  sold: number;
+  contributors: number;
+  status: IcoStatus;
+  createdAt: number;
+}
+
 export interface ChainJson {
   id: number;
   name: string;
@@ -56,6 +90,7 @@ export interface ChainJson {
   Exchanges?: Record<string, Exchange>;
   Lenders?: Record<string, Lender>;
   FungibleTokens?: Record<string, FungibleToken>;
+  ICOs?: Record<string, IcoOffering>;
 }
 
 interface ChainStoreContextType {
@@ -72,6 +107,7 @@ interface ChainStoreContextType {
   updateChainExchanges: (chainId: number, exchanges: Record<string, Exchange>) => void;
   updateChainLenders: (chainId: number, lenders: Record<string, Lender>) => void;
   updateChainFungibleTokens: (chainId: number, tokens: Record<string, FungibleToken>) => void;
+  updateChainICOs: (chainId: number, icos: Record<string, IcoOffering>) => void;
 }
 
 const ChainStoreContext = createContext<ChainStoreContextType | undefined>(undefined);
@@ -241,6 +277,20 @@ export function ChainStoreProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  const updateChainICOs = useCallback(
+    (chainId: number, icos: Record<string, IcoOffering>) => {
+      setChainCache(prev => {
+        const existing = prev[chainId];
+        if (!existing) return prev;
+        return {
+          ...prev,
+          [chainId]: { ...existing, ICOs: icos },
+        };
+      });
+    },
+    [],
+  );
+
   const value: ChainStoreContextType = {
     selectedChainId,
     selectedChain,
@@ -255,6 +305,7 @@ export function ChainStoreProvider({ children }: { children: ReactNode }) {
     updateChainExchanges,
     updateChainLenders,
     updateChainFungibleTokens,
+    updateChainICOs,
   };
 
   return (

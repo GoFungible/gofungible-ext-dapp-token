@@ -73,5 +73,6 @@
 		
 	},
 	"FungibleFactory": "",
-  "FungibleTokens": {}
+  "FungibleTokens": {},
+  "ICOs": {}
 }
