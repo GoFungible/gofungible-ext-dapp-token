@@ -9,6 +9,6 @@
     { "path": "/token-distribution", "component": "TokenDistribution", "exact": true }
   ],
   "sidebarItems": [
-    { "id": "token-distribution", "label": "nav.token-distribution", "icon": "gift", "route": "/token-distribution", "order": 5 }
+    { "id": "token-distribution", "label": "nav.token-distribution", "icon": "gift", "route": "/token-distribution", "order": 6 }
   ]
 }

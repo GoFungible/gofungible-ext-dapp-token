@@ -9,6 +9,6 @@
     { "path": "/token-lending", "component": "TokenLending", "exact": true }
   ],
   "sidebarItems": [
-    { "id": "token-lending", "label": "nav.token-lending", "icon": "landmark", "route": "/token-lending", "order": 7 }
+    { "id": "token-lending", "label": "nav.token-lending", "icon": "landmark", "route": "/token-lending", "order": 8 }
   ]
 }

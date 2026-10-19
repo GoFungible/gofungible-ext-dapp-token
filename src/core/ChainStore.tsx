@@ -128,6 +128,39 @@ export interface LendingOffer {
   repaidAt?: number;
 }
 
+export interface VestingTranche {
+  id: string;
+  date: string;
+  amount: number;
+  released: boolean;
+  releasedAt?: number;
+}
+
+export type VestingCadence = 'daily' | 'weekly' | 'monthly' | 'linear';
+
+export type VestingScheduleStatus = 'active' | 'completed' | 'cancelled';
+
+export interface VestingSchedule {
+  id: string;
+  name: string;
+  chainId: number;
+  chainName: string;
+  tokenAddress: string;
+  tokenSymbol: string;
+  beneficiary: string;
+  totalAmount: number;
+  releasedAmount: number;
+  startDate: string;
+  cliffDays: number;
+  durationDays: number;
+  cadence: VestingCadence;
+  offeringId?: string;
+  offeringName?: string;
+  tranches: VestingTranche[];
+  status: VestingScheduleStatus;
+  createdAt: number;
+}
+
 export interface ChainJson {
   id: number;
   name: string;
@@ -148,6 +181,7 @@ export interface ChainJson {
   ICOs?: Record<string, IcoOffering>;
   Airdrops?: Record<string, AirdropCampaign>;
   LendingOffers?: Record<string, LendingOffer>;
+  VestingSchedules?: Record<string, VestingSchedule>;
 }
 
 interface ChainStoreContextType {
@@ -167,6 +201,7 @@ interface ChainStoreContextType {
   updateChainICOs: (chainId: number, icos: Record<string, IcoOffering>) => void;
   updateChainAirdrops: (chainId: number, airdrops: Record<string, AirdropCampaign>) => void;
   updateChainLendingOffers: (chainId: number, offers: Record<string, LendingOffer>) => void;
+  updateChainVestingSchedules: (chainId: number, schedules: Record<string, VestingSchedule>) => void;
 }
 
 const ChainStoreContext = createContext<ChainStoreContextType | undefined>(undefined);
@@ -378,6 +413,20 @@ export function ChainStoreProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  const updateChainVestingSchedules = useCallback(
+    (chainId: number, schedules: Record<string, VestingSchedule>) => {
+      setChainCache(prev => {
+        const existing = prev[chainId];
+        if (!existing) return prev;
+        return {
+          ...prev,
+          [chainId]: { ...existing, VestingSchedules: schedules },
+        };
+      });
+    },
+    [],
+  );
+
   const value: ChainStoreContextType = {
     selectedChainId,
     selectedChain,
@@ -395,6 +444,7 @@ export function ChainStoreProvider({ children }: { children: ReactNode }) {
     updateChainICOs,
     updateChainAirdrops,
     updateChainLendingOffers,
+    updateChainVestingSchedules,
   };
 
   return (
