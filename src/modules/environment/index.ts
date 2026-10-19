@@ -23,6 +23,9 @@ const environmentModule: ModuleInstance = {
     eventBus.on('environment:factory-deployed', (data) => {
       console.log('Environment: factory deployed', data);
     });
+    eventBus.on('chain:unreachable', (data) => {
+      console.warn('Chain unreachable', data);
+    });
     eventBus.on('refresh-environment', () => {
       console.log('Environment: refresh requested');
     });

@@ -12,6 +12,8 @@ import {
 } from 'viem';
 import create2FactoryArtifact from '../../../../abi/Create2Factory.json';
 import fungibleProxyArtifact from '../../../../abi/FungibleProxy.json';
+import { classifyRpcFailure } from '../../../core/rpcErrors';
+import type { DeployOutcome } from '../types';
 
 interface UseDeployFungibleProxyReturn {
   deployFungibleProxy: (params: {
@@ -19,7 +21,7 @@ interface UseDeployFungibleProxyReturn {
     rpcUrl: string;
     implementation: Address;
     salt: string;
-  }) => Promise<Address | null>;
+  }) => Promise<DeployOutcome>;
   isDeploying: boolean;
 }
 
@@ -32,10 +34,14 @@ export function useDeployFungibleProxy(): UseDeployFungibleProxyReturn {
     rpcUrl: string;
     implementation: Address;
     salt: string;
-  }): Promise<Address | null> {
-    if (!walletClient) return null;
+  }): Promise<DeployOutcome> {
+    if (!walletClient) {
+      return { ok: false, failure: { kind: 'unknown', message: 'Wallet not connected' } };
+    }
     const account = walletClient.account;
-    if (!account) return null;
+    if (!account) {
+      return { ok: false, failure: { kind: 'unknown', message: 'Wallet has no account' } };
+    }
 
     setIsDeploying(true);
     try {
@@ -75,16 +81,20 @@ export function useDeployFungibleProxy(): UseDeployFungibleProxyReturn {
             topics: [...log.topics] as [`0x${string}`, ...`0x${string}`[]],
           });
           if (event.eventName === 'Deployed') {
-            return (event.args as unknown as { contractAddress: Address }).contractAddress;
+            const address = (event.args as unknown as { contractAddress: Address }).contractAddress;
+            return { ok: true, address };
           }
         } catch {
           continue;
         }
       }
 
-      return null;
-    } catch {
-      return null;
+      return {
+        ok: false,
+        failure: { kind: 'unknown', message: 'Deployed event not found in transaction receipt' },
+      };
+    } catch (error) {
+      return { ok: false, failure: classifyRpcFailure(error) };
     } finally {
       setIsDeploying(false);
     }

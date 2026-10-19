@@ -12,6 +12,9 @@ import {
   AlertCircle,
   AlertTriangle,
   ExternalLink,
+  Wifi,
+  WifiOff,
+  HelpCircle,
 } from 'lucide-react';
 import {
   EnvironmentChainState,
@@ -23,7 +26,10 @@ import { useDeployFungibleProxy } from './hooks/useDeployFungibleProxy';
 import { useDeployFungibleFactory } from './hooks/useDeployFungibleFactory';
 import { useDeployFungibleEnvironment } from './hooks/useDeployFungibleEnvironment';
 import { useAddChain } from './hooks/useAddChain';
+import { useChainHealth } from './hooks/useChainHealth';
 import { useChainStore, type ChainJson, type Exchange } from '../../core/ChainStore';
+import type { ChainHealthStatus } from '../../core/chainHealth';
+import { isChainUnreachable, classifyRpcFailure, type RpcFailure } from '../../core/rpcErrors';
 
 function StatusBadge({ deployed }: { deployed: boolean }) {
   const { t } = useTranslation();
@@ -80,6 +86,60 @@ function AddressRow({
         </a>
       )}
     </div>
+  );
+}
+
+function NodeStatusBadge({
+  status,
+  isChecking,
+  onRecheck,
+}: {
+  status: ChainHealthStatus;
+  isChecking: boolean;
+  onRecheck: () => void;
+}) {
+  const { t } = useTranslation();
+
+  if (isChecking) {
+    return (
+      <span className="flex items-center gap-1.5 text-xs font-medium text-muted bg-gray-50 px-2.5 py-1 rounded-full">
+        <Loader2 className="h-3 w-3 animate-spin" />
+        {t('environment.checkingNode')}
+      </span>
+    );
+  }
+
+  if (status === 'online') {
+    return (
+      <span className="flex items-center gap-1.5 text-xs font-medium text-green-700 bg-green-50 px-2.5 py-1 rounded-full">
+        <Wifi className="h-3 w-3" />
+        {t('environment.nodeOnline')}
+      </span>
+    );
+  }
+
+  if (status === 'offline') {
+    return (
+      <button
+        onClick={onRecheck}
+        className="flex items-center gap-1.5 text-xs font-medium text-red-700 bg-red-50 px-2.5 py-1 rounded-full hover:bg-red-100"
+        title={t('environment.retryNodeCheck')}
+      >
+        <WifiOff className="h-3 w-3" />
+        {t('environment.nodeOfflineBadge')}
+      </button>
+    );
+  }
+
+  return (
+    <button
+      onClick={onRecheck}
+      className="flex items-center gap-1.5 text-xs font-medium text-muted bg-gray-50 px-2.5 py-1 rounded-full hover:bg-gray-100"
+      title={t('environment.retryNodeCheck')}
+    >
+      <HelpCircle className="h-3 w-3" />
+      {t('environment.nodeUnknown')}
+    </button>
   );
 }
 
@@ -1155,6 +1215,35 @@ export function Environment() {
   const { deployFungibleFactory, isDeploying: isDeployingFactory } = useDeployFungibleFactory();
   const { deployFungibleEnvironment, isDeploying: isDeployingEnvironment } = useDeployFungibleEnvironment();
 
+  const reportFailure = (failure: RpcFailure, fallbackKey: string) => {
+    const chainName = selectedChain?.name ?? '';
+    if (isChainUnreachable(failure)) {
+      setError(t('environment.error.chainUnreachable', { name: chainName }));
+      eventBus.emit('chain:unreachable', {
+        chainId: selectedChainId,
+        chainName,
+        rpcUrl: selectedChain?.rpcUrl,
+        reason: failure.kind,
+        message: failure.message,
+        timestamp: Date.now(),
+      });
+      return;
+    }
+    switch (failure.kind) {
+      case 'user_rejected':
+        setError(t('environment.error.userRejected'));
+        return;
+      case 'rate_limited':
+        setError(t('environment.error.rateLimited', { name: chainName }));
+        return;
+      case 'contract_reverted':
+        setError(t('environment.error.contractReverted'));
+        return;
+      default:
+        setError(t(fallbackKey));
+    }
+  };
+
   function buildCreate2Factory(
   cfg: { create2Factory?: Record<string, { address?: string; desc?: string }> } | null,
 ): EnvironmentChainState['create2Factory'] {
@@ -1223,6 +1312,9 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
   const { addChain, switchChain, isAdding: isAddingChain, error: addChainError } =
     useAddChain();
 
+  const { health: nodeHealth, isChecking: isCheckingNode, check: checkNode } =
+    useChainHealth(selectedChain?.rpcUrl);
+
   const selectedState = chainStates.find(c => c.chainId === selectedChainId);
   const isChainAdded = selectedChain ? connectedChains.some(c => c.id === selectedChainId) : false;
   const explorer = selectedChain?.blockExplorer || '';
@@ -1266,11 +1358,12 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
     setSuccess(undefined);
 
     try {
-      const factoryAddress = await deployCreate2Factory(selectedChain.rpcUrl);
-      if (!factoryAddress) {
-        setError(t('environment.error.deployToken'));
+      const outcome = await deployCreate2Factory(selectedChain.rpcUrl);
+      if (!outcome.ok) {
+        reportFailure(outcome.failure, 'environment.error.deployToken');
         return;
       }
+      const factoryAddress = outcome.address;
 
       updateChainCreate2Factory(selectedChainId, {
         deployed: { address: factoryAddress, desc: 'Create2Factory deployed from this dApp' },
@@ -1305,8 +1398,8 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
         t('environment.success.tokenDeployed', { name: selectedChain?.name || '' })
       );
       setForm({ tokenAddress: '', useCreate2: true, create2Salt: 'fungible-token', selectedCreate2Factory: '' });
-    } catch {
-      setError(t('environment.error.deployToken'));
+    } catch (error) {
+      reportFailure(classifyRpcFailure(error), 'environment.error.deployToken');
     } finally {
       setActiveStep(null);
     }
@@ -1328,17 +1421,19 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
     setSuccess(undefined);
 
     try {
-      const proxyAddress = await deployFungibleProxy({
+      const outcome = await deployFungibleProxy({
         factoryAddress: form.selectedCreate2Factory as Address,
         rpcUrl: selectedChain.rpcUrl,
         implementation: selectedState.token.address as Address,
         salt: form.create2Salt,
       });
 
-      if (!proxyAddress) {
-        setError(t('environment.error.deployProxy'));
+      if (!outcome.ok) {
+        reportFailure(outcome.failure, 'environment.error.deployProxy');
         return;
       }
+
+      const proxyAddress = outcome.address;
 
       const newState = { ...selectedState };
       newState.fungibleProxy = {
@@ -1360,8 +1455,8 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
       });
 
       setSuccess(t('environment.success.proxyDeployed', { name: selectedChain?.name || '' }));
-    } catch {
-      setError(t('environment.error.deployProxy'));
+    } catch (error) {
+      reportFailure(classifyRpcFailure(error), 'environment.error.deployProxy');
     } finally {
       setActiveStep(null);
     }
@@ -1379,11 +1474,12 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
     setSuccess(undefined);
 
     try {
-      const factoryAddress = await deployFungibleFactory(selectedChain.rpcUrl);
-      if (!factoryAddress) {
-        setError(t('environment.error.deployFactory'));
+      const outcome = await deployFungibleFactory(selectedChain.rpcUrl);
+      if (!outcome.ok) {
+        reportFailure(outcome.failure, 'environment.error.deployFactory');
         return;
       }
+      const factoryAddress = outcome.address;
 
       const newState = { ...selectedState };
       newState.fungibleFactory = {
@@ -1405,8 +1501,8 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
       });
 
       setSuccess(t('environment.success.factoryDeployed', { name: selectedChain?.name || '' }));
-    } catch {
-      setError(t('environment.error.deployFactory'));
+    } catch (error) {
+      reportFailure(classifyRpcFailure(error), 'environment.error.deployFactory');
     } finally {
       setActiveStep(null);
     }
@@ -1492,11 +1588,12 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
     setSuccess(undefined);
 
     try {
-      const environmentAddress = await deployFungibleEnvironment(selectedChain.rpcUrl);
-      if (!environmentAddress) {
-        setError(t('environment.error.deployEnvironment'));
+      const outcome = await deployFungibleEnvironment(selectedChain.rpcUrl);
+      if (!outcome.ok) {
+        reportFailure(outcome.failure, 'environment.error.deployEnvironment');
         return;
       }
+      const environmentAddress = outcome.address;
 
       const newState = { ...selectedState };
       newState.fungibleEnvironment = {
@@ -1518,8 +1615,8 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
       });
 
       setSuccess(t('environment.success.environmentDeployed', { name: selectedChain?.name || '' }));
-    } catch {
-      setError(t('environment.error.deployEnvironment'));
+    } catch (error) {
+      reportFailure(classifyRpcFailure(error), 'environment.error.deployEnvironment');
     } finally {
       setActiveStep(null);
     }
@@ -1676,7 +1773,7 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
             <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center">
               <Network className="h-6 w-6 text-blue-600" />
             </div>
-            <div>
+            <div className="flex-1 min-w-0">
               <h2 className="text-xl font-semibold text-foreground">
                 {t('environment.chainHeader', { name: selectedChain.name, id: selectedChain.id })}
               </h2>
@@ -1684,7 +1781,35 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
                 {selectedChain.rpcUrl}
               </p>
             </div>
+            <NodeStatusBadge
+              status={nodeHealth?.status ?? 'unknown'}
+              isChecking={isCheckingNode}
+              onRecheck={checkNode}
+            />
           </div>
+
+          {nodeHealth?.status === 'offline' && (
+            <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
+              <WifiOff className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <p className="text-sm text-red-800">
+                  {t('environment.nodeOffline', { name: selectedChain.name, url: selectedChain.rpcUrl })}
+                </p>
+                {nodeHealth.failure?.message && (
+                  <p className="mt-1 text-xs text-red-600 font-mono break-words">
+                    {nodeHealth.failure.message}
+                  </p>
+                )}
+                <button
+                  onClick={checkNode}
+                  disabled={isCheckingNode}
+                  className="mt-2 text-sm font-medium text-red-700 hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isCheckingNode ? t('environment.checkingNode') : t('environment.retryNodeCheck')}
+                </button>
+              </div>
+            </div>
+          )}
 
           {!isChainAdded && selectedChain && (
             <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-center gap-3">

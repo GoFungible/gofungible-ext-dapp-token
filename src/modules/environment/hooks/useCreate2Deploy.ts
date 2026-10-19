@@ -4,12 +4,13 @@ import {
   createPublicClient,
   http,
   type Abi,
-  type Address,
 } from 'viem';
 import create2FactoryArtifact from '../../../../abi/Create2Factory.json';
+import { classifyRpcFailure } from '../../../core/rpcErrors';
+import type { DeployOutcome } from '../types';
 
 interface UseCreate2DeployReturn {
-  deployCreate2Factory: (rpcUrl: string) => Promise<Address | null>;
+  deployCreate2Factory: (rpcUrl: string) => Promise<DeployOutcome>;
   isDeploying: boolean;
 }
 
@@ -17,13 +18,13 @@ export function useCreate2Deploy(): UseCreate2DeployReturn {
   const { data: walletClient } = useWalletClient();
   const [isDeploying, setIsDeploying] = useState(false);
 
-  async function deployCreate2Factory(rpcUrl: string): Promise<Address | null> {
+  async function deployCreate2Factory(rpcUrl: string): Promise<DeployOutcome> {
     if (!walletClient) {
-      return null;
+      return { ok: false, failure: { kind: 'unknown', message: 'Wallet not connected' } };
     }
     const account = walletClient.account;
     if (!account) {
-      return null;
+      return { ok: false, failure: { kind: 'unknown', message: 'Wallet has no account' } };
     }
     setIsDeploying(true);
     try {
@@ -36,9 +37,16 @@ export function useCreate2Deploy(): UseCreate2DeployReturn {
         account,
       });
       const receipt = await publicClient.waitForTransactionReceipt({ hash });
-      return receipt.contractAddress ?? null;
-    } catch {
-      return null;
+      const address = receipt.contractAddress;
+      if (!address) {
+        return {
+          ok: false,
+          failure: { kind: 'unknown', message: 'Deployment receipt has no contract address' },
+        };
+      }
+      return { ok: true, address };
+    } catch (error) {
+      return { ok: false, failure: classifyRpcFailure(error) };
     } finally {
       setIsDeploying(false);
     }

@@ -4,12 +4,13 @@ import {
   createPublicClient,
   http,
   type Abi,
-  type Address,
 } from 'viem';
 import fungibleEnvironmentArtifact from '../../../../abi/FungibleEnvironment.json';
+import { classifyRpcFailure } from '../../../core/rpcErrors';
+import type { DeployOutcome } from '../types';
 
 interface UseDeployFungibleEnvironmentReturn {
-  deployFungibleEnvironment: (rpcUrl: string) => Promise<Address | null>;
+  deployFungibleEnvironment: (rpcUrl: string) => Promise<DeployOutcome>;
   isDeploying: boolean;
 }
 
@@ -17,13 +18,13 @@ export function useDeployFungibleEnvironment(): UseDeployFungibleEnvironmentRetu
   const { data: walletClient } = useWalletClient();
   const [isDeploying, setIsDeploying] = useState(false);
 
-  async function deployFungibleEnvironment(rpcUrl: string): Promise<Address | null> {
+  async function deployFungibleEnvironment(rpcUrl: string): Promise<DeployOutcome> {
     if (!walletClient) {
-      return null;
+      return { ok: false, failure: { kind: 'unknown', message: 'Wallet not connected' } };
     }
     const account = walletClient.account;
     if (!account) {
-      return null;
+      return { ok: false, failure: { kind: 'unknown', message: 'Wallet has no account' } };
     }
     setIsDeploying(true);
     try {
@@ -36,9 +37,16 @@ export function useDeployFungibleEnvironment(): UseDeployFungibleEnvironmentRetu
         account,
       });
       const receipt = await publicClient.waitForTransactionReceipt({ hash });
-      return receipt.contractAddress ?? null;
-    } catch {
-      return null;
+      const address = receipt.contractAddress;
+      if (!address) {
+        return {
+          ok: false,
+          failure: { kind: 'unknown', message: 'Deployment receipt has no contract address' },
+        };
+      }
+      return { ok: true, address };
+    } catch (error) {
+      return { ok: false, failure: classifyRpcFailure(error) };
     } finally {
       setIsDeploying(false);
     }
