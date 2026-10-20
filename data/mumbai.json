@@ -2,7 +2,7 @@
   "id": 80001,
   "name": "Mumbai",
   "symbol": "MATIC",
-  "rpcUrl": "https://polygon-mumbai-bor-rpc.publicnode.com",
+  "rpcUrl": "https://rpc-mumbai.maticvigil.com",
   "blockExplorer": "https://mumbai.polygonscan.com",
   "isActive": true,
   "token": {

@@ -2,7 +2,7 @@
   "id": 5,
   "name": "Goerli",
   "symbol": "ETH",
-  "rpcUrl": "https://ethereum-goerli-rpc.publicnode.com",
+  "rpcUrl": "https://rpc.ankr.com/eth_goerli",
   "blockExplorer": "https://goerli.etherscan.io",
   "isActive": true,
   "token": {

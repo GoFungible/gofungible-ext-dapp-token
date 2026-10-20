@@ -2,7 +2,7 @@
   "id": 80002,
   "name": "Polygon Amoy",
   "symbol": "MATIC",
-  "rpcUrl": "https://rpc-amoy.polygon.technology",
+  "rpcUrl": "https://polygon-amoy-bor-rpc.publicnode.com",
   "blockExplorer": "https://amoy.polygonscan.com",
   "isActive": true,
   "token": {
