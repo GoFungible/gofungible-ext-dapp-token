@@ -76,7 +76,6 @@ export function DebugStatePopup({ isOpen, onClose, onRefresh }: DebugStatePopupP
       isActive: c.isActive,
       token: c.token,
       create2Factory: c.create2Factory,
-      FungibleProxy: c.FungibleProxy,
       FungibleFactory: c.FungibleFactory,
     }));
     return {

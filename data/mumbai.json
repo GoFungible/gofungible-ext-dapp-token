@@ -33,7 +33,6 @@
       "desc": "CREATE2 and CREATE opcodes. CREATE3 simplifies multi-chain deployments by deriving addresses solely from the deployer address and salt (ignoring init-code bytecode variations), while CREATEX provides a comprehensive toolkit for deterministic contract and proxy creation."
     }
   },
-  "FungibleProxy": "",
   "FungibleEnvironment": "",
   "Relayers": {},
   "PaymentTokens": {},

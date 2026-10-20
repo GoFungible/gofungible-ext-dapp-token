@@ -170,7 +170,6 @@ export interface ChainJson {
   isActive: boolean;
   token?: ChainToken;
   create2Factory?: Record<string, { address?: string; desc?: string }>;
-  FungibleProxy?: string;
   FungibleFactory?: string;
   FungibleEnvironment?: string;
   PaymentTokens?: Record<string, PaymentToken>;
@@ -190,7 +189,6 @@ interface ChainStoreContextType {
   chainCache: Record<number, ChainJson>;
   selectChain: (chainId: number) => void;
   updateChainCreate2Factory: (chainId: number, entries: Record<string, { address?: string; desc?: string }>) => void;
-  updateChainFungibleProxy: (chainId: number, address: string) => void;
   updateChainFungibleFactory: (chainId: number, address: string) => void;
   updateChainFungibleEnvironment: (chainId: number, address: string) => void;
   updateChainPaymentTokens: (chainId: number, tokens: Record<string, PaymentToken>) => void;
@@ -267,20 +265,6 @@ export function ChainStoreProvider({ children }: { children: ReactNode }) {
             ...existing,
             create2Factory: { ...existingFactory, ...entries },
           },
-        };
-      });
-    },
-    [],
-  );
-
-  const updateChainFungibleProxy = useCallback(
-    (chainId: number, address: string) => {
-      setChainCache(prev => {
-        const existing = prev[chainId];
-        if (!existing) return prev;
-        return {
-          ...prev,
-          [chainId]: { ...existing, FungibleProxy: address },
         };
       });
     },
@@ -447,7 +431,6 @@ export function ChainStoreProvider({ children }: { children: ReactNode }) {
     chainCache,
     selectChain,
     updateChainCreate2Factory,
-    updateChainFungibleProxy,
     updateChainFungibleFactory,
     updateChainFungibleEnvironment,
     updateChainPaymentTokens,

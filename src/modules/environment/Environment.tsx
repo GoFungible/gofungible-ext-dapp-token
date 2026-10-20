@@ -1,10 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useChains, useChainId } from 'wagmi';
-import type { Address } from 'viem';
 import {
   Network,
-  Settings,
   CheckCircle,
   XCircle,
   Plus,
@@ -22,7 +20,6 @@ import {
 import { eventBus } from '../../core/EventBus';
 import mockChains from '@data/chains';
 import { useCreate2Deploy } from './hooks/useCreate2Deploy';
-import { useDeployFungibleProxy } from './hooks/useDeployFungibleProxy';
 import { useDeployFungibleFactory } from './hooks/useDeployFungibleFactory';
 import { useDeployFungibleEnvironment } from './hooks/useDeployFungibleEnvironment';
 import { useAddChain } from './hooks/useAddChain';
@@ -228,120 +225,6 @@ function TokenDeployment({
   );
 }
 
-function FungibleProxyDeployment({
-  state,
-  create2Salt,
-  setCreate2Salt,
-	onDeploy,
-  isLoading,
-  explorer,
-  factories,
-  selectedFactory,
-  setSelectedFactory,
-}: {
-  state: EnvironmentChainState;
-  create2Salt: string;
-  setCreate2Salt: (value: string) => void;
-  onDeploy: () => void;
-  isLoading: boolean;
-  explorer: string;
-  factories: { label: string; address: string; desc?: string }[];
-  selectedFactory: string;
-  setSelectedFactory: (value: string) => void;
-}) {
-  const { t } = useTranslation();
-  return (
-    <div className="bg-surface rounded-xl border border-gray-200 p-6 flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
-          <Settings className="h-5 w-5 text-blue-600" />
-          {t('environment.fungibleProxyContract')}
-        </h3>
-        <StatusBadge deployed={state.fungibleProxy.deployed} />
-      </div>
-
-      <p className="text-sm text-muted">
-        {t('environment.fungibleProxyDesc')}
-      </p>
-
-      <div>
-        <label className="block text-xs font-medium text-muted uppercase tracking-wide mb-1">
-          {t('environment.create2FactorySelect')}
-        </label>
-        <select
-          value={selectedFactory}
-          onChange={e => setSelectedFactory(e.target.value)}
-          disabled={isLoading}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none bg-white"
-        >
-          <option value="">{t('environment.create2FactorySelectPlaceholder')}</option>
-          {factories.map(f => (
-            <option key={f.address} value={f.address}>
-              {f.label} - {f.address.slice(0, 10)}...{f.address.slice(-8)}
-            </option>
-          ))}
-        </select>
-        {selectedFactory && (
-          <p className="mt-2 text-xs text-muted">
-            {factories.find(f => f.address === selectedFactory)?.desc}
-          </p>
-        )}
-      </div>
-
-      <div>
-        <label className="block text-xs font-medium text-muted uppercase tracking-wide mb-1">
-          {t('environment.create2Salt')}
-        </label>
-        <input
-          type="text"
-          value={create2Salt}
-          onChange={e => setCreate2Salt(e.target.value)}
-          placeholder={t('environment.create2SaltPlaceholder')}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg font-mono text-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none"
-          disabled={isLoading}
-        />
-      </div>
-
-      {state.fungibleProxy.address && (
-        <div className="bg-gray-50 rounded-lg p-4">
-          <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
-            {t('environment.proxyAddress')}
-          </p>
-          <AddressRow
-            address={state.fungibleProxy.address}
-            deployed={state.fungibleProxy.deployed}
-            showExplorer={!!explorer}
-            explorer={explorer}
-          />
-        </div>
-      )}
-
-      <div className="flex justify-end mt-auto">
-        <button
-          onClick={onDeploy}
-          disabled={isLoading || !selectedFactory || !create2Salt}
-          className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
-          title={t('environment.deployFungibleProxy')}
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              {t('common.deploying')}
-            </>
-          ) : state.fungibleProxy.deployed ? (
-            t('environment.proxyDeployed')
-          ) : (
-            <>
-            <Plus className="h-4 w-4" />
-            {t('environment.deployFungibleProxy')}
-            </>
-          )}
-        </button>
-      </div>
-    </div>
-  );
-}
-
 function FungibleFactoryDeployment({
   state,
   create2Salt,
@@ -428,8 +311,8 @@ function FungibleFactoryDeployment({
           </div>
           <span className="text-sm text-muted">
             {state.fungibleFactory.assigned
-              ? t('environment.assignedToProxy')
-              : t('environment.notAssignedToProxy')}
+              ? t('environment.assigned')
+              : t('environment.notAssigned')}
           </span>
         </div>
       </div>
@@ -437,7 +320,7 @@ function FungibleFactoryDeployment({
       <div className="flex flex-wrap justify-end gap-2">
         <button
           onClick={onDeploy}
-          disabled={isDeploying || !state.fungibleProxy.deployed || state.fungibleFactory.deployed}
+          disabled={isDeploying || state.fungibleFactory.deployed}
           className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
           title={t('environment.deployFactory')}
         >
@@ -571,8 +454,8 @@ function FungibleEnvironmentDeployment({
           </div>
           <span className="text-sm text-muted">
             {state.fungibleEnvironment.assigned
-              ? t('environment.assignedToProxy')
-              : t('environment.notAssignedToProxy')}
+              ? t('environment.assigned')
+              : t('environment.notAssigned')}
           </span>
         </div>
       </div>
@@ -1303,7 +1186,7 @@ export function Environment() {
   const { t } = useTranslation();
   const [chainStates, setChainStates] = useState<EnvironmentChainState[]>([]);
   const [activeStep, setActiveStep] = useState<string | null>(null);
-  const { selectedChainId, selectedChain, selectChain, updateChainCreate2Factory, updateChainFungibleProxy, updateChainFungibleFactory, updateChainFungibleEnvironment, updateChainPaymentTokens, updateChainRelayers, updateChainExchanges, updateChainLenders, updateChainFungibleTokens, chainCache } = useChainStore();
+  const { selectedChainId, selectedChain, selectChain, updateChainCreate2Factory, updateChainFungibleFactory, updateChainFungibleEnvironment, updateChainPaymentTokens, updateChainRelayers, updateChainExchanges, updateChainLenders, updateChainFungibleTokens, chainCache } = useChainStore();
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const [form, setForm] = useState({
@@ -1315,7 +1198,6 @@ export function Environment() {
   const environmentInitializedRef = useRef(false);
 
   const { deployCreate2Factory, isDeploying: isDeployingCreate2 } = useCreate2Deploy();
-  const { deployFungibleProxy, isDeploying: isDeployingProxy } = useDeployFungibleProxy();
   const { deployFungibleFactory, isDeploying: isDeployingFactory } = useDeployFungibleFactory();
   const { deployFungibleEnvironment, isDeploying: isDeployingEnvironment } = useDeployFungibleEnvironment();
 
@@ -1366,7 +1248,6 @@ export function Environment() {
 function buildEnvironmentState(c: ChainJson): EnvironmentChainState {
   const cfg = c as { create2Factory?: Record<string, { address?: string; desc?: string }> };
   const create2Factory = buildCreate2Factory(cfg);
-  const proxyAddress = typeof c.FungibleProxy === 'string' && c.FungibleProxy ? c.FungibleProxy : null;
   const factoryAddress = typeof c.FungibleFactory === 'string' && c.FungibleFactory ? c.FungibleFactory : null;
   const environmentAddress = typeof c.FungibleEnvironment === 'string' && c.FungibleEnvironment ? c.FungibleEnvironment : null;
   return {
@@ -1377,7 +1258,6 @@ function buildEnvironmentState(c: ChainJson): EnvironmentChainState {
       deploymentType: null,
     },
     create2Factory,
-    fungibleProxy: { address: proxyAddress, deployed: !!proxyAddress, assigned: !!proxyAddress },
     fungibleFactory: { address: factoryAddress, deployed: !!factoryAddress, assigned: !!factoryAddress },
     fungibleEnvironment: { address: environmentAddress, deployed: !!environmentAddress, assigned: !!environmentAddress },
   };
@@ -1504,63 +1384,6 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
       setForm({ tokenAddress: '', useCreate2: true, create2Salt: 'fungible-token', selectedCreate2Factory: '' });
     } catch (error) {
       reportFailure(classifyRpcFailure(error), 'environment.error.deployToken');
-    } finally {
-      setActiveStep(null);
-    }
-  };
-
-  const handleDeployProxy = async () => {
-    if (!selectedState || !selectedChain) return;
-    if (!isChainAdded) {
-      setError(t('environment.chainNotAdded', { name: selectedChain.name }));
-      return;
-    }
-    if (!form.selectedCreate2Factory) {
-      setError(t('environment.error.selectFactory'));
-      return;
-    }
-
-    setActiveStep('proxy');
-    setError(undefined);
-    setSuccess(undefined);
-
-    try {
-      const outcome = await deployFungibleProxy({
-        factoryAddress: form.selectedCreate2Factory as Address,
-        rpcUrl: selectedChain.rpcUrl,
-        implementation: selectedState.token.address as Address,
-        salt: form.create2Salt,
-      });
-
-      if (!outcome.ok) {
-        reportFailure(outcome.failure, 'environment.error.deployProxy');
-        return;
-      }
-
-      const proxyAddress = outcome.address;
-
-      const newState = { ...selectedState };
-      newState.fungibleProxy = {
-        address: proxyAddress,
-        deployed: true,
-        assigned: true,
-      };
-
-      updateChainFungibleProxy(selectedChainId, proxyAddress);
-
-      setChainStates(prev =>
-        prev.map(c => (c.chainId === selectedChainId ? newState : c))
-      );
-
-      eventBus.emit('environment:proxy-deployed', {
-        chainId: selectedChainId,
-        chainName: selectedChain?.name,
-        timestamp: Date.now(),
-      });
-
-      setSuccess(t('environment.success.proxyDeployed', { name: selectedChain?.name || '' }));
-    } catch (error) {
-      reportFailure(classifyRpcFailure(error), 'environment.error.deployProxy');
     } finally {
       setActiveStep(null);
     }
@@ -1961,25 +1784,13 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
             </div>
           )}
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
             <TokenDeployment
               state={selectedState}
               onDeploy={() => { void handleDeployToken(); }}
               isLoading={activeStep === 'token' || isDeployingCreate2}
               explorer={explorer}
               chainAdded={isChainAdded}
-            />
-
-            <FungibleProxyDeployment
-              state={selectedState}
-              create2Salt={form.create2Salt}
-              setCreate2Salt={v => setForm({ ...form, create2Salt: v })}
-              onDeploy={() => { void handleDeployProxy(); }}
-              isLoading={activeStep === 'proxy' || isDeployingProxy}
-              explorer={explorer}
-              factories={availableFactories}
-              selectedFactory={form.selectedCreate2Factory}
-              setSelectedFactory={v => setForm({ ...form, selectedCreate2Factory: v })}
             />
 
             <FungibleEnvironmentDeployment

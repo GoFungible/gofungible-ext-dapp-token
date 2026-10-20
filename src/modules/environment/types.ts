@@ -31,7 +31,6 @@ export interface EnvironmentChainState {
     entries: Record<string, Create2FactoryEntry>;
     deployed: boolean;
   };
-  fungibleProxy: EnvironmentContract;
   fungibleFactory: EnvironmentContract;
   fungibleEnvironment: EnvironmentContract;
 }

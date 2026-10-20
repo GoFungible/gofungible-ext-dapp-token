@@ -2,7 +2,7 @@
   "id": "environment",
   "name": "Environment",
   "version": "1.0.0",
-  "description": "Manage the contract environment of a chain: Create2Token, FungibleProxy, and FungibleFactory",
+  "description": "Manage the contract environment of a chain: Create2Token, FungibleFactory, and FungibleEnvironment",
   "author": "Gofungible Team",
   "entryPoint": "environment",
   "routes": [

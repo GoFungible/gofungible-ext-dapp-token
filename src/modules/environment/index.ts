@@ -17,9 +17,6 @@ const environmentModule: ModuleInstance = {
     eventBus.on('environment:token-deployed', (data) => {
       console.log('Environment: token deployed', data);
     });
-    eventBus.on('environment:proxy-deployed', (data) => {
-      console.log('Environment: proxy deployed', data);
-    });
     eventBus.on('environment:factory-deployed', (data) => {
       console.log('Environment: factory deployed', data);
     });
