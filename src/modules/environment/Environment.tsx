@@ -344,18 +344,28 @@ function FungibleProxyDeployment({
 
 function FungibleFactoryDeployment({
   state,
+  create2Salt,
+  setCreate2Salt,
   onDeploy,
   onSetInFactory,
   isDeploying,
   isSetInLoading,
   explorer,
+  factories,
+  selectedFactory,
+  setSelectedFactory,
 }: {
   state: EnvironmentChainState;
+  create2Salt: string;
+  setCreate2Salt: (value: string) => void;
   onDeploy: () => void;
   onSetInFactory: () => void;
   isDeploying: boolean;
   isSetInLoading: boolean;
   explorer: string;
+  factories: { label: string; address: string; desc?: string }[];
+  selectedFactory: string;
+  setSelectedFactory: (value: string) => void;
 }) {
   const { t } = useTranslation();
   return (
@@ -371,6 +381,39 @@ function FungibleFactoryDeployment({
       <p className="text-sm text-muted">
         {t('environment.fungibleFactoryDesc')}
       </p>
+
+      <div>
+        <label className="block text-xs font-medium text-muted uppercase tracking-wide mb-1">
+          {t('environment.create2FactorySelect')}
+        </label>
+        <select
+          value={selectedFactory}
+          onChange={e => setSelectedFactory(e.target.value)}
+          disabled={isDeploying}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none bg-white"
+        >
+          <option value="">{t('environment.create2FactorySelectPlaceholder')}</option>
+          {factories.map(f => (
+            <option key={f.address} value={f.address}>
+              {f.label} - {f.address.slice(0, 10)}...{f.address.slice(-8)}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label className="block text-xs font-medium text-muted uppercase tracking-wide mb-1">
+          {t('environment.create2Salt')}
+        </label>
+        <input
+          type="text"
+          value={create2Salt}
+          onChange={e => setCreate2Salt(e.target.value)}
+          placeholder={t('environment.create2SaltPlaceholder')}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg font-mono text-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none"
+          disabled={isDeploying}
+        />
+      </div>
 
       <div className="bg-gray-50 rounded-lg p-4 space-y-2">
         <AddressRow
@@ -439,18 +482,28 @@ function FungibleFactoryDeployment({
 
 function FungibleEnvironmentDeployment({
   state,
+  create2Salt,
+  setCreate2Salt,
   onDeploy,
   onSetInEnvironment,
   isDeploying,
   isSetInLoading,
   explorer,
+  factories,
+  selectedFactory,
+  setSelectedFactory,
 }: {
   state: EnvironmentChainState;
+  create2Salt: string;
+  setCreate2Salt: (value: string) => void;
   onDeploy: () => void;
   onSetInEnvironment: () => void;
   isDeploying: boolean;
   isSetInLoading: boolean;
   explorer: string;
+  factories: { label: string; address: string; desc?: string }[];
+  selectedFactory: string;
+  setSelectedFactory: (value: string) => void;
 }) {
   const { t } = useTranslation();
   return (
@@ -466,6 +519,44 @@ function FungibleEnvironmentDeployment({
       <p className="text-sm text-muted">
         {t('environment.fungibleEnvironmentDesc')}
       </p>
+
+      <div>
+        <label className="block text-xs font-medium text-muted uppercase tracking-wide mb-1">
+          {t('environment.create2FactorySelect')}
+        </label>
+        <select
+          value={selectedFactory}
+          onChange={e => setSelectedFactory(e.target.value)}
+          disabled={isDeploying}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none bg-white"
+        >
+          <option value="">{t('environment.create2FactorySelectPlaceholder')}</option>
+          {factories.map(f => (
+            <option key={f.address} value={f.address}>
+              {f.label} - {f.address.slice(0, 10)}...{f.address.slice(-8)}
+            </option>
+          ))}
+        </select>
+        {selectedFactory && (
+          <p className="mt-2 text-xs text-muted">
+            {factories.find(f => f.address === selectedFactory)?.desc}
+          </p>
+        )}
+      </div>
+
+      <div>
+        <label className="block text-xs font-medium text-muted uppercase tracking-wide mb-1">
+          {t('environment.create2Salt')}
+        </label>
+        <input
+          type="text"
+          value={create2Salt}
+          onChange={e => setCreate2Salt(e.target.value)}
+          placeholder={t('environment.create2SaltPlaceholder')}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg font-mono text-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none"
+          disabled={isDeploying}
+        />
+      </div>
 
       <div className="bg-gray-50 rounded-lg p-4">
         <AddressRow
@@ -489,7 +580,7 @@ function FungibleEnvironmentDeployment({
       <div className="flex flex-wrap justify-end gap-2 mt-auto">
         <button
           onClick={onDeploy}
-          disabled={isDeploying || state.fungibleEnvironment.deployed}
+          disabled={isDeploying || state.fungibleEnvironment.deployed || !selectedFactory || !create2Salt}
           className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
           title={t('environment.deployFungibleEnvironment')}
         >
@@ -1893,29 +1984,32 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
 
             <FungibleEnvironmentDeployment
               state={selectedState}
+              create2Salt={form.create2Salt}
+              setCreate2Salt={v => setForm({ ...form, create2Salt: v })}
               onDeploy={() => { void handleDeployEnvironment(); }}
               onSetInEnvironment={() => { void handleSetInEnvironment(); }}
               isDeploying={activeStep === 'environment' || isDeployingEnvironment}
               isSetInLoading={activeStep === 'setInEnvironment'}
               explorer={explorer}
+              factories={availableFactories}
+              selectedFactory={form.selectedCreate2Factory}
+              setSelectedFactory={v => setForm({ ...form, selectedCreate2Factory: v })}
             />
           </div>
 
-          <FungibleFactoryDeployment
-            state={selectedState}
-            onDeploy={() => { void handleDeployFactory(); }}
-            onSetInFactory={() => { void handleSetInFactory(); }}
-            isDeploying={activeStep === 'factory' || isDeployingFactory}
-            isSetInLoading={activeStep === 'setInFactory'}
-            explorer={explorer}
-          />
-
-          <FungibleTokens
-            tokens={selectedChain.FungibleTokens ?? {}}
-            explorer={explorer}
-            onAdd={handleAddFungibleToken}
-            onRemove={handleRemoveFungibleToken}
-          />
+            <FungibleFactoryDeployment
+              state={selectedState}
+              create2Salt={form.create2Salt}
+              setCreate2Salt={v => setForm({ ...form, create2Salt: v })}
+              onDeploy={() => { void handleDeployFactory(); }}
+              onSetInFactory={() => { void handleSetInFactory(); }}
+              isDeploying={activeStep === 'factory' || isDeployingFactory}
+              isSetInLoading={activeStep === 'setInFactory'}
+              explorer={explorer}
+              factories={availableFactories}
+              selectedFactory={form.selectedCreate2Factory}
+              setSelectedFactory={v => setForm({ ...form, selectedCreate2Factory: v })}
+            />
 
           <PaymentTokens
             tokens={selectedChain.PaymentTokens ?? {}}
