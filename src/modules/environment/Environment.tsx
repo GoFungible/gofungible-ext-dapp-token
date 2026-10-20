@@ -252,7 +252,7 @@ function FungibleFactoryDeployment({
 }) {
   const { t } = useTranslation();
   return (
-    <div className="bg-surface rounded-xl border border-gray-200 p-6 space-y-4">
+    <div className="bg-surface rounded-xl border border-gray-200 p-6 flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
           <Network className="h-5 w-5 text-blue-600" />
@@ -317,7 +317,7 @@ function FungibleFactoryDeployment({
         </div>
       </div>
 
-      <div className="flex flex-wrap justify-end gap-2">
+      <div className="flex flex-wrap justify-end gap-2 mt-auto">
         <button
           onClick={onDeploy}
           disabled={isDeploying || state.fungibleFactory.deployed}
@@ -1784,7 +1784,7 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
             </div>
           )}
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
             <TokenDeployment
               state={selectedState}
               onDeploy={() => { void handleDeployToken(); }}
@@ -1806,7 +1806,6 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
               selectedFactory={form.selectedCreate2Factory}
               setSelectedFactory={v => setForm({ ...form, selectedCreate2Factory: v })}
             />
-          </div>
 
             <FungibleFactoryDeployment
               state={selectedState}
@@ -1821,6 +1820,7 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
               selectedFactory={form.selectedCreate2Factory}
               setSelectedFactory={v => setForm({ ...form, selectedCreate2Factory: v })}
             />
+          </div>
 
           <PaymentTokens
             tokens={selectedChain.PaymentTokens ?? {}}
