@@ -20,9 +20,39 @@ export const anvil2 = defineChain({
   iconBackground: '#ffffff',
 });
 
+export const goerli = defineChain({
+  id: 5,
+  name: 'Goerli',
+  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  rpcUrls: { default: { http: ['https://ethereum-goerli-rpc.publicnode.com'] } },
+  blockExplorers: { default: { name: 'Etherscan', url: 'https://goerli.etherscan.io' } },
+  iconUrl: '/gofungible-ext-dapp-token/icons/goerli.svg',
+  iconBackground: '#ffffff',
+});
+
+export const mumbai = defineChain({
+  id: 80001,
+  name: 'Mumbai',
+  nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
+  rpcUrls: { default: { http: ['https://polygon-mumbai-bor-rpc.publicnode.com'] } },
+  blockExplorers: { default: { name: 'Polygonscan', url: 'https://mumbai.polygonscan.com' } },
+  iconUrl: '/gofungible-ext-dapp-token/icons/mumbai.svg',
+  iconBackground: '#ffffff',
+});
+
+export const amoy = defineChain({
+  id: 80002,
+  name: 'Polygon Amoy',
+  nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
+  rpcUrls: { default: { http: ['https://rpc-amoy.polygon.technology'] } },
+  blockExplorers: { default: { name: 'Polygonscan', url: 'https://amoy.polygonscan.com' } },
+  iconUrl: '/gofungible-ext-dapp-token/icons/amoy.svg',
+  iconBackground: '#ffffff',
+});
+
 export const wagmiConfig = getDefaultConfig({
   appName: 'Gofungible Ext DApp Token',
   projectId: import.meta.env.VITE_WALLET_CONNECT_PROJECT_ID ?? 'YOUR_PROJECT_ID',
-  chains: [mainnet, polygon, arbitrum, optimism, base, sepolia, bsc, anvil1, anvil2],
+  chains: [mainnet, polygon, arbitrum, optimism, base, sepolia, bsc, anvil1, anvil2, goerli, mumbai, amoy],
   ssr: true,
 });

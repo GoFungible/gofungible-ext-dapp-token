@@ -1,0 +1,48 @@
+{
+  "id": 5,
+  "name": "Goerli",
+  "symbol": "ETH",
+  "rpcUrl": "https://ethereum-goerli-rpc.publicnode.com",
+  "blockExplorer": "https://goerli.etherscan.io",
+  "isActive": true,
+  "token": {
+    "address": "0x1234567890123456789012345678901234567890",
+    "name": "Gofungible Token",
+    "symbol": "GFT",
+    "decimals": 18,
+    "totalSupply": "1000000000000000000000000",
+    "holders": 15420,
+    "priceUsd": 1.23,
+    "priceChange24h": 2.45
+  },
+  "create2Factory": {
+    "nick": {
+      "address": "0x4e59b44847b379578588920ca78fbf26c0b4956c",
+      "desc": "The most ubiquitous CREATE2 factory deployed identically across Ethereum Mainnet, Arbitrum, Optimism, Polygon, and most other EVM networks. It was generated via 'Nick's Method' (using an unsigned transaction with no known private key) so that any developer can trust that the factory exists at the exact same address and code across chains"
+    },
+    "safe": {
+      "address": "0x914d7C52D26757471F884d52469ab126F747414d",
+      "desc": "Like Nick's Method, the factory itself was originally deployed using a single, globally broadcasted presigned transaction from a keyless account. When you spin up a Safe account, the UI or SDK interacts with this Proxy Factory."
+    },
+    "keyless": {
+      "address": "0x0000000000FFe8B47B3e2130213B802212439497",
+      "desc": "Another well-known permissionless factory created by developer 0age.eth used for gas-efficient and keyless deterministic contract deployments."
+    },
+    "createx": {
+      "address": "0xba5Ed099633D3B313e4D5F7bdc1305d3c28ba5Ed",
+      "desc": "CREATE2 and CREATE opcodes. CREATE3 simplifies multi-chain deployments by deriving addresses solely from the deployer address and salt (ignoring init-code bytecode variations), while CREATEX provides a comprehensive toolkit for deterministic contract and proxy creation."
+    }
+  },
+  "FungibleProxy": "",
+  "FungibleEnvironment": "",
+  "Relayers": {},
+  "PaymentTokens": {},
+  "Exchanges": {},
+  "Lenders": {},
+  "FungibleFactory": "",
+  "FungibleTokens": {},
+  "ICOs": {},
+  "Airdrops": {},
+  "LendingOffers": {},
+  "VestingSchedules": {}
+}
