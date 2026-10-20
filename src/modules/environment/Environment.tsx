@@ -368,9 +368,7 @@ function FungibleEnvironmentDeployment({
   create2Salt,
   setCreate2Salt,
   onDeploy,
-  onSetInEnvironment,
   isDeploying,
-  isSetInLoading,
   explorer,
   factories,
   selectedFactory,
@@ -380,9 +378,7 @@ function FungibleEnvironmentDeployment({
   create2Salt: string;
   setCreate2Salt: (value: string) => void;
   onDeploy: () => void;
-  onSetInEnvironment: () => void;
   isDeploying: boolean;
-  isSetInLoading: boolean;
   explorer: string;
   factories: { label: string; address: string; desc?: string }[];
   selectedFactory: string;
@@ -448,16 +444,6 @@ function FungibleEnvironmentDeployment({
           showExplorer={!!explorer}
           explorer={explorer}
         />
-        <div className="flex items-center gap-2 mt-2">
-          <div className={state.fungibleEnvironment.assigned ? 'text-green-600' : 'text-muted'}>
-            {state.fungibleEnvironment.assigned ? <CheckCircle className="h-4 w-4 inline" /> : <XCircle className="h-4 w-4 inline" />}
-          </div>
-          <span className="text-sm text-muted">
-            {state.fungibleEnvironment.assigned
-              ? t('environment.assigned')
-              : t('environment.notAssigned')}
-          </span>
-        </div>
       </div>
 
       <div className="flex flex-wrap justify-end gap-2 mt-auto">
@@ -478,26 +464,6 @@ function FungibleEnvironmentDeployment({
             <>
               <Plus className="h-4 w-4" />
               {t('environment.deployFungibleEnvironment')}
-            </>
-          )}
-        </button>
-        <button
-          onClick={onSetInEnvironment}
-          disabled={isSetInLoading || state.fungibleEnvironment.assigned}
-          className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
-          title={t('environment.setInEnvironment')}
-        >
-          {isSetInLoading ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              {t('common.deploying')}
-            </>
-          ) : state.fungibleEnvironment.assigned ? (
-            t('environment.environmentAssigned')
-          ) : (
-            <>
-              <Plus className="h-4 w-4" />
-              {t('environment.setInEnvironment')}
             </>
           )}
         </button>
@@ -1259,7 +1225,7 @@ function buildEnvironmentState(c: ChainJson): EnvironmentChainState {
     },
     create2Factory,
     fungibleFactory: { address: factoryAddress, deployed: !!factoryAddress, assigned: !!factoryAddress },
-    fungibleEnvironment: { address: environmentAddress, deployed: !!environmentAddress, assigned: !!environmentAddress },
+    fungibleEnvironment: { address: environmentAddress, deployed: !!environmentAddress },
   };
 }
 
@@ -1469,40 +1435,6 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
     }
   };
 
-  const handleSetInEnvironment = async () => {
-    if (!selectedState) return;
-
-    setActiveStep('setInEnvironment');
-    setError(undefined);
-    setSuccess(undefined);
-
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-
-      const newState = { ...selectedState };
-      newState.fungibleEnvironment = {
-        ...newState.fungibleEnvironment,
-        assigned: true,
-      };
-
-      setChainStates(prev =>
-        prev.map(c => (c.chainId === selectedChainId ? newState : c))
-      );
-
-      eventBus.emit('environment:environment-assigned', {
-        chainId: selectedChainId,
-        chainName: selectedChain?.name,
-        timestamp: Date.now(),
-      });
-
-      setSuccess(t('environment.success.environmentAssigned', { name: selectedChain?.name || '' }));
-    } catch {
-      setError(t('environment.error.setInEnvironment'));
-    } finally {
-      setActiveStep(null);
-    }
-  };
-
   const handleDeployEnvironment = async () => {
     if (!selectedState || !selectedChain) return;
     if (!isChainAdded) {
@@ -1526,7 +1458,6 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
       newState.fungibleEnvironment = {
         address: environmentAddress,
         deployed: true,
-        assigned: false,
       };
 
       updateChainFungibleEnvironment(selectedChainId, environmentAddress);
@@ -1798,9 +1729,7 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
               create2Salt={form.create2Salt}
               setCreate2Salt={v => setForm({ ...form, create2Salt: v })}
               onDeploy={() => { void handleDeployEnvironment(); }}
-              onSetInEnvironment={() => { void handleSetInEnvironment(); }}
               isDeploying={activeStep === 'environment' || isDeployingEnvironment}
-              isSetInLoading={activeStep === 'setInEnvironment'}
               explorer={explorer}
               factories={availableFactories}
               selectedFactory={form.selectedCreate2Factory}

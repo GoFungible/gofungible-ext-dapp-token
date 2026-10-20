@@ -16,7 +16,7 @@ export interface EnvironmentToken {
 export interface EnvironmentContract {
   address: string | null;
   deployed: boolean;
-  assigned: boolean;
+  assigned?: boolean;
 }
 
 export interface Create2FactoryEntry {
