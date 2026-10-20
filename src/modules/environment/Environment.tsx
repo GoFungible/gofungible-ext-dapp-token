@@ -362,7 +362,7 @@ function FungibleFactoryDeployment({
     <div className="bg-surface rounded-xl border border-gray-200 p-6 space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
-          <Network className="h-5 w-5 text-green-600" />
+          <Network className="h-5 w-5 text-blue-600" />
           {t('environment.fungibleFactoryContract')}
         </h3>
         <StatusBadge deployed={state.fungibleFactory.deployed} />
@@ -395,7 +395,7 @@ function FungibleFactoryDeployment({
         <button
           onClick={onDeploy}
           disabled={isDeploying || !state.fungibleProxy.deployed || state.fungibleFactory.deployed}
-          className="px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+          className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
           title={t('environment.deployFactory')}
         >
           {isDeploying ? (
@@ -415,7 +415,7 @@ function FungibleFactoryDeployment({
         <button
           onClick={onSetInFactory}
           disabled={isSetInLoading || !state.fungibleFactory.deployed || state.fungibleFactory.assigned}
-          className="px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+          className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
           title={t('environment.setInFactory')}
         >
           {isSetInLoading ? (
@@ -560,7 +560,7 @@ function PaymentTokens({
     <div className="bg-surface rounded-xl border border-gray-200 p-6 flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
-          <Network className="h-5 w-5 text-blue-600" />
+          <Network className="h-5 w-5 text-green-600" />
           {t('environment.paymentTokens')}
         </h3>
         <span className="text-xs font-medium text-muted bg-gray-50 px-2 py-1 rounded-full">
@@ -648,7 +648,7 @@ function PaymentTokens({
             <button
               onClick={handleAdd}
               disabled={!newName.trim() || !newAddress.trim()}
-              className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+              className="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
             >
               <Plus className="h-4 w-4" />
               {t('environment.addPaymentToken')}
@@ -659,7 +659,7 @@ function PaymentTokens({
         <div className="flex justify-end">
           <button
             onClick={() => setAdding(true)}
-            className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+            className="px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
             title={t('environment.addPaymentToken')}
           >
             <Plus className="h-4 w-4" />
@@ -699,7 +699,7 @@ function Relayers({
     <div className="bg-surface rounded-xl border border-gray-200 p-6 flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
-          <Network className="h-5 w-5 text-blue-600" />
+          <Network className="h-5 w-5 text-green-600" />
           {t('environment.relayers')}
         </h3>
         <span className="text-xs font-medium text-muted bg-gray-50 px-2 py-1 rounded-full">
@@ -782,7 +782,7 @@ function Relayers({
             <button
               onClick={handleAdd}
               disabled={!newName.trim() || !newAddress.trim()}
-              className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+              className="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
             >
               <Plus className="h-4 w-4" />
               {t('environment.addRelayer')}
@@ -793,7 +793,7 @@ function Relayers({
         <div className="flex justify-end">
           <button
             onClick={() => setAdding(true)}
-            className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+            className="px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
             title={t('environment.addRelayer')}
           >
             <Plus className="h-4 w-4" />
@@ -833,7 +833,7 @@ function Exchanges({
     <div className="bg-surface rounded-xl border border-gray-200 p-6 flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
-          <Network className="h-5 w-5 text-blue-600" />
+          <Network className="h-5 w-5 text-green-600" />
           {t('environment.exchanges')}
         </h3>
         <span className="text-xs font-medium text-muted bg-gray-50 px-2 py-1 rounded-full">
@@ -917,7 +917,7 @@ function Exchanges({
             <button
               onClick={handleAdd}
               disabled={!newName.trim() || !newAddress.trim()}
-              className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+              className="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
             >
               <Plus className="h-4 w-4" />
               {t('environment.addExchange')}
@@ -928,7 +928,7 @@ function Exchanges({
         <div className="flex justify-end">
           <button
             onClick={() => setAdding(true)}
-            className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+            className="px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
             title={t('environment.addExchange')}
           >
             <Plus className="h-4 w-4" />
@@ -968,7 +968,7 @@ function Lenders({
     <div className="bg-surface rounded-xl border border-gray-200 p-6 flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
-          <Network className="h-5 w-5 text-blue-600" />
+          <Network className="h-5 w-5 text-green-600" />
           {t('environment.lendingPlatforms')}
         </h3>
         <span className="text-xs font-medium text-muted bg-gray-50 px-2 py-1 rounded-full">
@@ -1051,7 +1051,7 @@ function Lenders({
             <button
               onClick={handleAdd}
               disabled={!newName.trim() || !newAddress.trim()}
-              className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+              className="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
             >
               <Plus className="h-4 w-4" />
               {t('environment.addLender')}
@@ -1062,7 +1062,7 @@ function Lenders({
         <div className="flex justify-end">
           <button
             onClick={() => setAdding(true)}
-            className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+            className="px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
             title={t('environment.addLender')}
           >
             <Plus className="h-4 w-4" />
@@ -1901,6 +1901,22 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
             />
           </div>
 
+          <FungibleFactoryDeployment
+            state={selectedState}
+            onDeploy={() => { void handleDeployFactory(); }}
+            onSetInFactory={() => { void handleSetInFactory(); }}
+            isDeploying={activeStep === 'factory' || isDeployingFactory}
+            isSetInLoading={activeStep === 'setInFactory'}
+            explorer={explorer}
+          />
+
+          <FungibleTokens
+            tokens={selectedChain.FungibleTokens ?? {}}
+            explorer={explorer}
+            onAdd={handleAddFungibleToken}
+            onRemove={handleRemoveFungibleToken}
+          />
+
           <PaymentTokens
             tokens={selectedChain.PaymentTokens ?? {}}
             explorer={explorer}
@@ -1929,22 +1945,7 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
             onRemove={handleRemoveLender}
           />
 
-          <FungibleFactoryDeployment
-            state={selectedState}
-            onDeploy={() => { void handleDeployFactory(); }}
-            onSetInFactory={() => { void handleSetInFactory(); }}
-            isDeploying={activeStep === 'factory' || isDeployingFactory}
-            isSetInLoading={activeStep === 'setInFactory'}
-            explorer={explorer}
-          />
-
-          <FungibleTokens
-            tokens={selectedChain.FungibleTokens ?? {}}
-            explorer={explorer}
-            onAdd={handleAddFungibleToken}
-            onRemove={handleRemoveFungibleToken}
-          />
-        </div>
+          </div>
       )}
     </div>
   );
