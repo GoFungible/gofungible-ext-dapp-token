@@ -1779,6 +1779,13 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
             onRemove={handleRemoveLender}
           />
 
+          <FungibleTokens
+            tokens={selectedChain.FungibleTokens ?? {}}
+            explorer={explorer}
+            onAdd={handleAddFungibleToken}
+            onRemove={handleRemoveFungibleToken}
+          />
+
           </div>
       )}
     </div>
