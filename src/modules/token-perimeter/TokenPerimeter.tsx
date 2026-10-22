@@ -381,13 +381,15 @@ export function TokenPerimeter() {
   const [bindTokenAddress, setBindTokenAddress] = useState('');
   const [unbindModalOpen, setUnbindModalOpen] = useState(false);
   const [chainToUnbind, setChainToUnbind] = useState<ChainData | null>(null);
+  const [masterChainId, setMasterChainId] = useState<number>(MASTER_CHAIN_ID);
   const { selectedChainId, selectedChain, selectChain } = useChainStore();
 
-  const masterChain = chains.find(c => c.id === MASTER_CHAIN_ID);
-  const selectableChains = chains.filter(c => c.id !== MASTER_CHAIN_ID);
+  const masterChain = chains.find(c => c.id === masterChainId);
+  const masterCandidates = chains.filter(c => c.isActive && c.token);
+  const selectableChains = chains.filter(c => c.id !== masterChainId);
   const selectedChainIsActive = selectedChain?.isActive ?? false;
   const canBind = !!selectedChain && !selectedChainIsActive;
-  const canUnbind = !!selectedChain && selectedChainIsActive;
+  const canUnbind = !!selectedChain && selectedChainIsActive && selectedChain.id !== MASTER_CHAIN_ID;
 
   useEffect(() => {
     setChains(mockChains.map(c => ({ ...c, token: c.token ? { ...c.token } : undefined })));
@@ -408,6 +410,12 @@ export function TokenPerimeter() {
       void selectChain(selectableChains[0].id);
     }
   }, [selectableChains, selectedChainId, selectChain]);
+
+  useEffect(() => {
+    if (selectedChainId === masterChainId && selectableChains.length > 0) {
+      void selectChain(selectableChains[0].id);
+    }
+  }, [masterChainId, selectedChainId, selectableChains, selectChain]);
 
   const handleBindButtonClick = () => {
     if (!selectedChain) return;
@@ -524,8 +532,25 @@ export function TokenPerimeter() {
             <p className="text-xs font-medium text-muted uppercase tracking-wide mb-2">
               {t('tokenPerimeter.masterChain')}
             </p>
-            <div className="px-3 py-1.5 border border-gray-300 rounded-lg bg-surface font-mono text-sm text-foreground mb-3">
-              {t('tokenPerimeter.masterToken')}
+            <div className="relative mb-3">
+              <select
+                value={masterChainId}
+                onChange={e => setMasterChainId(Number(e.target.value))}
+                className="w-full px-3 py-1.5 border border-gray-300 rounded-lg bg-surface focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none appearance-none font-mono text-sm pr-8"
+                disabled={isLoading}
+                aria-label={t('tokenPerimeter.masterToken')}
+              >
+                {masterCandidates.map(chain => (
+                  <option key={chain.id} value={chain.id}>
+                    {t('tokenPerimeter.masterOption', {
+                      name: chain.name,
+                      symbol: chain.symbol,
+                      token: t('tokenPerimeter.masterToken'),
+                    })}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted pointer-events-none" />
             </div>
             {masterChain && (
               <ChainTokenCard
@@ -581,6 +606,7 @@ export function TokenPerimeter() {
                 onChange={e => void selectChain(Number(e.target.value))}
                 className="w-full px-3 py-1.5 border border-gray-300 rounded-lg bg-surface focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none appearance-none font-mono text-sm pr-8"
                 disabled={isLoading}
+                aria-label={t('tokenPerimeter.chain')}
               >
                 {selectableChains.map(chain => (
                   <option key={chain.id} value={chain.id}>

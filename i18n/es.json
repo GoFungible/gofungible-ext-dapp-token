@@ -213,6 +213,7 @@
     "subtitle": "Gestione las cadenas EVM cubiertas por el token multichain. Vincule nuevas cadenas para agregarlas al perímetro o desvincule las existentes para eliminarlas.",
     "masterChain": "CADENA MAESTRA",
     "masterToken": "Token Maestro",
+    "masterOption": "{{name}} ({{symbol}}) • {{token}}",
     "masterBadge": "Maestro",
     "chain": "CADENA",
     "active": "Activo",

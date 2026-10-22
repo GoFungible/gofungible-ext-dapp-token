@@ -214,6 +214,7 @@
     "subtitle": "Manage the EVM chains covered by the multichain token. Bind new chains to add them to the token perimeter or unbind existing ones to remove them.",
     "masterChain": "MASTER CHAIN",
     "masterToken": "Master Token",
+    "masterOption": "{{name}} ({{symbol}}) • {{token}}",
     "masterBadge": "Master",
     "chain": "CHAIN",
     "active": "Active",
