@@ -251,7 +251,8 @@
     "successUnbound": "Se desvinculó correctamente {{name}} del perímetro del token multichain",
     "errorUnbindFailed": "Error al desvincular la cadena. Inténtelo de nuevo.",
     "supportedChains": "Cadenas Soportadas",
-    "noSupportedChains": "No hay cadenas vinculadas actualmente al perímetro del token multichain"
+    "noSupportedChains": "No hay cadenas vinculadas actualmente al perímetro del token multichain",
+    "connectWallet": "Conecte la cartera para ver las cadenas soportadas"
   },
   "tokenNegotiation": {
     "title": "Negociación de Token",

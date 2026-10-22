@@ -251,7 +251,8 @@
     "successUnbound": "Successfully unbound {{name}} from the multichain token perimeter",
     "errorUnbindFailed": "Failed to unbind chain. Please try again.",
     "supportedChains": "Supported Chains",
-    "noSupportedChains": "No chains are currently bound to the multichain token perimeter"
+    "noSupportedChains": "No chains are currently bound to the multichain token perimeter",
+    "connectWallet": "Connect wallet to view supported chains"
   },
   "tokenNegotiation": {
     "title": "Token Negotiation",
