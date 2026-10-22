@@ -1,10 +1,14 @@
-import type { Address } from 'viem';
+import type { Address, Hex } from 'viem';
 import type { RpcFailure } from '../chains/rpcErrors';
 
 export const SUPPORTED_CHAIN_IDS = [1, 137, 42161, 10, 8453, 56];
 
 export type DeployOutcome =
   | { ok: true; address: Address }
+  | { ok: false; failure: RpcFailure };
+
+export type ContractCallOutcome =
+  | { ok: true; hash: Hex }
   | { ok: false; failure: RpcFailure };
 
 export interface EnvironmentToken {

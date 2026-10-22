@@ -67,24 +67,12 @@ export function DebugStatePopup({ isOpen, onClose, onRefresh }: DebugStatePopupP
       active: th.id === coreFramework.theme.getActive().id,
     }));
     const activeTheme = coreFramework.theme.getActive();
-    const chains = Object.values(chainCache).map(c => ({
-      id: c.id,
-      name: c.name,
-      symbol: c.symbol,
-      rpcUrl: c.rpcUrl,
-      blockExplorer: c.blockExplorer,
-      isActive: c.isActive,
-      token: c.token,
-      create2Factory: c.create2Factory,
-      FungibleFactory: c.FungibleFactory,
-    }));
+    const chains = Object.values(chainCache);
     return {
       capturedAt: new Date().toISOString(),
       chainStore: {
         selectedChainId,
-        selectedChain: selectedChain
-          ? { id: selectedChain.id, name: selectedChain.name, symbol: selectedChain.symbol }
-          : null,
+        selectedChain: selectedChain ?? null,
         chainCount: Object.keys(chainCache).length,
       },
       chains,

@@ -22,6 +22,7 @@ import mockChains from '@data/chains';
 import { useCreate2Deploy } from './hooks/useCreate2Deploy';
 import { useDeployFungibleFactory } from './hooks/useDeployFungibleFactory';
 import { useDeployFungibleEnvironment } from './hooks/useDeployFungibleEnvironment';
+import { useSetFungibleFactory } from './hooks/useSetFungibleFactory';
 import { useAddChain } from './hooks/useAddChain';
 import { useChainHealth } from './hooks/useChainHealth';
 import { useChainStore, type ChainJson, type Exchange } from '../chains/ChainStore';
@@ -340,7 +341,7 @@ function FungibleFactoryDeployment({
         </button>
         <button
           onClick={onSetInFactory}
-          disabled={isSetInLoading || !state.fungibleFactory.deployed || state.fungibleFactory.assigned}
+          disabled={isSetInLoading || !state.fungibleFactory.deployed || state.fungibleFactory.assigned || !state.fungibleEnvironment.deployed}
           className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
           title={t('environment.setInFactory')}
         >
@@ -1032,6 +1033,7 @@ export function Environment() {
   const { deployCreate2Factory, isDeploying: isDeployingCreate2 } = useCreate2Deploy();
   const { deployFungibleFactory, isDeploying: isDeployingFactory } = useDeployFungibleFactory();
   const { deployFungibleEnvironment, isDeploying: isDeployingEnvironment } = useDeployFungibleEnvironment();
+  const { setFungibleFactory, isAssigning: isAssigningFactory } = useSetFungibleFactory();
 
   const reportFailure = (failure: RpcFailure, fallbackKey: string) => {
     const chainName = selectedChain?.name ?? '';
@@ -1268,14 +1270,31 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
   };
 
   const handleSetInFactory = async () => {
-    if (!selectedState || !selectedState.fungibleFactory.deployed) return;
+    if (!selectedState || !selectedChain) return;
+    if (!selectedState.fungibleFactory.deployed) return;
+
+    const environmentAddress = selectedState.fungibleEnvironment.address;
+    const factoryAddress = selectedState.fungibleFactory.address;
+    if (!environmentAddress) {
+      setError(t('environment.error.environmentNotDeployed'));
+      return;
+    }
+    if (!factoryAddress) return;
 
     setActiveStep('setInFactory');
     setError(undefined);
     setSuccess(undefined);
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const outcome = await setFungibleFactory({
+        rpcUrl: selectedChain.rpcUrl,
+        environmentAddress,
+        factoryAddress,
+      });
+      if (!outcome.ok) {
+        reportFailure(outcome.failure, 'environment.error.setInFactory');
+        return;
+      }
 
       const newState = { ...selectedState };
       newState.fungibleFactory = {
@@ -1294,8 +1313,8 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
       });
 
       setSuccess(t('environment.success.factoryAssigned', { name: selectedChain?.name || '' }));
-    } catch {
-      setError(t('environment.error.setInFactory'));
+    } catch (error) {
+      reportFailure(classifyRpcFailure(error), 'environment.error.setInFactory');
     } finally {
       setActiveStep(null);
     }
@@ -1308,12 +1327,23 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
       return;
     }
 
+    const factoryAddress = form.selectedCreate2Factory;
+    const salt = form.create2Salt;
+    if (!factoryAddress || !salt) {
+      setError(t('environment.error.create2FactoryRequired'));
+      return;
+    }
+
     setActiveStep('environment');
     setError(undefined);
     setSuccess(undefined);
 
     try {
-      const outcome = await deployFungibleEnvironment(selectedChain.rpcUrl);
+      const outcome = await deployFungibleEnvironment({
+        rpcUrl: selectedChain.rpcUrl,
+        factoryAddress,
+        salt,
+      });
       if (!outcome.ok) {
         reportFailure(outcome.failure, 'environment.error.deployEnvironment');
         return;
@@ -1586,10 +1616,10 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
               state={selectedState}
               create2Salt={form.create2Salt}
               setCreate2Salt={v => setForm({ ...form, create2Salt: v })}
-              onDeploy={() => { void handleDeployFactory(); }}
-              onSetInFactory={() => { void handleSetInFactory(); }}
-              isDeploying={activeStep === 'factory' || isDeployingFactory}
-              isSetInLoading={activeStep === 'setInFactory'}
+          onDeploy={() => { void handleDeployFactory(); }}
+          onSetInFactory={() => { void handleSetInFactory(); }}
+          isDeploying={activeStep === 'factory' || isDeployingFactory}
+          isSetInLoading={activeStep === 'setInFactory' || isAssigningFactory}
               explorer={explorer}
               factories={availableFactories}
               selectedFactory={form.selectedCreate2Factory}
