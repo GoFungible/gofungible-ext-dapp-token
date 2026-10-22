@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { coreFramework } from './core/CoreFramework';
 import { ChainStoreProvider } from './modules/chains/ChainStore';
+import { FungibleTokensSync } from './modules/chains/FungibleTokensSync';
 import { LayoutProvider } from './components/LayoutProvider';
 import { TokenPerimeter } from './modules/token-perimeter/TokenPerimeter';
 import { LoaderModule } from './modules/loader/LoaderModule';
@@ -277,6 +278,7 @@ function App() {
   return (
     <BrowserRouter basename="/gofungible-ext-dapp-token/">
       <ChainStoreProvider>
+        <FungibleTokensSync />
         <LayoutProvider>
         {!modulesLoaded ? (
           <div className="min-h-screen flex items-center justify-center">
