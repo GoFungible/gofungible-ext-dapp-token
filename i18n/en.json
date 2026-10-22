@@ -22,7 +22,6 @@
     "dashboard": "Dashboard",
     "environment": "Environment",
     "token-perimeter": "Token Perimeter",
-    "token-bridge": "Token Bridge",
     "token-negotiation": "Token Negotiation",
     "token-fundraising": "Token Fundraising",
     "token-distribution": "Token Distribution",
@@ -249,47 +248,7 @@
     "successUnbound": "Successfully unbound {{name}} from the multichain token perimeter",
     "errorUnbindFailed": "Failed to unbind chain. Please try again.",
     "supportedChains": "Supported Chains",
-    "noSupportedChains": "No chains are currently bound to the multichain token perimeter",
-    "noTransactions": "No bridge transactions yet",
-    "noTransactionsDesc": "Your bridge history will appear here",
-    "transactionHistory": "Transaction History",
-    "txRoute": "{{from}} → {{to}}",
-    "txAmount": "{{amount}} GFT",
-    "viewTransaction": "View Transaction",
-    "status": {
-      "completed": "Completed",
-      "pending": "Pending",
-      "failed": "Failed"
-    }
-  },
-  "tokenBridge": {
-    "title": "Token Bridge",
-    "subtitle": "Bridge tokens between chains in the multichain token perimeter",
-    "selectChain": "Select {{label}} chain",
-    "selectChainModal": "Select {{label}} Chain",
-    "amount": "Amount",
-    "available": "Available: {{max}} {{symbol}}",
-    "max": "Max",
-    "bridgeTransfer": "Bridge Transfer",
-    "fromChain": "From Chain",
-    "toChain": "To Chain",
-    "swapChains": "Swap chains",
-    "bridgeTokens": "Bridge Tokens",
-    "bridgeInfo": "Bridge Info",
-    "masterToSlave": "Master → Slave",
-    "masterToSlaveDesc": "Bridge from Master Token (Ethereum) to Slave Tokens on other chains",
-    "slaveToMaster": "Slave → Master",
-    "slaveToMasterDesc": "Bridge from Slave Tokens back to Master Token on Ethereum",
-    "oneToOneRatio": "1:1 Ratio",
-    "oneToOneRatioDesc": "Tokens are bridged at a 1:1 ratio with no fees (gas fees apply)",
-    "error": {
-      "validAmount": "Please enter a valid amount",
-      "insufficientBalance": "Insufficient balance. Maximum: {{max}} {{symbol}}",
-      "selectBothChains": "Please select both chains"
-    },
-    "success": {
-      "bridged": "Successfully bridged {{amount}} {{symbol}} from {{from}} to {{to}}"
-    }
+    "noSupportedChains": "No chains are currently bound to the multichain token perimeter"
   },
   "tokenNegotiation": {
     "title": "Token Negotiation",

@@ -22,7 +22,6 @@
     "dashboard": "Panel",
     "environment": "Entorno",
     "token-perimeter": "Perímetro de Token",
-    "token-bridge": "Puente de Token",
     "token-negotiation": "Negociación de Token",
     "token-fundraising": "Financiación de Token",
     "token-distribution": "Distribución de Token",
@@ -248,47 +247,7 @@
     "successUnbound": "Se desvinculó correctamente {{name}} del perímetro del token multichain",
     "errorUnbindFailed": "Error al desvincular la cadena. Inténtelo de nuevo.",
     "supportedChains": "Cadenas Soportadas",
-    "noSupportedChains": "No hay cadenas vinculadas actualmente al perímetro del token multichain",
-    "noTransactions": "No hay transacciones de puente aún",
-    "noTransactionsDesc": "Su historial de puentes aparecerá aquí",
-    "transactionHistory": "Historial de Transacciones",
-    "txRoute": "{{from}} → {{to}}",
-    "txAmount": "{{amount}} GFT",
-    "viewTransaction": "Ver Transacción",
-    "status": {
-      "completed": "Completada",
-      "pending": "Pendiente",
-      "failed": "Fallida"
-    }
-  },
-  "tokenBridge": {
-    "title": "Puente de Token",
-    "subtitle": "Transfiera tokens entre cadenas en el perímetro del token multichain",
-    "selectChain": "Seleccionar cadena {{label}}",
-    "selectChainModal": "Seleccionar Cadena {{label}}",
-    "amount": "Monto",
-    "available": "Disponible: {{max}} {{symbol}}",
-    "max": "Máximo",
-    "bridgeTransfer": "Transferencia de Puente",
-    "fromChain": "Cadena Origen",
-    "toChain": "Cadena Destino",
-    "swapChains": "Intercambiar cadenas",
-    "bridgeTokens": "Puente de Tokens",
-    "bridgeInfo": "Información del Puente",
-    "masterToSlave": "Maestro → Esclavo",
-    "masterToSlaveDesc": "Transfiere desde el Token Maestro (Ethereum) a Tokens Esclavos en otras cadenas",
-    "slaveToMaster": "Esclavo → Maestro",
-    "slaveToMasterDesc": "Transfiere desde Tokens Esclavos de vuelta al Token Maestro en Ethereum",
-    "oneToOneRatio": "Relación 1:1",
-    "oneToOneRatioDesc": "Los tokens se transfieren a una relación 1:1 sin comisiones (se aplican tarifas de gas)",
-    "error": {
-      "validAmount": "Ingrese un monto válido",
-      "insufficientBalance": "Saldo insuficiente. Máximo: {{max}} {{symbol}}",
-      "selectBothChains": "Seleccione ambas cadenas"
-    },
-    "success": {
-      "bridged": "Se transfirió correctamente {{amount}} {{symbol}} de {{from}} a {{to}}"
-    }
+    "noSupportedChains": "No hay cadenas vinculadas actualmente al perímetro del token multichain"
   },
   "tokenNegotiation": {
     "title": "Negociación de Token",

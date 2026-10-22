@@ -6,7 +6,6 @@ import { ChainStoreProvider } from './core/ChainStore';
 import { LayoutProvider } from './components/LayoutProvider';
 import { TokenPerimeter } from './modules/token-perimeter/TokenPerimeter';
 import { LoaderModule } from './modules/loader/LoaderModule';
-import { TokenBridge } from './modules/token-bridge/TokenBridge';
 import { Dashboard } from './modules/dashboard/Dashboard';
 import { Environment } from './modules/environment/Environment';
 import { TokenNegotiation } from './modules/token-negotiation/TokenNegotiation';
@@ -21,7 +20,6 @@ import './index.css';
 const componentRegistry: Record<string, React.ComponentType> = {
   'TokenPerimeter': TokenPerimeter,
   'LoaderModule': LoaderModule,
-  'TokenBridge': TokenBridge,
   'Dashboard': Dashboard,
   'Environment': Environment,
   'TokenNegotiation': TokenNegotiation,
@@ -50,7 +48,6 @@ function App() {
     await loadTokenVestingModule();
     await loadTokenPerimeterModule();
     await loadLoaderModule();
-    await loadTokenBridgeModule();
     await loadDefaultThemeModule();
     await loadDarkThemeModule();
     await loadBrandThemeModule();
@@ -80,19 +77,6 @@ function App() {
       }
     } catch (error) {
       console.error('Failed to load loader module:', error);
-    }
-  };
-
-  const loadTokenBridgeModule = async () => {
-    try {
-      const mod = await import('./modules/token-bridge/index');
-      console.log('Token bridge module loaded:', mod);
-      if (mod.default && typeof mod.default.initialize === 'function') {
-        await mod.default.initialize(coreFramework);
-        console.log('TokenBridge module initialized successfully');
-      }
-    } catch (error) {
-      console.error('Failed to load token-bridge module:', error);
     }
   };
 

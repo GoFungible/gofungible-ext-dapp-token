@@ -35,18 +35,6 @@ export interface PerimeterEvent {
   timestamp: number;
 }
 
-export interface PerimeterTransaction {
-  id: string;
-  fromChainId: number;
-  toChainId: number;
-  fromAddress: string;
-  toAddress: string;
-  amount: string;
-  status: 'pending' | 'completed' | 'failed';
-  timestamp: number;
-  txHash?: string;
-}
-
 import i18n from '../../i18n';
 
 export function formatNumber(num: number | string): string {
