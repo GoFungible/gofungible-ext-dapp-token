@@ -1,4 +1,4 @@
-import type { ChainJson, Lender, LendingOffer, LendingOfferStatus } from '../../core/ChainStore';
+import type { ChainJson, Lender, LendingOffer, LendingOfferStatus } from '../chains/ChainStore';
 
 export type { LendingOffer, LendingOfferStatus };
 

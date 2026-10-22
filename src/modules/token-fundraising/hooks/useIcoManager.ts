@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { useChainStore, type IcoOffering } from '../../../core/ChainStore';
+import { useChainStore, type IcoOffering } from '../../chains/ChainStore';
 import { eventBus } from '../../../core/EventBus';
 import {
   buildOfferingId,

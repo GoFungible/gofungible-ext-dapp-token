@@ -1,4 +1,4 @@
-import type { ChainJson, IcoOffering, IcoStatus, IcoTier, PaymentToken } from '../../core/ChainStore';
+import type { ChainJson, IcoOffering, IcoStatus, IcoTier, PaymentToken } from '../chains/ChainStore';
 
 export type { IcoOffering, IcoStatus, IcoTier };
 

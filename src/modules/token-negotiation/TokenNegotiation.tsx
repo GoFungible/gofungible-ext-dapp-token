@@ -10,7 +10,7 @@ import {
 import { NegotiationChainState, ExchangePair, formatUnits, totalUnits } from './types';
 import { eventBus } from '../../core/EventBus';
 import mockChains from '@data/chains';
-import { useChainStore } from '../../core/ChainStore';
+import { useChainStore } from '../chains/ChainStore';
 
 const DEFAULT_EXCHANGES: Record<string, ExchangePair[]> = {
   '1': [

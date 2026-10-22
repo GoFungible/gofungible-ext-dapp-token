@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AlertCircle, CheckCircle, Hourglass, Loader2, Network } from 'lucide-react';
 import mockChains from '@data/chains';
-import { useChainStore } from '../../core/ChainStore';
+import { useChainStore } from '../chains/ChainStore';
 import { VestingForm } from './components/VestingForm';
 import { VestingCard } from './components/VestingCard';
 import { useVestingManager } from './hooks/useVestingManager';

@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { useChainStore, type VestingSchedule, type VestingTranche } from '../../../core/ChainStore';
+import { useChainStore, type VestingSchedule, type VestingTranche } from '../../chains/ChainStore';
 import { eventBus } from '../../../core/EventBus';
 import {
   buildScheduleId,

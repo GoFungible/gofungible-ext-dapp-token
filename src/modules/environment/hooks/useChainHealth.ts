@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { probeChain, type ChainHealth } from '../../../core/chainHealth';
+import { probeChain, type ChainHealth } from '../../chains/chainHealth';
 
 interface UseChainHealthReturn {
   health: ChainHealth | null;

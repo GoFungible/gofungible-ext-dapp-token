@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { XCircle, Copy, CheckCircle, RefreshCw } from 'lucide-react';
-import { useChainStore } from '../core/ChainStore';
+import { useChainStore } from '../modules/chains/ChainStore';
 import { coreFramework } from '../core/CoreFramework';
 import { eventBus } from '../core/EventBus';
 

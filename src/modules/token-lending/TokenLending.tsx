@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AlertCircle, CheckCircle, Landmark, Loader2, Network } from 'lucide-react';
 import mockChains from '@data/chains';
-import { useChainStore } from '../../core/ChainStore';
+import { useChainStore } from '../chains/ChainStore';
 import { LendingForm } from './components/LendingForm';
 import { LendingCard } from './components/LendingCard';
 import { useLendingManager } from './hooks/useLendingManager';

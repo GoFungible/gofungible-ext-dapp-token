@@ -24,9 +24,9 @@ import { useDeployFungibleFactory } from './hooks/useDeployFungibleFactory';
 import { useDeployFungibleEnvironment } from './hooks/useDeployFungibleEnvironment';
 import { useAddChain } from './hooks/useAddChain';
 import { useChainHealth } from './hooks/useChainHealth';
-import { useChainStore, type ChainJson, type Exchange } from '../../core/ChainStore';
-import type { ChainHealthStatus } from '../../core/chainHealth';
-import { isChainUnreachable, classifyRpcFailure, type RpcFailure } from '../../core/rpcErrors';
+import { useChainStore, type ChainJson, type Exchange } from '../chains/ChainStore';
+import type { ChainHealthStatus } from '../chains/chainHealth';
+import { isChainUnreachable, classifyRpcFailure, type RpcFailure } from '../chains/rpcErrors';
 
 function StatusBadge({ deployed }: { deployed: boolean }) {
   const { t } = useTranslation();

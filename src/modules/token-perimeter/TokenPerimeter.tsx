@@ -22,7 +22,7 @@ import {
 } from './types';
 import { eventBus } from '../../core/EventBus';
 import mockChains from '@data/chains';
-import { useChainStore } from '../../core/ChainStore';
+import { useChainStore } from '../chains/ChainStore';
 
 function CopyAddress({ address }: { address: string }) {
   const [copied, setCopied] = useState(false);

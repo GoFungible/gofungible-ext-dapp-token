@@ -4,7 +4,7 @@ import type {
   VestingSchedule,
   VestingScheduleStatus,
   VestingTranche,
-} from '../../core/ChainStore';
+} from '../chains/ChainStore';
 
 export type { VestingCadence, VestingSchedule, VestingScheduleStatus, VestingTranche };
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { coreFramework } from './core/CoreFramework';
-import { ChainStoreProvider } from './core/ChainStore';
+import { ChainStoreProvider } from './modules/chains/ChainStore';
 import { LayoutProvider } from './components/LayoutProvider';
 import { TokenPerimeter } from './modules/token-perimeter/TokenPerimeter';
 import { LoaderModule } from './modules/loader/LoaderModule';
@@ -39,6 +39,7 @@ function App() {
   }, []);
 
   const loadModules = async () => {
+    await loadChainsModule();
     await loadDashboardModule();
     await loadEnvironmentModule();
     await loadTokenNegotiationModule();
@@ -56,6 +57,17 @@ function App() {
     await loadBrutalistThemeModule();
     await loadThemeManagerModule();
     setModulesLoaded(true);
+  };
+
+  const loadChainsModule = async () => {
+    try {
+      const mod = await import('./modules/chains/index');
+      if (mod.default && typeof mod.default.initialize === 'function') {
+        await mod.default.initialize(coreFramework);
+      }
+    } catch (error) {
+      console.error('Failed to load chains module:', error);
+    }
   };
 
   const loadTokenPerimeterModule = async () => {

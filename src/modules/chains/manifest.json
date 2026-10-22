@@ -1,0 +1,9 @@
+{
+  "id": "chains",
+  "name": "Chains",
+  "version": "1.0.0",
+  "description": "Chain ecosystem state, chain health probing and RPC error classification",
+  "author": "Gofungible Team",
+  "entryPoint": "chains",
+  "extensionPoints": ["chain-state"]
+}

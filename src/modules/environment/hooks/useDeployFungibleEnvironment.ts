@@ -6,7 +6,7 @@ import {
   type Abi,
 } from 'viem';
 import fungibleEnvironmentArtifact from '../../../../abi/FungibleEnvironment.json';
-import { classifyRpcFailure } from '../../../core/rpcErrors';
+import { classifyRpcFailure } from '../../chains/rpcErrors';
 import type { DeployOutcome } from '../types';
 
 interface UseDeployFungibleEnvironmentReturn {

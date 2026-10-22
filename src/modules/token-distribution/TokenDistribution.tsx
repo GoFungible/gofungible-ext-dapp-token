@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AlertCircle, CheckCircle, Gift, Loader2, Network } from 'lucide-react';
 import mockChains from '@data/chains';
-import { useChainStore } from '../../core/ChainStore';
+import { useChainStore } from '../chains/ChainStore';
 import { AirdropForm } from './components/AirdropForm';
 import { AirdropCard } from './components/AirdropCard';
 import { useAirdropManager } from './hooks/useAirdropManager';

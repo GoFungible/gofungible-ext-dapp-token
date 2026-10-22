@@ -1,5 +1,5 @@
 import type { Address } from 'viem';
-import type { RpcFailure } from '../../core/rpcErrors';
+import type { RpcFailure } from '../chains/rpcErrors';
 
 export const SUPPORTED_CHAIN_IDS = [1, 137, 42161, 10, 8453, 56];
 

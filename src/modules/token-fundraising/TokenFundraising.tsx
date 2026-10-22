@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AlertCircle, CheckCircle, Loader2, Network, Rocket } from 'lucide-react';
 import mockChains from '@data/chains';
-import { useChainStore } from '../../core/ChainStore';
+import { useChainStore } from '../chains/ChainStore';
 import { IcoForm } from './components/IcoForm';
 import { IcoCard } from './components/IcoCard';
 import { useIcoManager } from './hooks/useIcoManager';

@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { useChainStore, type AirdropCampaign, type AirdropRecipient } from '../../../core/ChainStore';
+import { useChainStore, type AirdropCampaign, type AirdropRecipient } from '../../chains/ChainStore';
 import { eventBus } from '../../../core/EventBus';
 import {
   buildCampaignId,

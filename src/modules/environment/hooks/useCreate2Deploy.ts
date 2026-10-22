@@ -6,7 +6,7 @@ import {
   type Abi,
 } from 'viem';
 import create2FactoryArtifact from '../../../../abi/Create2Factory.json';
-import { classifyRpcFailure } from '../../../core/rpcErrors';
+import { classifyRpcFailure } from '../../chains/rpcErrors';
 import type { DeployOutcome } from '../types';
 
 interface UseCreate2DeployReturn {

@@ -4,7 +4,7 @@ import type {
   AirdropRecipient,
   AirdropRecipientStatus,
   AirdropStatus,
-} from '../../core/ChainStore';
+} from '../chains/ChainStore';
 
 export type { AirdropCampaign, AirdropClaimMode, AirdropRecipient, AirdropRecipientStatus, AirdropStatus };
 
