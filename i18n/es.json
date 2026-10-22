@@ -246,7 +246,20 @@
     "successBound": "Se vinculó correctamente {{name}} al perímetro del token multichain",
     "errorBindFailed": "Error al vincular la cadena. Inténtelo de nuevo.",
     "successUnbound": "Se desvinculó correctamente {{name}} del perímetro del token multichain",
-    "errorUnbindFailed": "Error al desvincular la cadena. Inténtelo de nuevo."
+    "errorUnbindFailed": "Error al desvincular la cadena. Inténtelo de nuevo.",
+    "supportedChains": "Cadenas Soportadas",
+    "noSupportedChains": "No hay cadenas vinculadas actualmente al perímetro del token multichain",
+    "noTransactions": "No hay transacciones de puente aún",
+    "noTransactionsDesc": "Su historial de puentes aparecerá aquí",
+    "transactionHistory": "Historial de Transacciones",
+    "txRoute": "{{from}} → {{to}}",
+    "txAmount": "{{amount}} GFT",
+    "viewTransaction": "Ver Transacción",
+    "status": {
+      "completed": "Completada",
+      "pending": "Pendiente",
+      "failed": "Fallida"
+    }
   },
   "tokenBridge": {
     "title": "Puente de Token",
@@ -256,12 +269,6 @@
     "amount": "Monto",
     "available": "Disponible: {{max}} {{symbol}}",
     "max": "Máximo",
-    "noTransactions": "No hay transacciones de puente aún",
-    "noTransactionsDesc": "Su historial de puentes aparecerá aquí",
-    "transactionHistory": "Historial de Transacciones",
-    "txRoute": "{{from}} → {{to}}",
-    "txAmount": "{{amount}} GFT",
-    "viewTransaction": "Ver Transacción",
     "bridgeTransfer": "Transferencia de Puente",
     "fromChain": "Cadena Origen",
     "toChain": "Cadena Destino",
@@ -274,12 +281,6 @@
     "slaveToMasterDesc": "Transfiere desde Tokens Esclavos de vuelta al Token Maestro en Ethereum",
     "oneToOneRatio": "Relación 1:1",
     "oneToOneRatioDesc": "Los tokens se transfieren a una relación 1:1 sin comisiones (se aplican tarifas de gas)",
-    "supportedChains": "Cadenas Soportadas",
-    "status": {
-      "completed": "Completada",
-      "pending": "Pendiente",
-      "failed": "Fallida"
-    },
     "error": {
       "validAmount": "Ingrese un monto válido",
       "insufficientBalance": "Saldo insuficiente. Máximo: {{max}} {{symbol}}",

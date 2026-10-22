@@ -12,11 +12,23 @@ import {
   X,
   AlertCircle,
   ChevronDown,
+  Send,
 } from 'lucide-react';
-import { ChainData, formatNumber, formatAddress, isEthereumAddress, MASTER_CHAIN_ID } from './types';
+import i18n from '../../i18n';
+import {
+  ChainData,
+  formatNumber,
+  formatAddress,
+  formatAmount,
+  parseAmount,
+  isEthereumAddress,
+  MASTER_CHAIN_ID,
+  PerimeterTransaction,
+} from './types';
 import { eventBus } from '../../core/EventBus';
 import mockChains from '@data/chains';
 import { useChainStore } from '../../core/ChainStore';
+import { subscribeTransactions } from './transactionStore';
 
 function CopyAddress({ address }: { address: string }) {
   const [copied, setCopied] = useState(false);
@@ -318,6 +330,102 @@ function UnbindModal({
   );
 }
 
+function SupportedChainsCard({
+  chains,
+  selectedChainId,
+}: {
+  chains: ChainData[];
+  selectedChainId: number;
+}) {
+  const { t } = useTranslation();
+  const supportedChains = chains.filter(c => c.isActive);
+
+  return (
+    <div className="bg-surface rounded-xl border border-gray-200 p-6">
+      <h3 className="font-semibold text-foreground mb-4">{t('tokenPerimeter.supportedChains')}</h3>
+      {supportedChains.length === 0 ? (
+        <p className="text-sm text-muted">{t('tokenPerimeter.noSupportedChains')}</p>
+      ) : (
+        <div className="space-y-3">
+          {supportedChains.map(chain => (
+            <div
+              key={chain.id}
+              className={`flex items-center gap-3 p-3 rounded-lg border transition-colors ${
+                selectedChainId === chain.id
+                  ? 'border-blue-300 bg-blue-50'
+                  : 'border-gray-200 hover:border-gray-300'
+              }`}
+            >
+              <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center">
+                <Network className="h-4 w-4 text-green-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-foreground truncate">{chain.name}</p>
+                <p className="text-xs text-muted truncate">
+                  {chain.token?.symbol} • {formatAddress(chain.token?.address || '')}
+                </p>
+              </div>
+              <span className="text-xs text-muted">
+                {formatNumber(chain.token?.totalSupply || '0')} {chain.token?.symbol}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function TransactionHistory({ transactions }: { transactions: PerimeterTransaction[] }) {
+  const { t } = useTranslation();
+  if (transactions.length === 0) {
+    return (
+      <div className="text-center py-8 text-muted">
+        <Send className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+        <p>{t('tokenPerimeter.noTransactions')}</p>
+        <p className="text-sm mt-1">{t('tokenPerimeter.noTransactionsDesc')}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-3">
+      <h3 className="font-semibold text-foreground">{t('tokenPerimeter.transactionHistory')}</h3>
+      {transactions.slice().reverse().map(tx => (
+        <div key={tx.id} className="bg-surface border border-gray-200 rounded-lg p-4">
+          <div className="flex items-center justify-between mb-2">
+            <span className="font-medium text-foreground">
+              {t('tokenPerimeter.txRoute', { from: tx.fromChainId, to: tx.toChainId })}
+            </span>
+            <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+              tx.status === 'completed' ? 'bg-green-100 text-green-700' :
+              tx.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+              'bg-red-100 text-red-700'
+            }`}>
+              {t(`tokenPerimeter.status.${tx.status}`)}
+            </span>
+          </div>
+          <div className="flex items-center justify-between text-sm text-muted">
+            <span>{t('tokenPerimeter.txAmount', { amount: formatAmount(parseAmount(tx.amount, 18), 18) })}</span>
+            <span>{new Date(tx.timestamp).toLocaleString(i18n.language)}</span>
+          </div>
+          {tx.txHash && (
+            <a
+              href={`https://etherscan.io/tx/${tx.txHash}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 mt-2 text-xs text-blue-600 hover:text-blue-700"
+            >
+              <ExternalLink className="h-3 w-3" />
+              {t('tokenPerimeter.viewTransaction')}
+            </a>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export function TokenPerimeter() {
   const { t } = useTranslation();
   const [chains, setChains] = useState<ChainData[]>([]);
@@ -329,6 +437,7 @@ export function TokenPerimeter() {
   const [bindTokenAddress, setBindTokenAddress] = useState('');
   const [unbindModalOpen, setUnbindModalOpen] = useState(false);
   const [chainToUnbind, setChainToUnbind] = useState<ChainData | null>(null);
+  const [transactions, setTransactions] = useState<PerimeterTransaction[]>([]);
   const { selectedChainId, selectedChain, selectChain } = useChainStore();
 
   const masterChain = chains.find(c => c.id === MASTER_CHAIN_ID);
@@ -350,6 +459,8 @@ export function TokenPerimeter() {
 
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => subscribeTransactions(setTransactions), []);
 
   useEffect(() => {
     if (selectableChains.length > 0 && !selectedChainId) {
@@ -563,6 +674,12 @@ export function TokenPerimeter() {
             )}
           </div>
         </div>
+      </div>
+
+      <SupportedChainsCard chains={chains} selectedChainId={selectedChainId} />
+
+      <div className="bg-surface rounded-xl border border-gray-200 p-6">
+        <TransactionHistory transactions={transactions} />
       </div>
 
       {bindFormOpen && selectedChain && (

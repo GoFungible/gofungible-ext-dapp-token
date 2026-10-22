@@ -2,6 +2,8 @@ import { ModuleInstance, ModuleManifest } from '../../types';
 import { coreFramework } from '../../core/CoreFramework';
 import { eventBus } from '../../core/EventBus';
 import { TokenPerimeter } from './TokenPerimeter';
+import { addTransaction } from './transactionStore';
+import { PerimeterTransaction } from './types';
 
 
 import manifestRaw from './manifest.json';
@@ -22,6 +24,9 @@ const tokenPerimeterModule: ModuleInstance = {
     });
     eventBus.on('perimeter:unbind', (data) => {
       console.log('TokenPerimeter: chain unbound', data);
+    });
+    eventBus.on('bridge:transaction', (data) => {
+      addTransaction(data as PerimeterTransaction);
     });
 
     console.log('TokenPerimeter module initialized');

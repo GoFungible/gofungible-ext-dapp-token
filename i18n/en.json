@@ -247,7 +247,20 @@
     "successBound": "Successfully bound {{name}} to the multichain token perimeter",
     "errorBindFailed": "Failed to bind chain. Please try again.",
     "successUnbound": "Successfully unbound {{name}} from the multichain token perimeter",
-    "errorUnbindFailed": "Failed to unbind chain. Please try again."
+    "errorUnbindFailed": "Failed to unbind chain. Please try again.",
+    "supportedChains": "Supported Chains",
+    "noSupportedChains": "No chains are currently bound to the multichain token perimeter",
+    "noTransactions": "No bridge transactions yet",
+    "noTransactionsDesc": "Your bridge history will appear here",
+    "transactionHistory": "Transaction History",
+    "txRoute": "{{from}} → {{to}}",
+    "txAmount": "{{amount}} GFT",
+    "viewTransaction": "View Transaction",
+    "status": {
+      "completed": "Completed",
+      "pending": "Pending",
+      "failed": "Failed"
+    }
   },
   "tokenBridge": {
     "title": "Token Bridge",
@@ -257,12 +270,6 @@
     "amount": "Amount",
     "available": "Available: {{max}} {{symbol}}",
     "max": "Max",
-    "noTransactions": "No bridge transactions yet",
-    "noTransactionsDesc": "Your bridge history will appear here",
-    "transactionHistory": "Transaction History",
-    "txRoute": "{{from}} → {{to}}",
-    "txAmount": "{{amount}} GFT",
-    "viewTransaction": "View Transaction",
     "bridgeTransfer": "Bridge Transfer",
     "fromChain": "From Chain",
     "toChain": "To Chain",
@@ -275,12 +282,6 @@
     "slaveToMasterDesc": "Bridge from Slave Tokens back to Master Token on Ethereum",
     "oneToOneRatio": "1:1 Ratio",
     "oneToOneRatioDesc": "Tokens are bridged at a 1:1 ratio with no fees (gas fees apply)",
-    "supportedChains": "Supported Chains",
-    "status": {
-      "completed": "Completed",
-      "pending": "Pending",
-      "failed": "Failed"
-    },
     "error": {
       "validAmount": "Please enter a valid amount",
       "insufficientBalance": "Insufficient balance. Maximum: {{max}} {{symbol}}",

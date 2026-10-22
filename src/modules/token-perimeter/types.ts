@@ -35,6 +35,18 @@ export interface PerimeterEvent {
   timestamp: number;
 }
 
+export interface PerimeterTransaction {
+  id: string;
+  fromChainId: number;
+  toChainId: number;
+  fromAddress: string;
+  toAddress: string;
+  amount: string;
+  status: 'pending' | 'completed' | 'failed';
+  timestamp: number;
+  txHash?: string;
+}
+
 import i18n from '../../i18n';
 
 export function formatNumber(num: number | string): string {
@@ -52,4 +64,17 @@ export function formatAddress(address: string): string {
 
 export function isEthereumAddress(address: string): boolean {
   return /^0x[a-fA-F0-9]{40}$/.test(address);
+}
+
+export function parseAmount(amount: string, decimals: number): bigint {
+  const [whole, fraction = ''] = amount.split('.');
+  const paddedFraction = (fraction + '0'.repeat(decimals)).slice(0, decimals);
+  return BigInt((whole || '0') + paddedFraction);
+}
+
+export function formatAmount(amount: bigint, decimals: number): string {
+  const str = amount.toString().padStart(decimals + 1, '0');
+  const whole = str.slice(0, -decimals) || '0';
+  const fraction = str.slice(-decimals).replace(/0+$/, '');
+  return fraction ? `${whole}.${fraction}` : whole;
 }
