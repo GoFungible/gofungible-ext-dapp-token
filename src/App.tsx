@@ -12,7 +12,6 @@ import { Environment } from './modules/environment/Environment';
 import { TokenNegotiation } from './modules/token-negotiation/TokenNegotiation';
 import { TokenFundraising } from './modules/token-fundraising/TokenFundraising';
 import { TokenDistribution } from './modules/token-distribution/TokenDistribution';
-import { TokenVesting } from './modules/token-vesting/TokenVesting';
 import { ThemeManager } from './modules/theme-manager/ThemeManager';
 import { Loader2 } from 'lucide-react';
 import './index.css';
@@ -25,7 +24,6 @@ const componentRegistry: Record<string, React.ComponentType> = {
   'TokenNegotiation': TokenNegotiation,
   'TokenFundraising': TokenFundraising,
   'TokenDistribution': TokenDistribution,
-  'TokenVesting': TokenVesting,
   'ThemeManager': ThemeManager,
 };
 
@@ -44,7 +42,6 @@ function App() {
     await loadTokenNegotiationModule();
     await loadTokenFundraisingModule();
     await loadTokenDistributionModule();
-    await loadTokenVestingModule();
     await loadTokenPerimeterModule();
     await loadLoaderModule();
     await loadDefaultThemeModule();
@@ -152,19 +149,6 @@ function App() {
       }
     } catch (error) {
       console.error('Failed to load token-distribution module:', error);
-    }
-  };
-
-  const loadTokenVestingModule = async () => {
-    try {
-      const mod = await import('./modules/token-vesting/index');
-      console.log('TokenVesting module loaded:', mod);
-      if (mod.default && typeof mod.default.initialize === 'function') {
-        await mod.default.initialize(coreFramework);
-        console.log('TokenVesting module initialized successfully');
-      }
-    } catch (error) {
-      console.error('Failed to load token-vesting module:', error);
     }
   };
 
