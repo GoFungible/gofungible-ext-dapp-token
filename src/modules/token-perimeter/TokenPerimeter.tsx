@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Network,
@@ -324,7 +324,7 @@ function UnbindModal({
   );
 }
 
-function SupportedChainsCard({
+function DraggableSupportedChains({
   chains,
   selectedChainId,
 }: {
@@ -332,38 +332,87 @@ function SupportedChainsCard({
   selectedChainId: number;
 }) {
   const { t } = useTranslation();
-  const supportedChains = chains.filter(c => c.isActive);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [offset, setOffset] = useState(0);
+  const dragState = useRef({
+    active: false,
+    startX: 0,
+    startOffset: 0,
+    moved: false,
+  });
+
+  const ITEM_WIDTH = 160 + 16; // min-w + gap
+
+  // Render the list 3 times so we can loop seamlessly in both directions.
+  const loopItems = [...chains, ...chains, ...chains];
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    dragState.current = { active: true, startX: e.clientX, startOffset: offset, moved: false };
+    (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
+  };
+
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (!dragState.current.active) return;
+    const dx = e.clientX - dragState.current.startX;
+    if (Math.abs(dx) > 4) dragState.current.moved = true;
+    const next = dragState.current.startOffset + dx;
+    setOffset(next);
+  };
+
+  const commit = () => {
+    dragState.current.active = false;
+    const singleWidth = chains.length * ITEM_WIDTH;
+    let next = offset;
+    if (next > 0) next -= singleWidth;
+    else if (next < -singleWidth) next += singleWidth;
+    setOffset(next);
+  };
 
   return (
     <div className="bg-surface rounded-xl border border-gray-200 p-6">
-      <h3 className="font-semibold text-foreground mb-4">{t('tokenPerimeter.supportedChains')}</h3>
-      {supportedChains.length === 0 ? (
+      <h3 className="font-semibold text-foreground mb-4">
+        {t('tokenPerimeter.supportedChains')} ({chains.length})
+      </h3>
+      {chains.length === 0 ? (
         <p className="text-sm text-muted">{t('tokenPerimeter.noSupportedChains')}</p>
       ) : (
-        <div className="space-y-3">
-          {supportedChains.map(chain => (
-            <div
-              key={chain.id}
-              className={`flex items-center gap-3 p-3 rounded-lg border transition-colors ${
-                selectedChainId === chain.id
-                  ? 'border-blue-300 bg-blue-50'
-                  : 'border-gray-200 hover:border-gray-300'
-              }`}
-            >
-              <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center">
-                <Network className="h-4 w-4 text-green-600" />
+        <div
+          ref={trackRef}
+          className="overflow-hidden cursor-grab active:cursor-grabbing select-none"
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={commit}
+          onPointerLeave={commit}
+          onPointerCancel={commit}
+        >
+          <div
+            className="flex flex-nowrap gap-4"
+            style={{ transform: `translateX(${offset}px)` }}
+          >
+            {loopItems.map((chain, index) => (
+              <div
+                key={`${chain.id}-${index}`}
+                className={`flex flex-col items-center gap-2 p-4 rounded-lg border transition-colors min-w-[160px] ${
+                  selectedChainId === chain.id
+                    ? 'border-blue-300 bg-blue-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
+                  <Network className="h-5 w-5 text-green-600" />
+                </div>
+                <div className="text-center">
+                  <p className="font-medium text-foreground truncate">{chain.name}</p>
+                  <p className="text-xs text-muted truncate">
+                    {chain.token?.symbol} • {formatAddress(chain.token?.address || '')}
+                  </p>
+                </div>
+                <span className="text-xs text-muted">
+                  {formatNumber(chain.token?.totalSupply || '0')} {chain.token?.symbol}
+                </span>
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-medium text-foreground truncate">{chain.name}</p>
-                <p className="text-xs text-muted truncate">
-                  {chain.token?.symbol} • {formatAddress(chain.token?.address || '')}
-                </p>
-              </div>
-              <span className="text-xs text-muted">
-                {formatNumber(chain.token?.totalSupply || '0')} {chain.token?.symbol}
-              </span>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )}
     </div>
@@ -643,7 +692,7 @@ export function TokenPerimeter() {
         </div>
       </div>
 
-      <SupportedChainsCard chains={chains} selectedChainId={selectedChainId} />
+      <DraggableSupportedChains chains={chains.filter(c => c.isActive)} selectedChainId={selectedChainId} />
 
       {bindFormOpen && selectedChain && (
         <BindForm
