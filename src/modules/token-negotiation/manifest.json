@@ -9,6 +9,7 @@
     { "path": "/token-negotiation", "component": "TokenNegotiation", "exact": true }
   ],
   "sidebarItems": [
+    { "id": "group-lifecycle", "label": "nav.groupLifecycle", "separator": true, "order": 6 },
     { "id": "token-negotiation", "label": "nav.token-negotiation", "icon": "file-text", "route": "/token-negotiation", "order": 7 }
   ]
 }

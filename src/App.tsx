@@ -10,7 +10,7 @@ import { LoaderModule } from './modules/loader/LoaderModule';
 import { Dashboard } from './modules/dashboard/Dashboard';
 import { Environment } from './modules/environment/Environment';
 import { TokenNegotiation } from './modules/token-negotiation/TokenNegotiation';
-import { TokenFundraising } from './modules/token-fundraising/TokenFundraising';
+
 
 import { ThemeManager } from './modules/theme-manager/ThemeManager';
 import { Loader2 } from 'lucide-react';
@@ -22,7 +22,7 @@ const componentRegistry: Record<string, React.ComponentType> = {
   'Dashboard': Dashboard,
   'Environment': Environment,
   'TokenNegotiation': TokenNegotiation,
-  'TokenFundraising': TokenFundraising,
+  
   
   'ThemeManager': ThemeManager,
 };
@@ -40,7 +40,6 @@ function App() {
     await loadDashboardModule();
     await loadEnvironmentModule();
     await loadTokenNegotiationModule();
-    await loadTokenFundraisingModule();
     await loadTokenPerimeterModule();
     await loadLoaderModule();
     await loadDefaultThemeModule();
@@ -125,18 +124,6 @@ function App() {
     }
   };
 
-  const loadTokenFundraisingModule = async () => {
-    try {
-      const mod = await import('./modules/token-fundraising/index');
-      console.log('TokenFundraising module loaded:', mod);
-      if (mod.default && typeof mod.default.initialize === 'function') {
-        await mod.default.initialize(coreFramework);
-        console.log('TokenFundraising module initialized successfully');
-      }
-    } catch (error) {
-      console.error('Failed to load token-fundraising module:', error);
-    }
-  };
 
 
   const loadThemeManagerModule = async () => {
