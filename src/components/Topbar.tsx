@@ -41,11 +41,6 @@ export function Topbar() {
             >
               <Menu className="h-6 w-6" />
             </button>
-            <h1 className="text-lg font-semibold text-foreground hidden sm:block">
-              {t('app.title')}
-            </h1>
-          </div>
-          <div className="flex items-center gap-2">
             {topbarItems.map(item => {
               const Icon = item.icon ? iconMap[item.icon] : Settings;
               const isDebugButton = item.id === 'token-perimeter-refresh';
@@ -86,6 +81,8 @@ export function Topbar() {
                 ))}
               </select>
             </div>
+          </div>
+          <div className="flex items-center gap-2">
             <div className="relative ml-4">
               <ConnectButton />
             </div>
