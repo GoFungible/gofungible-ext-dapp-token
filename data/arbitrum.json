@@ -21,43 +21,10 @@
     "keyless": { "address": "0x0000000000FFe8B47B3e2130213B802212439497", "desc": "Another well-known permissionless factory created by developer 0age.eth used for gas-efficient and keyless deterministic contract deployments." },
     "createx": { "address": "0xba5Ed099633D3B313e4D5F7bdc1305d3c28ba5Ed", "desc": "CREATE2 and CREATE opcodes. CREATE3 simplifies multi-chain deployments by deriving addresses solely from the deployer address and salt (ignoring init-code bytecode variations), while CREATEX provides a comprehensive toolkit for deterministic contract and proxy creation." }
 	},
-	"FungibleEnvironment": "",
-	"Relayers": {
-		
-	},
-	"PaymentTokens": {
-		"WBNB": "",
-
-		"BTCB": "",
-		"WETH": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
-		"ETH": "",
-		"XRP": "",
-		"XLM": "",
-		"ADA": "",
-		"WHBAR": "",
-		"SUI": "",
-		"MATIC": "",
-		"DOT": "",
-		"ATOM": "",
-		"LTC": "",
-		"AVAX": "",
-
-		"CAKE": "",
-		"DODO": "",
-
-		"USDT": "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9",
-		"BUSD": "",
-		"USDC": "0x2ce2f7dcf2f724c688ee05a6bdc3002a108e5831",
-		"DAI": "",
-
-		"PEPE": "",
-		"FLOKY": "",
-		"WIF": "",
-		"TURBO": "",
-		"TRUMP": "",
-		"DOGE": "",
-		"SHIB": ""
-	},
+  "FungibleEnvironment": "",
+  "FungibleFactory": "",
+  "FungibleTokens": {},
+  "Relayers": {},
 	"Exchanges": {
 		"uniswap": { "name": "uniswap", "factory": "0xf1D7CC64Fb4452F05c498126312eBE29f30Fbcf9", "router": "0x4752ba5dbc23f44d87826276bf6fd6b1c372ad24" },
 		"sushiswap": { "name": "sushiswap", "factory": "0xc35DADB65012eC5796536bD9864eD8773aBc74C4", "router": "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506" },
@@ -67,25 +34,6 @@
 		"apeswap": { "name": "apeswap", "factory": "0xCf083Be4164828f00cAE704EC15a36D711491284", "router": "0x7d13268144adcdbEBDf94F654085CC15502849Ff" },
 		"camelot": { "name": "camelot", "factory": "0x6EcCab422D763aC031210895C81787E87B43A652", "router": "0xc873fEcbd354f5A56E00E710B90EF4201db2448d" },
 		"magicswap": { "name": "magicswap", "factory": "0x77fa938998e196701c324149f771efd6e980df0a", "router": "0xb740d5804ea2061432469119cfa40cbb4586dd17" }
-
-	},
-	"Lenders": {
-		
-	},
-	"FungibleFactory": "",
-	"FungibleTokens": {
-
-	},
-	"ICOs": {
-
-	},
-	"Airdrops": {
-
-	},
-	"LendingOffers": {
-
-	},
-	"VestingSchedules": {
 
 	}
 }

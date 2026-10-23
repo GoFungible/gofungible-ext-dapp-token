@@ -15,35 +15,10 @@
     "priceUsd": 1.25,
     "priceChange24h": 3.12
   },
-	"create2Factory": {
- 	},
-	"FungibleEnvironment": "",
-	"Relayers": {
-		
-	},
-	"PaymentTokens": {
-		
-	},
-	"Exchanges": {
-		
-	},
-	"Lenders": {
-		
-	},
-	"FungibleFactory": "",
-	"FungibleTokens": {
-
-	},
-	"ICOs": {
-
-	},
-	"Airdrops": {
-
-	},
-	"LendingOffers": {
-
-	},
-	"VestingSchedules": {
-
-	}
+	"create2Factory": {},
+  "FungibleEnvironment": "",
+  "FungibleFactory": "",
+  "FungibleTokens": {},
+  "Relayers": {},
+  "Exchanges": {}
 }

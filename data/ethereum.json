@@ -21,13 +21,10 @@
     "keyless": { "address": "0x0000000000FFe8B47B3e2130213B802212439497", "desc": "Another well-known permissionless factory created by developer 0age.eth used for gas-efficient and keyless deterministic contract deployments." },
     "createx": { "address": "0xba5Ed099633D3B313e4D5F7bdc1305d3c28ba5Ed", "desc": "CREATE2 and CREATE opcodes. CREATE3 simplifies multi-chain deployments by deriving addresses solely from the deployer address and salt (ignoring init-code bytecode variations), while CREATEX provides a comprehensive toolkit for deterministic contract and proxy creation." }
 	},
-	"FungibleEnvironment": "",
-	"Relayers": {
-		
-	},
-	"PaymentTokens": {
-		
-	},
+  "FungibleEnvironment": "",
+  "FungibleFactory": "",
+  "FungibleTokens": {},
+  "Relayers": {},
 	"Exchanges": {
 		"uniswap": { "name": "uniswap", "factory": "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f", "router": "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D" },
 		"sushiswap": { "name": "sushiswap", "factory": "0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac", "router": "0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F" },
@@ -40,24 +37,5 @@
 		"apeswap": { "name": "apeswap", "factory": "0xBAe5dc9B19004883d0377419FeF3c2C8832d7d7B", "router": "0x5f509a3C3F16dF2Fba7bF84dEE1eFbce6BB85587" },
 		"swipeswap": { "name": "swipeswap", "factory": "0x8a93B6865C4492fF17252219B87eA6920848EdC0", "router": "0xCB0cb2d22C529FdC9F6EFff2ED21086104b21a79" },
 		"vvs": { "name": "vvs", "factory": "0x54Ff509102D51Bf4e0d06184A051c1e917333254", "router": "0x2e5dbaa86FcA7cb73F060300C55B51C72f1B8554" }
-	},
-	"Lenders": {
-		
-	},
-	"FungibleFactory": "",
-	"FungibleTokens": {
-
-	},
-	"ICOs": {
-
-	},
-	"Airdrops": {
-
-	},
-	"LendingOffers": {
-
-	},
-	"VestingSchedules": {
-
 	}
 }

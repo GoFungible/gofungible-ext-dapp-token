@@ -21,37 +21,15 @@
     "keyless": { "address": "0x0000000000FFe8B47B3e2130213B802212439497", "desc": "Another well-known permissionless factory created by developer 0age.eth used for gas-efficient and keyless deterministic contract deployments." },
     "createx": { "address": "0xba5Ed099633D3B313e4D5F7bdc1305d3c28ba5Ed", "desc": "CREATE2 and CREATE opcodes. CREATE3 simplifies multi-chain deployments by deriving addresses solely from the deployer address and salt (ignoring init-code bytecode variations), while CREATEX provides a comprehensive toolkit for deterministic contract and proxy creation." }
 	},
-	"FungibleEnvironment": "",
-	"Relayers": {
-		
-	},
-	"PaymentTokens": {
-		
-	},
+  "FungibleEnvironment": "",
+  "FungibleFactory": "",
+  "FungibleTokens": {},
+  "Relayers": {},
 	"Exchanges": {
 		"uniswap": { "name": "uniswap", "factory": "0x8909Dc15e40173Ff4699343b6eB8132c65e18eC6", "router": "0x4752ba5dbc23f44d87826276bf6fd6b1c372ad24" },
 		"sushiswap": { "name": "sushiswap", "factory": "0x71524B4f93c58fcbF659783284E38825f0622859", "router": "0x6BDED42c6DA8FBf0d2bA55B2fa120C5e0c8D7891" },
 		"pancakeswap": { "name": "pancakeswap", "factory": "0x02a84c1b3BBD7401a5f7fa98a384EBC70bB5749E", "router": "0x8cFe327CEc66d1C090Dd72bd0FF11d690C33a2Eb" },
 		"diamondswap": { "name": "diamondswap", "factory": "0x1a62A841E83ECC3D72b0de6002AF7a7Dbf921Cd5", "router": "0x0681363e5da35a248E1abb5CddD6DB9cDac9a771" },
 		"equalizer": { "name": "equalizer", "factory": "0xEd8db60aCc29e14bC867a497D94ca6e3CeB5eC04", "router": "0x2F87Bf58D5A9b2eFadE55Cdbd46153a0902be6FA" }
-	},
-	"Lenders": {
-		
-	},
-	"FungibleFactory": "",
-	"FungibleTokens": {
-
-	},
-	"ICOs": {
-
-	},
-	"Airdrops": {
-
-	},
-	"LendingOffers": {
-
-	},
-	"VestingSchedules": {
-
 	}
 }

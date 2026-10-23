@@ -22,40 +22,9 @@
     "createx": { "address": "0xba5Ed099633D3B313e4D5F7bdc1305d3c28ba5Ed", "desc": "CREATE2 and CREATE opcodes. CREATE3 simplifies multi-chain deployments by deriving addresses solely from the deployer address and salt (ignoring init-code bytecode variations), while CREATEX provides a comprehensive toolkit for deterministic contract and proxy creation." }
   },
   "FungibleEnvironment": "",
+  "FungibleFactory": "",
+  "FungibleTokens": {},
   "Relayers": {},
-  "PaymentTokens": {
-		"WBNB": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
-
-		"BTCB": "0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c",
-		"WETH": "",
-		"ETH": "0x2170ed0880ac9a755fd29b2688956bd959f933f8",
-		"XRP": "0x1d2f0da169ceb9fc7b3144628db156f3f6c60dbe",
-		"XLM": "0x43c934a845205f0b514417d757d7235b8f53f1b9",
-		"ADA": "0x3ee2200efb3400fabb9aacf31297cbdd1d435d47",
-		"WHBAR": "",
-		"SUI": "",
-		"MATIC": "0xcc42724c6683b7e57334c4e856f4c9965ed682bd",
-		"DOT": "0x7083609fce4d1d8dc0c979aab8c869ea2c873402",
-		"ATOM": "0x0eb3a705fc54725037cc9e008bdede697f62f335",
-		"LTC": "0x4338665cbb7b2485a8855a139b75d5e34ab0db94",
-		"AVAX": "",
-
-		"CAKE": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
-		"DODO": "0x67ee3cb086f8a16f34bee3ca72fad36f7db929e2",
-
-		"USDT": "0x55d398326f99059ff775485246999027b3197955",
-		"BUSD": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
-		"USDC": "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
-		"DAI": "0x1af3f329e8be154074d8769d1ffa4ee058b1dbc3",
-
-		"PEPE": "0x25d887ce7a35172c62febfd67a1856f20faebb00",
-		"FLOKY": "0xfb5b838b6cfeedc2873ab27866079ac55363d37e",
-		"WIF": "",
-		"TURBO": "",
-		"TRUMP": "",
-		"DOGE": "0xba2ae424d960c26247dd6c32edc70b295c744c43",
-		"SHIB": "0xdf0816cc717216c8b0863af8d4f0fc20bc65d643"
-	},
   "Exchanges": {
 		"uniswap": { "name": "uniswap", "factory": "0x8909Dc15e40173Ff4699343b6eB8132c65e18eC6", "router": "0x4752ba5dbc23f44d87826276bf6fd6b1c372ad24" },
 		"sushiswap": { "name": "sushiswap", "factory": "0xc35DADB65012eC5796536bD9864eD8773aBc74C4", "router": "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506" },
@@ -67,14 +36,5 @@
 		"jetswap": { "name": "jetswap", "factory": "0x0eb58E5c8aA63314ff5547289185cC4583DfCBD5", "router": "0xBe65b8f75B9F20f4C522e0067a3887FADa714800" },
 		"babydogeswap": { "name": "babydogeswap", "factory": "0x4693B62E5fc9c0a45F89D62e6300a03C85f43137", "router": "0xC9a0F685F39d05D835c369036251ee3aEaaF3c47" },
 		"babyswap": { "name": "babyswap", "factory": "0x86407bEa2078ea5f5EB5A52B2caA963bC1F889Da", "router": "0x325E343f1dE602396E256B67eFd1F61C3A6B38Bd" }
-	},
-	"Lenders": {
-		
-	},
-	"FungibleFactory": "",
-  "FungibleTokens": {},
-  "ICOs": {},
-  "Airdrops": {},
-  "LendingOffers": {},
-  "VestingSchedules": {}
+	}
 }

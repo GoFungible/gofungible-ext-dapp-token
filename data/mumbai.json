@@ -34,14 +34,8 @@
     }
   },
   "FungibleEnvironment": "",
-  "Relayers": {},
-  "PaymentTokens": {},
-  "Exchanges": {},
-  "Lenders": {},
   "FungibleFactory": "",
   "FungibleTokens": {},
-  "ICOs": {},
-  "Airdrops": {},
-  "LendingOffers": {},
-  "VestingSchedules": {}
+  "Relayers": {},
+  "Exchanges": {}
 }
