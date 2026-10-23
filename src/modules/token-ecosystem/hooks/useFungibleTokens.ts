@@ -3,7 +3,7 @@ import { useWalletClient } from 'wagmi';
 import { createPublicClient, http, type Abi, type Address } from 'viem';
 import fungibleEnvironmentArtifact from '../../../../abi/FungibleEnvironment.json';
 import mockChains from '@data/chains';
-import { useChainStore } from '../../chains/ChainStore';
+import { useChainStore, type FungibleToken } from '../../chains/ChainStore';
 import { useToast } from '../../../core/toast/ToastContext';
 
 interface FungibleTokenInfo {
@@ -24,7 +24,7 @@ export function useFungibleTokens(masterChainId: number | null): UseFungibleToke
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
   const { data: walletClient } = useWalletClient();
-  const { chainCache } = useChainStore();
+  const { chainCache, updateChainFungibleTokens } = useChainStore();
   const { addToast, updateToast } = useToast();
 
   const fetchTokens = useCallback(async () => {
@@ -125,6 +125,13 @@ if (!fungibleEnvironmentAddress) {
       }
 
       setTokens(tokensInfo);
+      // Update chain cache with fungible tokens
+      const fungibleTokensRecord: Record<string, FungibleToken> = {};
+      tokensInfo.forEach(t => {
+        fungibleTokensRecord[t.symbol] = { name: t.name, address: t.address };
+      });
+      updateChainFungibleTokens(masterChainId, fungibleTokensRecord);
+      
       updateToast(toastId, { 
         type: 'success', 
         title: 'Tokens Loaded', 
@@ -141,7 +148,7 @@ if (!fungibleEnvironmentAddress) {
     } finally {
       setIsLoading(false);
     }
-  }, [walletClient, masterChainId, chainCache, addToast, updateToast]);
+  }, [walletClient, masterChainId, chainCache, updateChainFungibleTokens, addToast, updateToast]);
 
   return { tokens, isLoading, error, fetchTokens };
 }

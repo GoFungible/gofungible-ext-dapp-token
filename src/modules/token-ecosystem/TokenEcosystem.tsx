@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useAccount, useChainId, useWalletClient } from 'wagmi';
 import { useCreateFungibleToken } from './hooks/useCreateFungibleToken';
 import { useFungibleTokens } from './hooks/useFungibleTokens';
+import { useChainStore } from '../chains/ChainStore';
 import {
   Network,
   CheckCircle,
@@ -51,13 +52,15 @@ function ChainTokenCard({
   chain,
   statusBadge,
   masked,
+  tokenOverride,
 }: {
   chain: ChainData;
   statusBadge: React.ReactNode;
   masked: boolean;
+  tokenOverride?: { name: string; symbol: string; address: string; decimals: number; totalSupply: string; holders: number };
 }) {
   const { t } = useTranslation();
-  const token = chain.token;
+  const token = tokenOverride || chain.token;
 
   return (
     <div className="bg-surface rounded-xl border border-gray-200 p-6 hover:border-blue-300 transition-colors h-full relative">
