@@ -62,8 +62,6 @@ function ChainTokenCard({
 }) {
   const { t } = useTranslation();
   const token = chain.token;
-  const priceChange = token?.priceChange24h || 0;
-  const isPositive = priceChange >= 0;
 
   return (
     <div className="bg-surface rounded-xl border border-gray-200 p-6 hover:border-blue-300 transition-colors h-full relative">
@@ -109,7 +107,7 @@ function ChainTokenCard({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
             <div className="bg-gray-50 rounded-lg p-4">
               <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
                 {t('tokenEcosystem.totalSupply')}
@@ -121,20 +119,6 @@ function ChainTokenCard({
                 {t('tokenEcosystem.holders')}
               </p>
               <p className="text-lg font-semibold text-foreground">{formatNumber(token.holders)}</p>
-            </div>
-            <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
-                {t('tokenEcosystem.priceUsd')}
-              </p>
-              <p className="text-lg font-semibold text-foreground">${token.priceUsd?.toFixed(4) || 'N/A'}</p>
-            </div>
-            <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
-                {t('tokenEcosystem.change24h')}
-              </p>
-              <p className={`text-lg font-semibold ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
-                {isPositive ? '+' : ''}{priceChange.toFixed(2)}%
-              </p>
             </div>
           </div>
 
@@ -346,6 +330,11 @@ export function TokenEcosystem() {
   const [unbindModalOpen, setUnbindModalOpen] = useState(false);
   const [chainToUnbind, setChainToUnbind] = useState<ChainData | null>(null);
   const [masterChainId, setMasterChainId] = useState<number>(MASTER_CHAIN_ID);
+  const [selectedToken, setSelectedToken] = useState<string>('');
+  const [createTokenOpen, setCreateTokenOpen] = useState(false);
+  const [createTokenName, setCreateTokenName] = useState('');
+  const [createTokenIsMaster, setCreateTokenIsMaster] = useState(false);
+  const [createTokenSupply, setCreateTokenSupply] = useState('');
   const { selectedChainId: slaveChainId, selectedChain: slaveChain, selectChain: selectSlaveChain } = useChainStore();
 
   const masterChain = chains.find(c => c.id === masterChainId);
@@ -382,6 +371,39 @@ export function TokenEcosystem() {
 
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (selectedToken === 'create-new') {
+      setCreateTokenOpen(true);
+    }
+  }, [selectedToken]);
+
+  const handleCreateToken = () => {
+    if (!createTokenName.trim()) return;
+    
+    setIsLoading(true);
+    setError(undefined);
+    setSuccess(undefined);
+
+    // Simulate token creation
+    setTimeout(() => {
+      setSuccess(t('tokenEcosystem.tokenCreated', { name: createTokenName }));
+      setCreateTokenOpen(false);
+      setCreateTokenName('');
+      setCreateTokenSupply('');
+      setCreateTokenIsMaster(false);
+      setSelectedToken('');
+      setIsLoading(false);
+    }, 1000);
+  };
+
+  const handleCreateTokenCancel = () => {
+    setCreateTokenOpen(false);
+    setCreateTokenName('');
+    setCreateTokenSupply('');
+    setCreateTokenIsMaster(false);
+    setSelectedToken('');
+  };
 
 
   const handleBindButtonClick = () => {
@@ -529,7 +551,107 @@ export function TokenEcosystem() {
               )}
               <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted pointer-events-none" />
             </div>
-            {masterChain && (
+            <div className="relative mb-3">
+              {isConnected ? (
+                <select
+                  value={selectedToken}
+                  onChange={e => setSelectedToken(e.target.value)}
+                  className="w-full px-3 py-1.5 border border-gray-300 rounded-lg bg-surface focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none appearance-none font-mono text-sm pr-8"
+                  disabled={isLoading}
+                  aria-label={t('tokenEcosystem.tokenSelect')}
+                >
+                  <option value="">{t('tokenEcosystem.tokenSelectPlaceholder')}</option>
+                  {masterChain?.token && (
+                    <option key={masterChain.token.address} value={masterChain.token.address}>
+                      {masterChain.token.name} ({masterChain.token.symbol})
+                    </option>
+                  )}
+                  <option disabled value="" style={{ borderTop: '1px solid #e5e7eb', marginTop: '4px', paddingTop: '4px' }} />
+                  <option key="create-new" value="create-new">
+                    {t('tokenEcosystem.createNewToken')}
+                  </option>
+                </select>
+              ) : (
+                <input
+                  type="text"
+                  className="w-full px-3 py-1.5 border border-gray-300 rounded-lg bg-gray-50 text-muted font-mono text-sm cursor-not-allowed"
+                  disabled
+                  placeholder=""
+                  aria-label={t('tokenEcosystem.tokenSelect')}
+                />
+              )}
+              <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted pointer-events-none" />
+            </div>
+            {createTokenOpen ? (
+              <div className="bg-surface rounded-xl border border-blue-300 p-6 mt-4 animate-fade-in">
+                <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                  <Plus className="h-5 w-5 text-blue-600" />
+                  {t('tokenEcosystem.createNewToken')}
+                </h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-medium text-muted uppercase tracking-wide mb-1">
+                      {t('tokenEcosystem.tokenName')}
+                    </label>
+                    <input
+                      type="text"
+                      value={createTokenName}
+                      onChange={e => setCreateTokenName(e.target.value)}
+                      placeholder={t('tokenEcosystem.tokenNamePlaceholder')}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none"
+                    />
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      id="createTokenIsMaster"
+                      checked={createTokenIsMaster}
+                      onChange={e => setCreateTokenIsMaster(e.target.checked)}
+                      className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <label htmlFor="createTokenIsMaster" className="text-sm text-foreground">
+                      {t('tokenEcosystem.isMasterToken')}
+                    </label>
+                  </div>
+                  {createTokenIsMaster && (
+                    <div>
+                      <label className="block text-xs font-medium text-muted uppercase tracking-wide mb-1">
+                        {t('tokenEcosystem.tokenSupply')}
+                      </label>
+                      <input
+                        type="text"
+                        value={createTokenSupply}
+                        onChange={e => setCreateTokenSupply(e.target.value)}
+                        placeholder={t('tokenEcosystem.tokenSupplyPlaceholder')}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none"
+                      />
+                    </div>
+                  )}
+                  <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+                    <button
+                      onClick={handleCreateTokenCancel}
+                      className="px-4 py-2 text-foreground bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                    >
+                      {t('common.cancel')}
+                    </button>
+                    <button
+                      onClick={handleCreateToken}
+                      disabled={isLoading || !createTokenName.trim()}
+                      className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+                    >
+                      {isLoading ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          {t('common.processing')}
+                        </>
+                      ) : (
+                        t('common.create')
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : masterChain && (
               <ChainTokenCard
                 chain={masterChain}
                 masked={!isConnected}
