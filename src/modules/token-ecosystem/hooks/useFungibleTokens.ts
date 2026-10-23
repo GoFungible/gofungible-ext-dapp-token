@@ -4,6 +4,7 @@ import { createPublicClient, http, type Abi, type Address } from 'viem';
 import fungibleEnvironmentArtifact from '../../../../abi/FungibleEnvironment.json';
 import mockChains from '@data/chains';
 import { useChainStore } from '../../chains/ChainStore';
+import { useToast } from '../../../core/toast/ToastContext';
 
 interface FungibleTokenInfo {
   name: string;
@@ -18,16 +19,29 @@ interface UseFungibleTokensReturn {
   fetchTokens: () => Promise<void>;
 }
 
-export function useFungibleTokens(masterChainId: number): UseFungibleTokensReturn {
+export function useFungibleTokens(masterChainId: number | null): UseFungibleTokensReturn {
   const [tokens, setTokens] = useState<FungibleTokenInfo[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
   const { data: walletClient } = useWalletClient();
   const { chainCache } = useChainStore();
+  const { addToast, updateToast } = useToast();
 
   const fetchTokens = useCallback(async () => {
+    if (!masterChainId) {
+      return;
+    }
     if (!walletClient) {
+      const toastId = addToast({
+        type: 'error',
+        title: 'Wallet Not Connected',
+        message: 'Please connect your wallet to fetch tokens',
+        chainId: masterChainId,
+        functionName: 'getFungibles',
+      });
       setError('Wallet not connected');
+      // Auto-remove error toast after 5 seconds
+      setTimeout(() => updateToast(toastId, { type: 'info', title: 'Wallet Required', message: 'Connect wallet to load tokens' }), 5000);
       return;
     }
 
@@ -48,10 +62,20 @@ export function useFungibleTokens(masterChainId: number): UseFungibleTokensRetur
     setIsLoading(true);
     setError(undefined);
 
+    const toastId = addToast({
+      type: 'pending',
+      title: 'Fetching Tokens',
+      message: `Loading tokens from ${chainConfig.name}`,
+      chainId: masterChainId,
+      functionName: 'getFungibles',
+    });
+
     try {
       const publicClient = createPublicClient({
         transport: http(chainConfig.rpcUrl),
       });
+
+      updateToast(toastId, { message: 'Calling getFungibles...' });
 
       const symbols = await publicClient.readContract({
         address: fungibleEnvironmentAddress as Address,
@@ -85,13 +109,23 @@ export function useFungibleTokens(masterChainId: number): UseFungibleTokensRetur
       }
 
       setTokens(tokensInfo);
+      updateToast(toastId, { 
+        type: 'success', 
+        title: 'Tokens Loaded', 
+        message: `Found ${tokensInfo.length} tokens on ${chainConfig.name}`,
+      });
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to fetch tokens';
       setError(message);
+      updateToast(toastId, { 
+        type: 'error', 
+        title: 'Failed to Fetch Tokens', 
+        message,
+      });
     } finally {
       setIsLoading(false);
     }
-  }, [walletClient, masterChainId, chainCache]);
+  }, [walletClient, masterChainId, chainCache, addToast, updateToast]);
 
   return { tokens, isLoading, error, fetchTokens };
 }

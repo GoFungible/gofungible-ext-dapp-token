@@ -16,6 +16,7 @@ import { TokenNegotiation } from './modules/token-negotiation/TokenNegotiation';
 
 import { ThemeManager } from './modules/theme-manager/ThemeManager';
 import { Loader2 } from 'lucide-react';
+import { ToastProvider } from './core/toast/ToastContext';
 import './index.css';
 
 const componentRegistry: Record<string, React.ComponentType> = {
@@ -247,21 +248,23 @@ function App() {
 
   return (
     <BrowserRouter basename="/gofungible-ext-dapp-token/">
-      <ChainStoreProvider>
-        <FungibleTokensSync />
-        <LayoutProvider>
-        {!modulesLoaded ? (
-          <div className="min-h-screen flex items-center justify-center">
-            <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
-          </div>
-        ) : (
-          <Routes>
-            {renderRoutes()}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        )}
-        </LayoutProvider>
-      </ChainStoreProvider>
+      <ToastProvider>
+        <ChainStoreProvider>
+          <FungibleTokensSync />
+          <LayoutProvider>
+          {!modulesLoaded ? (
+            <div className="min-h-screen flex items-center justify-center">
+              <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
+            </div>
+          ) : (
+            <Routes>
+              {renderRoutes()}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          )}
+          </LayoutProvider>
+        </ChainStoreProvider>
+      </ToastProvider>
     </BrowserRouter>
   );
 }

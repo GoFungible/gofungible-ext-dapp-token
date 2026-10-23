@@ -5,12 +5,13 @@ import fungibleEnvironmentArtifact from '../../../../abi/FungibleEnvironment.jso
 import mockChains from '@data/chains';
 import { useChainStore } from '../../chains/ChainStore';
 import { useAddChain } from '../../environment/hooks/useAddChain';
+import { useToast } from '../../../core/toast/ToastContext';
 
 interface UseCreateFungibleTokenParams {
   name: string;
   supply: string;
   isMaster: boolean;
-  masterChainId: number;
+  masterChainId: number | null;
 }
 
 interface UseCreateFungibleTokenReturn {
@@ -23,6 +24,7 @@ export function useCreateFungibleToken(): UseCreateFungibleTokenReturn {
   const { data: walletClient } = useWalletClient();
   const { addChain, switchChain } = useAddChain();
   const { chainCache } = useChainStore();
+  const { addToast, updateToast } = useToast();
 
   async function createFungibleToken(params: UseCreateFungibleTokenParams): Promise<{ ok: boolean; address?: Address; error?: string }> {
     const { name, supply, masterChainId } = params;
@@ -32,6 +34,9 @@ export function useCreateFungibleToken(): UseCreateFungibleTokenReturn {
     }
     if (!walletClient) {
       return { ok: false, error: 'Wallet not connected' };
+    }
+    if (!masterChainId) {
+      return { ok: false, error: 'Master chain not selected' };
     }
 
     const chainConfig = mockChains.find(c => c.id === masterChainId);
@@ -47,6 +52,16 @@ export function useCreateFungibleToken(): UseCreateFungibleTokenReturn {
     }
 
     setIsCreating(true);
+    
+    const toastId = addToast({
+      type: 'pending',
+      title: 'Creating Token',
+      message: `Creating "${name}" on ${chainConfig.name}`,
+      chainId: masterChainId,
+      functionName: 'createFungible',
+      data: { name, supply, symbol: name.substring(0, 10).toUpperCase(), salt: 'keccak256(name)' },
+    });
+
     try {
       const isChainConnected = walletClient.chain?.id === masterChainId;
       if (!isChainConnected) {
@@ -58,6 +73,7 @@ export function useCreateFungibleToken(): UseCreateFungibleTokenReturn {
           blockExplorers: chainConfig.blockExplorer ? { default: { name: 'Explorer', url: chainConfig.blockExplorer } } : undefined,
         };
         
+        updateToast(toastId, { message: 'Adding/switching chain...' });
         const added = await addChain(chain);
         if (added) {
           await switchChain(masterChainId);
@@ -72,6 +88,8 @@ export function useCreateFungibleToken(): UseCreateFungibleTokenReturn {
       const supplyBigInt = BigInt(supply || '0');
       const symbol = name.substring(0, 10).toUpperCase();
 
+      updateToast(toastId, { message: 'Submitting transaction...' });
+
       const hash = await walletClient.writeContract({
         address: fungibleEnvironmentAddress as Address,
         abi: fungibleEnvironmentArtifact.abi as Abi,
@@ -80,11 +98,24 @@ export function useCreateFungibleToken(): UseCreateFungibleTokenReturn {
         account: walletClient.account,
       });
 
+      updateToast(toastId, { message: `Transaction submitted: ${hash.slice(0, 10)}...`, data: { ...{ name, supply, symbol, salt }, txHash: hash } });
+
       await publicClient.waitForTransactionReceipt({ hash });
+
+      updateToast(toastId, { 
+        type: 'success', 
+        title: 'Token Created', 
+        message: `Successfully created "${name}" on ${chainConfig.name}`,
+      });
 
       return { ok: true };
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to create token';
+      updateToast(toastId, { 
+        type: 'error', 
+        title: 'Token Creation Failed', 
+        message,
+      });
       return { ok: false, error: message };
     } finally {
       setIsCreating(false);
