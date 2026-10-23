@@ -1,0 +1,17 @@
+{
+  "id": "extensions",
+  "name": "Extensions",
+  "version": "1.0.0",
+  "description": "Assign token extensions for a token in a certain chain",
+  "author": "Gofungible Team",
+  "entryPoint": "extensions",
+  "routes": [
+    { "path": "/extensions", "component": "Extensions", "exact": true }
+  ],
+  "topbarItems": [
+    { "id": "extensions-refresh", "label": "topbar.refresh", "icon": "refresh-cw", "action": "refresh-extensions", "order": 1 }
+  ],
+  "sidebarItems": [
+    { "id": "extensions", "label": "nav.extensions", "icon": "puzzle", "route": "/extensions", "order": -1 }
+  ]
+}

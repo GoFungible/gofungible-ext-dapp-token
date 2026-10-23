@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAccount, useChainId } from 'wagmi';
 import {
@@ -332,105 +332,6 @@ function UnbindModal({
   );
 }
 
-function DraggableSupportedChains({
-  chains,
-  selectedChainId,
-  masked,
-}: {
-  chains: ChainData[];
-  selectedChainId: number;
-  masked: boolean;
-}) {
-  const { t } = useTranslation();
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [offset, setOffset] = useState(0);
-  const dragState = useRef({
-    active: false,
-    startX: 0,
-    startOffset: 0,
-    moved: false,
-  });
-
-  const ITEM_WIDTH = 160 + 16; // min-w + gap
-
-  // Render the list 3 times so we can loop seamlessly in both directions.
-  const loopItems = [...chains, ...chains, ...chains];
-
-  const onPointerDown = (e: React.PointerEvent) => {
-    dragState.current = { active: true, startX: e.clientX, startOffset: offset, moved: false };
-    (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
-  };
-
-  const onPointerMove = (e: React.PointerEvent) => {
-    if (!dragState.current.active) return;
-    const dx = e.clientX - dragState.current.startX;
-    if (Math.abs(dx) > 4) dragState.current.moved = true;
-    const next = dragState.current.startOffset + dx;
-    setOffset(next);
-  };
-
-  const commit = () => {
-    dragState.current.active = false;
-    const singleWidth = chains.length * ITEM_WIDTH;
-    let next = offset;
-    if (next > 0) next -= singleWidth;
-    else if (next < -singleWidth) next += singleWidth;
-    setOffset(next);
-  };
-
-  return (
-    <div className="bg-surface rounded-xl border border-gray-200 p-6">
-      <h3 className="font-semibold text-foreground mb-4">
-        {t('tokenEcosystem.supportedChains')} ({masked ? 0 : chains.length})
-      </h3>
-      {masked ? (
-        <p className="text-sm text-muted">{t('tokenEcosystem.connectWallet')}</p>
-      ) : chains.length === 0 ? (
-        <p className="text-sm text-muted">{t('tokenEcosystem.noSupportedChains')}</p>
-      ) : (
-        <div
-          ref={trackRef}
-          className="overflow-hidden cursor-grab active:cursor-grabbing select-none"
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={commit}
-          onPointerLeave={commit}
-          onPointerCancel={commit}
-        >
-          <div
-            className="flex flex-nowrap gap-4"
-            style={{ transform: `translateX(${offset}px)` }}
-          >
-            {loopItems.map((chain, index) => (
-              <div
-                key={`${chain.id}-${index}`}
-                className={`flex flex-col items-center gap-2 p-4 rounded-lg border transition-colors min-w-[160px] ${
-                  selectedChainId === chain.id
-                    ? 'border-blue-300 bg-blue-50'
-                    : 'border-gray-200 hover:border-gray-300'
-                }`}
-              >
-                <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
-                  <Network className="h-5 w-5 text-green-600" />
-                </div>
-                <div className="text-center">
-                  <p className="font-medium text-foreground truncate">{chain.name}</p>
-                  <p className="text-xs text-muted truncate">
-                    {chain.token?.symbol} • {formatAddress(chain.token?.address || '')}
-                  </p>
-                </div>
-                <span className="text-xs text-muted">
-                  {formatNumber(chain.token?.totalSupply || '0')} {chain.token?.symbol}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
 export function TokenEcosystem() {
   const { t } = useTranslation();
   const { isConnected } = useAccount();
@@ -450,7 +351,6 @@ export function TokenEcosystem() {
   const masterChain = chains.find(c => c.id === masterChainId);
   const masterCandidates = chains.filter(c => c.isActive && c.token);
   const selectableChains = chains.filter(c => c.id !== masterChainId);
-  const connectedChain = walletChainId ? mockChains.find(c => c.id === Number(walletChainId)) : undefined;
   const slaveChainIsActive = slaveChain?.isActive ?? false;
   const canBind = !!slaveChain && !slaveChainIsActive;
   const canUnbind = !!slaveChain && slaveChainIsActive && slaveChain.id !== MASTER_CHAIN_ID;
@@ -464,19 +364,14 @@ export function TokenEcosystem() {
   }, [isConnected]);
 
   useEffect(() => {
-    if (!isConnected || !walletChainId || !connectedChain) return;
+    if (!isConnected || !walletChainId) return;
     const chainId = Number(walletChainId);
-
-    // Set master chain if connected chain is a master candidate (has token and isActive)
-    if (connectedChain.isActive && connectedChain.token) {
-      setMasterChainId(chainId);
-    }
 
     // Set slave chain if connected chain is a valid selectable chain (not master, has token)
     if (selectableChains.some(c => c.id === chainId)) {
       void selectSlaveChain(chainId);
     }
-  }, [isConnected, walletChainId, connectedChain, selectSlaveChain, selectableChains]);
+  }, [isConnected, walletChainId, selectSlaveChain, selectableChains]);
 
   useEffect(() => {
     const unsubscribe = eventBus.on('refresh-token-ecosystem', () => {
@@ -737,8 +632,6 @@ export function TokenEcosystem() {
           </div>
         </div>
       </div>
-
-      <DraggableSupportedChains chains={chains.filter(c => c.isActive)} selectedChainId={slaveChainId} masked={!isConnected} />
 
       {bindFormOpen && slaveChain && (
         <BindForm

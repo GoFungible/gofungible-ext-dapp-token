@@ -9,7 +9,8 @@
     { "path": "/environment", "component": "Environment", "exact": true }
   ],
   "sidebarItems": [
-    { "id": "group-configuration", "label": "nav.groupConfiguration", "separator": true, "order": -1 },
-    { "id": "environment", "label": "nav.environment", "icon": "settings", "route": "/environment", "order": 0 }
+    { "id": "group-environment", "label": "nav.groupEnvironment", "separator": true, "order": -3 },
+    { "id": "environment", "label": "nav.environment", "icon": "settings", "route": "/environment", "order": -2 },
+    { "id": "group-configuration", "label": "nav.groupConfiguration", "separator": true, "order": 0 }
   ]
 }

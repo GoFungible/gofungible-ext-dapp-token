@@ -87,14 +87,6 @@ export function Topbar() {
               </select>
             </div>
             <div className="relative ml-4">
-              <select
-                className="h-11 px-2 text-sm text-foreground border border-border rounded-lg bg-surface focus:outline-none focus:ring-2 focus:ring-blue-500"
-                aria-label="Multichain Token"
-              >
-                <option value="multichain-token">Multichain Token</option>
-              </select>
-            </div>
-            <div className="relative ml-4">
               <ConnectButton />
             </div>
           </div>
