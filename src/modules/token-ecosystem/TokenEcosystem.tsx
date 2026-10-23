@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAccount, useChainId, useWalletClient } from 'wagmi';
 import { useCreateFungibleToken } from './hooks/useCreateFungibleToken';
+import { useFungibleTokens } from './hooks/useFungibleTokens';
 import {
   Network,
   CheckCircle,
@@ -339,6 +340,7 @@ export function TokenEcosystem() {
   const { selectedChainId: slaveChainId, selectedChain: slaveChain, selectChain: selectSlaveChain } = useChainStore();
   const { data: walletClient } = useWalletClient();
   const { createFungibleToken } = useCreateFungibleToken();
+  const { tokens: fungibleTokens, isLoading: isFetchingTokens, fetchTokens } = useFungibleTokens(masterChainId);
 
   const masterChain = chains.find(c => c.id === masterChainId);
   const masterCandidates = chains.filter(c => c.isActive && c.token);
@@ -381,6 +383,12 @@ export function TokenEcosystem() {
     }
   }, [selectedToken]);
 
+  useEffect(() => {
+    if (isConnected && masterChainId) {
+      fetchTokens();
+    }
+  }, [isConnected, masterChainId, fetchTokens]);
+
   const handleCreateToken = async () => {
     if (!createTokenName.trim()) return;
     if (!masterChain) {
@@ -411,6 +419,8 @@ export function TokenEcosystem() {
         setCreateTokenSupply('');
         setCreateTokenIsMaster(false);
         setSelectedToken('');
+        // Refresh tokens list after creation
+        fetchTokens();
       } else {
         setError(result.error || t('tokenEcosystem.errorCreateFailed'));
       }
@@ -582,15 +592,15 @@ export function TokenEcosystem() {
                   value={selectedToken}
                   onChange={e => setSelectedToken(e.target.value)}
                   className="w-full px-3 py-1.5 border border-gray-300 rounded-lg bg-surface focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none appearance-none font-mono text-sm pr-8"
-                  disabled={isLoading}
+                  disabled={isLoading || isFetchingTokens}
                   aria-label={t('tokenEcosystem.tokenSelect')}
                 >
-                  <option value="">{t('tokenEcosystem.tokenSelectPlaceholder')}</option>
-                  {masterChain?.token && (
-                    <option key={masterChain.token.address} value={masterChain.token.address}>
-                      {masterChain.token.name} ({masterChain.token.symbol})
+                  <option value="">{isFetchingTokens ? t('tokenEcosystem.loadingTokens') : t('tokenEcosystem.tokenSelectPlaceholder')}</option>
+                  {fungibleTokens.map(token => (
+                    <option key={token.address || token.symbol} value={token.address || token.symbol}>
+                      {token.name} ({token.symbol}){token.address ? ` • ${token.address.slice(0, 10)}...` : ''}
                     </option>
-                  )}
+                  ))}
                   <option disabled value="" style={{ borderTop: '1px solid #e5e7eb', marginTop: '4px', paddingTop: '4px' }} />
                   <option key="create-new" value="create-new">
                     {t('tokenEcosystem.createNewToken')}

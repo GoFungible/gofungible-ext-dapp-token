@@ -309,6 +309,7 @@
     "chainConfigNotFound": "Configuración de cadena no encontrada",
     "environmentNotDeployed": "Fungible Environment no desplegado en esta cadena",
     "errorCreateFailed": "Error al crear el token. Inténtelo de nuevo.",
+    "loadingTokens": "Cargando tokens...",
     "supportedChains": "Cadenas Soportadas",
     "noSupportedChains": "No hay cadenas vinculadas actualmente al ecosistema del token multichain",
     "connectWallet": "Conecte la cartera para ver las cadenas soportadas"
