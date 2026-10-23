@@ -31,23 +31,17 @@ export function useFungibleTokens(masterChainId: number | null): UseFungibleToke
     if (!masterChainId) {
       return;
     }
-    if (!walletClient) {
-      const toastId = addToast({
-        type: 'error',
-        title: 'Wallet Not Connected',
-        message: 'Please connect your wallet to fetch tokens',
-        chainId: masterChainId,
-        functionName: 'getFungibles',
-      });
-      setError('Wallet not connected');
-      // Auto-remove error toast after 5 seconds
-      setTimeout(() => updateToast(toastId, { type: 'info', title: 'Wallet Required', message: 'Connect wallet to load tokens' }), 5000);
-      return;
-    }
 
     const chainConfig = mockChains.find(c => c.id === masterChainId);
     if (!chainConfig) {
       setError('Chain configuration not found');
+			addToast({
+        type: 'error',
+        title: 'Chain configuration not found',
+        message: 'Chain configuration not found on this chain',
+        chainId: masterChainId,
+        functionName: 'getFungibles',
+      });
       return;
     }
 
@@ -56,6 +50,13 @@ export function useFungibleTokens(masterChainId: number | null): UseFungibleToke
 
     if (!fungibleEnvironmentAddress) {
       setError('Fungible Environment not deployed on this chain');
+			addToast({
+        type: 'error',
+        title: 'Fungible Environment not deployed',
+        message: 'Fungible Environment not deployed on this chain',
+        chainId: masterChainId,
+        functionName: 'getFungibles',
+      });
       return;
     }
 
