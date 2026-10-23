@@ -13,6 +13,8 @@ import {
   Loader2,
   AlertCircle,
   ChevronDown,
+  ChevronRight,
+  ChevronLeft,
 } from 'lucide-react';
 import {
   ChainData,
@@ -334,7 +336,7 @@ export function TokenEcosystem() {
 
       <div className="bg-surface rounded-xl border border-gray-200 p-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          <div className="lg:col-span-5">
+          <div className="lg:col-span-4">
             <p className="text-xs font-medium text-muted uppercase tracking-wide mb-2">
               {t('tokenEcosystem.masterChain')}
             </p>
@@ -495,7 +497,26 @@ export function TokenEcosystem() {
             )}
           </div>
 
-          <div className="lg:col-span-5">
+          <div className="lg:col-span-2 flex flex-col items-center justify-center gap-4 self-center">
+            <button
+              className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+              disabled={!selectedToken || isLoading}
+              title={t('tokenEcosystem.setExtension')}
+            >
+              <ChevronRight className="h-4 w-4" />
+              {t('tokenEcosystem.set')}
+            </button>
+            <button
+              className="px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+              disabled={!selectedToken || isLoading}
+              title={t('tokenEcosystem.unsetExtension')}
+            >
+              <ChevronLeft className="h-4 w-4" />
+              {t('tokenEcosystem.unset')}
+            </button>
+          </div>
+
+          <div className="lg:col-span-6">
             <p className="text-xs font-medium text-muted uppercase tracking-wide mb-2">
               {t('tokenEcosystem.chain')}
             </p>
