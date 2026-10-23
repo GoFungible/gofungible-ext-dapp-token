@@ -279,6 +279,7 @@
     "tokenDetails": "Token Details",
     "tokenName": "Name",
     "tokenSymbol": "Symbol",
+    "selectToken": "Select a token...",
     "active": "Active",
     "available": "Available",
     "bound": "Bound",

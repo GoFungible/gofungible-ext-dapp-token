@@ -60,7 +60,7 @@ function ChainTokenCard({
   tokenOverride?: { name: string; symbol: string; address: string; decimals: number; totalSupply: string; holders: number };
 }) {
   const { t } = useTranslation();
-  const token = tokenOverride || chain.token;
+  const token = tokenOverride; // Only use tokenOverride, not chain.token
 
   return (
     <div className="bg-surface rounded-xl border border-gray-200 p-6 hover:border-blue-300 transition-colors h-full relative">
@@ -84,25 +84,26 @@ function ChainTokenCard({
         {statusBadge}
       </div>
 
-      {token && (
-        <div className="space-y-4">
+      <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-gray-50 rounded-lg p-4">
               <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
                 {t('tokenEcosystem.tokenAddress')}
               </p>
               <div className="flex items-center gap-2">
-                <code className="text-sm font-mono text-foreground flex-1 truncate">
-                  {formatAddress(token.address)}
+                <code className={`text-sm font-mono flex-1 truncate ${token ? 'text-foreground' : 'text-muted'}`}>
+                  {token ? formatAddress(token.address) : t('tokenEcosystem.selectToken')}
                 </code>
-                <CopyAddress address={token.address} />
+                {token && <CopyAddress address={token.address} />}
               </div>
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
               <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
                 {t('tokenEcosystem.decimals')}
               </p>
-              <p className="text-lg font-semibold text-foreground">{token.decimals}</p>
+              <p className={`text-lg font-semibold ${token ? 'text-foreground' : 'text-muted'}`}>
+                {token ? token.decimals : '--'}
+              </p>
             </div>
           </div>
 
@@ -111,38 +112,56 @@ function ChainTokenCard({
               <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
                 {t('tokenEcosystem.totalSupply')}
               </p>
-              <p className="text-lg font-semibold text-foreground">{formatNumber(token.totalSupply)}</p>
+              <p className={`text-lg font-semibold ${token ? 'text-foreground' : 'text-muted'}`}>
+                {token ? formatNumber(token.totalSupply) : '--'}
+              </p>
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
               <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
                 {t('tokenEcosystem.holders')}
               </p>
-              <p className="text-lg font-semibold text-foreground">{formatNumber(token.holders)}</p>
+              <p className={`text-lg font-semibold ${token ? 'text-foreground' : 'text-muted'}`}>
+                {token ? formatNumber(token.holders) : '--'}
+              </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
-            <a
-              href={`${chain.blockExplorer}/token/${token.address}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 font-medium"
-            >
-              <ExternalLink className="h-4 w-4" />
-              {t('tokenEcosystem.viewOnExplorer')}
-            </a>
-            <a
-              href={chain.blockExplorer}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1 text-sm text-muted hover:text-foreground"
-            >
-              <ExternalLink className="h-4 w-4" />
-              {t('tokenEcosystem.chainExplorer')}
-            </a>
+            {token ? (
+              <>
+                <a
+                  href={`${chain.blockExplorer}/token/${token.address}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 font-medium"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  {t('tokenEcosystem.viewOnExplorer')}
+                </a>
+                <a
+                  href={chain.blockExplorer}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1 text-sm text-muted hover:text-foreground"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  {t('tokenEcosystem.chainExplorer')}
+                </a>
+              </>
+            ) : (
+              <>
+                <span className="flex items-center gap-1 text-sm text-muted">
+                  <ExternalLink className="h-4 w-4" />
+                  {t('tokenEcosystem.viewOnExplorer')}
+                </span>
+                <span className="flex items-center gap-1 text-sm text-muted">
+                  <ExternalLink className="h-4 w-4" />
+                  {t('tokenEcosystem.chainExplorer')}
+                </span>
+              </>
+            )}
           </div>
         </div>
-      )}
     </div>
   );
 }
@@ -166,11 +185,24 @@ export function TokenEcosystem() {
   const { data: walletClient } = useWalletClient();
   const { createFungibleToken } = useCreateFungibleToken();
   const { tokens: fungibleTokens, isLoading: isFetchingTokens, fetchTokens } = useFungibleTokens(masterChainId);
+  const { chainCache } = useChainStore();
 
   const lastFetchedChainRef = useRef<number | null>(null);
 
   const masterChain = chains.find(c => c.id === masterChainId);
   const masterCandidates = chains.filter(c => c.isActive && c.token);
+
+  // Get selected token data from cache
+  const selectedTokenData = selectedToken && masterChainId
+    ? (() => {
+        const tokens = chainCache[masterChainId]?.FungibleTokens || {};
+        const key = Object.keys(tokens).find(key => 
+          tokens[key]?.address?.toLowerCase() === selectedToken.toLowerCase() || 
+          key.toLowerCase() === selectedToken.toLowerCase()
+        );
+        return key ? { ...tokens[key], symbol: key } : null;
+      })()
+    : null;
 
   const extensions = [
     { id: 'erc20', name: 'ERC20 Standard' },
@@ -445,6 +477,14 @@ export function TokenEcosystem() {
               <ChainTokenCard
                 chain={masterChain}
                 masked={!isConnected}
+                tokenOverride={selectedTokenData ? {
+                  name: selectedTokenData.name,
+                  symbol: selectedTokenData.symbol || selectedTokenData.name,
+                  address: selectedTokenData.address,
+                  decimals: 18,
+                  totalSupply: '0',
+                  holders: 0
+                } : undefined}
                 statusBadge={
                   <span className="flex items-center gap-1 text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
                     <CheckCircle className="h-3 w-3" />
