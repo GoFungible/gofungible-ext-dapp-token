@@ -6,6 +6,7 @@ import { ChainStoreProvider } from './modules/chains/ChainStore';
 import { FungibleTokensSync } from './modules/chains/FungibleTokensSync';
 import { LayoutProvider } from './components/LayoutProvider';
 import { TokenPerimeter } from './modules/token-perimeter/TokenPerimeter';
+import { TokenEcosystem } from './modules/token-ecosystem/TokenEcosystem';
 import { LoaderModule } from './modules/loader/LoaderModule';
 import { Dashboard } from './modules/dashboard/Dashboard';
 import { Environment } from './modules/environment/Environment';
@@ -18,6 +19,7 @@ import './index.css';
 
 const componentRegistry: Record<string, React.ComponentType> = {
   'TokenPerimeter': TokenPerimeter,
+  'TokenEcosystem': TokenEcosystem,
   'LoaderModule': LoaderModule,
   'Dashboard': Dashboard,
   'Environment': Environment,
@@ -38,6 +40,7 @@ function App() {
   const loadModules = async () => {
     await loadChainsModule();
     await loadDashboardModule();
+    await loadTokenEcosystemModule();
     await loadEnvironmentModule();
     await loadTokenNegotiationModule();
     await loadTokenPerimeterModule();
@@ -71,6 +74,17 @@ function App() {
       }
     } catch (error) {
       console.error('Failed to load token-perimeter module:', error);
+    }
+  };
+
+  const loadTokenEcosystemModule = async () => {
+    try {
+      const mod = await import('./modules/token-ecosystem/index');
+      if (mod.default && typeof mod.default.initialize === 'function') {
+        await mod.default.initialize(coreFramework);
+      }
+    } catch (error) {
+      console.error('Failed to load token-ecosystem module:', error);
     }
   };
 

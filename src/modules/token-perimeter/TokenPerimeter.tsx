@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAccount } from 'wagmi';
+import { useAccount, useChainId } from 'wagmi';
 import {
   Network,
   CheckCircle,
@@ -434,6 +434,7 @@ function DraggableSupportedChains({
 export function TokenPerimeter() {
   const { t } = useTranslation();
   const { isConnected } = useAccount();
+  const walletChainId = useChainId();
   const [chains, setChains] = useState<ChainData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
@@ -444,14 +445,15 @@ export function TokenPerimeter() {
   const [unbindModalOpen, setUnbindModalOpen] = useState(false);
   const [chainToUnbind, setChainToUnbind] = useState<ChainData | null>(null);
   const [masterChainId, setMasterChainId] = useState<number>(MASTER_CHAIN_ID);
-  const { selectedChainId, selectedChain, selectChain } = useChainStore();
+  const { selectedChainId: slaveChainId, selectedChain: slaveChain, selectChain: selectSlaveChain } = useChainStore();
 
   const masterChain = chains.find(c => c.id === masterChainId);
   const masterCandidates = chains.filter(c => c.isActive && c.token);
   const selectableChains = chains.filter(c => c.id !== masterChainId);
-  const selectedChainIsActive = selectedChain?.isActive ?? false;
-  const canBind = !!selectedChain && !selectedChainIsActive;
-  const canUnbind = !!selectedChain && selectedChainIsActive && selectedChain.id !== MASTER_CHAIN_ID;
+  const connectedChain = walletChainId ? mockChains.find(c => c.id === Number(walletChainId)) : undefined;
+  const slaveChainIsActive = slaveChain?.isActive ?? false;
+  const canBind = !!slaveChain && !slaveChainIsActive;
+  const canUnbind = !!slaveChain && slaveChainIsActive && slaveChain.id !== MASTER_CHAIN_ID;
 
   useEffect(() => {
     if (!isConnected) {
@@ -460,6 +462,21 @@ export function TokenPerimeter() {
     }
     setChains(mockChains.map(c => ({ ...c, token: c.token ? { ...c.token } : undefined })));
   }, [isConnected]);
+
+  useEffect(() => {
+    if (!isConnected || !walletChainId || !connectedChain) return;
+    const chainId = Number(walletChainId);
+
+    // Set master chain if connected chain is a master candidate (has token and isActive)
+    if (connectedChain.isActive && connectedChain.token) {
+      setMasterChainId(chainId);
+    }
+
+    // Set slave chain if connected chain is a valid selectable chain (not master, has token)
+    if (selectableChains.some(c => c.id === chainId)) {
+      void selectSlaveChain(chainId);
+    }
+  }, [isConnected, walletChainId, connectedChain, selectSlaveChain, selectableChains]);
 
   useEffect(() => {
     const unsubscribe = eventBus.on('refresh-token-perimeter', () => {
@@ -471,26 +488,15 @@ export function TokenPerimeter() {
     return () => unsubscribe();
   }, []);
 
-  useEffect(() => {
-    if (selectableChains.length > 0 && !selectedChainId) {
-      void selectChain(selectableChains[0].id);
-    }
-  }, [selectableChains, selectedChainId, selectChain]);
-
-  useEffect(() => {
-    if (selectedChainId === masterChainId && selectableChains.length > 0) {
-      void selectChain(selectableChains[0].id);
-    }
-  }, [masterChainId, selectedChainId, selectableChains, selectChain]);
 
   const handleBindButtonClick = () => {
-    if (!selectedChain) return;
-    setBindTokenAddress(selectedChain.token?.address || '');
+    if (!slaveChain) return;
+    setBindTokenAddress(slaveChain.token?.address || '');
     setBindFormOpen(true);
   };
 
   const handleBind = async () => {
-    if (!selectedChain) return;
+    if (!slaveChain) return;
 
     setIsLoading(true);
     setError(undefined);
@@ -500,7 +506,7 @@ export function TokenPerimeter() {
       await new Promise(resolve => setTimeout(resolve, 2000));
 
       setChains(prev => prev.map(c =>
-        c.id === selectedChain.id
+        c.id === slaveChain.id
           ? {
               ...c,
               isActive: true,
@@ -519,13 +525,13 @@ export function TokenPerimeter() {
       ));
 
       eventBus.emit('perimeter:bind', {
-        chainId: selectedChain.id,
-        chainName: selectedChain.name,
+        chainId: slaveChain.id,
+        chainName: slaveChain.name,
         action: 'bind',
         timestamp: Date.now(),
       });
 
-      setSuccess(t('tokenPerimeter.successBound', { name: selectedChain.name }));
+      setSuccess(t('tokenPerimeter.successBound', { name: slaveChain.name }));
       setBindFormOpen(false);
       setBindTokenAddress('');
     } catch {
@@ -658,7 +664,7 @@ export function TokenPerimeter() {
                 {t('tokenPerimeter.bind')}
               </button>
               <button
-                onClick={() => selectedChain && handleUnbindClick(selectedChain)}
+                onClick={() => slaveChain && handleUnbindClick(slaveChain)}
                 disabled={isLoading || !canUnbind || !isConnected}
                 className="px-8 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
                 title={t('tokenPerimeter.titleUnbind')}
@@ -680,12 +686,13 @@ export function TokenPerimeter() {
             <div className="relative mb-3">
               {isConnected ? (
                 <select
-                  value={selectedChainId}
-                  onChange={e => void selectChain(Number(e.target.value))}
+                  value={slaveChainId || ''}
+                  onChange={e => void selectSlaveChain(Number(e.target.value))}
                   className="w-full px-3 py-1.5 border border-gray-300 rounded-lg bg-surface focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none appearance-none font-mono text-sm pr-8"
                   disabled={isLoading}
                   aria-label={t('tokenPerimeter.chain')}
                 >
+                  <option value="">Select chain...</option>
                   {selectableChains.map(chain => (
                     <option key={chain.id} value={chain.id}>
                       {t('tokenPerimeter.chainOption', {
@@ -708,12 +715,12 @@ export function TokenPerimeter() {
               <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted pointer-events-none" />
             </div>
 
-            {selectedChain && (
+            {slaveChain && (
               <ChainTokenCard
-                chain={selectedChain}
+                chain={slaveChain}
                 masked={!isConnected}
                 statusBadge={
-                  selectedChainIsActive ? (
+                  slaveChainIsActive ? (
                     <span className="flex items-center gap-1 text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">
                       <CheckCircle className="h-3 w-3" />
                       {t('tokenPerimeter.active')}
@@ -731,11 +738,11 @@ export function TokenPerimeter() {
         </div>
       </div>
 
-      <DraggableSupportedChains chains={chains.filter(c => c.isActive)} selectedChainId={selectedChainId} masked={!isConnected} />
+      <DraggableSupportedChains chains={chains.filter(c => c.isActive)} selectedChainId={slaveChainId} masked={!isConnected} />
 
-      {bindFormOpen && selectedChain && (
+      {bindFormOpen && slaveChain && (
         <BindForm
-          chain={selectedChain}
+          chain={slaveChain}
           tokenAddress={bindTokenAddress}
           onTokenAddressChange={setBindTokenAddress}
           onConfirm={() => { void handleBind(); }}

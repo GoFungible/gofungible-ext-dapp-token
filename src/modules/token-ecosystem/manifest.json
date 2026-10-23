@@ -1,0 +1,17 @@
+{
+  "id": "token-ecosystem",
+  "name": "Token Ecosystem",
+  "version": "1.0.0",
+  "description": "Manage the EVM chains covered by the multichain token ecosystem",
+  "author": "Gofungible Team",
+  "entryPoint": "token-ecosystem",
+  "routes": [
+    { "path": "/ecosystem", "component": "TokenEcosystem", "exact": true }
+  ],
+  "topbarItems": [
+    { "id": "token-ecosystem-refresh", "label": "topbar.refresh", "icon": "refresh-cw", "action": "refresh-token-ecosystem", "order": 1 }
+  ],
+  "sidebarItems": [
+    { "id": "token-ecosystem", "label": "nav.token-ecosystem", "icon": "globe", "route": "/ecosystem", "order": 1 }
+  ]
+}
