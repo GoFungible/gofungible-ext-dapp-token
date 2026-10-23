@@ -473,145 +473,6 @@ function FungibleEnvironmentDeployment({
   );
 }
 
-function PaymentTokens({
-  tokens,
-  explorer,
-  onAdd,
-  onRemove,
-}: {
-  tokens: Record<string, { name: string; address: string }>;
-  explorer: string;
-  onAdd: (name: string, address: string) => void;
-  onRemove: (name: string) => void;
-}) {
-  const { t } = useTranslation();
-  const [adding, setAdding] = useState(false);
-  const [newName, setNewName] = useState('');
-  const [newAddress, setNewAddress] = useState('');
-
-  const handleAdd = () => {
-    if (!newName.trim() || !newAddress.trim()) return;
-    onAdd(newName.trim(), newAddress.trim());
-    setNewName('');
-    setNewAddress('');
-    setAdding(false);
-  };
-
-  return (
-    <div className="bg-surface rounded-xl border border-gray-200 p-6 flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
-          <Network className="h-5 w-5 text-green-600" />
-          {t('environment.paymentTokens')}
-        </h3>
-        <span className="text-xs font-medium text-muted bg-gray-50 px-2 py-1 rounded-full">
-          {Object.keys(tokens).length}
-        </span>
-      </div>
-
-      <p className="text-sm text-muted">
-        {t('environment.paymentTokensDesc')}
-      </p>
-
-      <div className="bg-gray-50 rounded-lg p-4 space-y-2">
-        {Object.keys(tokens).length > 0 ? (
-          Object.entries(tokens).map(([key, token]) => {
-            const tokenObj =
-              typeof token === 'string'
-                ? { name: key, address: token }
-                : (token as { name?: string; address?: string });
-            if (!tokenObj?.address || typeof tokenObj.address !== 'string' || tokenObj.address.length === 0) {
-              return null;
-            }
-            const addr = tokenObj.address;
-            const name = tokenObj.name || key;
-            if (!addr) return null;
-            return (
-              <div key={key} className="flex items-center justify-between gap-2">
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-foreground truncate">{name}</p>
-                  <code className="text-xs font-mono text-muted">
-                    {addr && addr.length > 8 ? `${addr.slice(0, 10)}...${addr.slice(-8)}` : addr}
-                  </code>
-                </div>
-                <div className="flex items-center gap-1">
-                  {explorer && addr && (
-                    <a
-                      href={`${explorer}/address/${addr}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-muted hover:text-blue-600"
-                      aria-label={t('environment.viewOnExplorer')}
-                      title={t('environment.viewOnExplorer')}
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                    </a>
-                  )}
-                  <button
-                    onClick={() => onRemove(key)}
-                    className="text-red-500 hover:text-red-700"
-                    title={t('environment.removePaymentToken')}
-                  >
-                    <XCircle className="h-4 w-4" />
-                  </button>
-                </div>
-              </div>
-            );
-          })
-        ) : (
-          <span className="text-xs text-muted">{t('environment.noPaymentTokens')}</span>
-        )}
-      </div>
-
-      {adding ? (
-        <div className="space-y-2">
-          <input
-            type="text"
-            value={newName}
-            onChange={e => setNewName(e.target.value)}
-            placeholder={t('environment.paymentTokenName')}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none"
-          />
-          <input
-            type="text"
-            value={newAddress}
-            onChange={e => setNewAddress(e.target.value)}
-            placeholder={t('environment.paymentTokenAddress')}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm font-mono focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none"
-          />
-          <div className="flex justify-end gap-2">
-            <button
-              onClick={() => { setAdding(false); setNewName(''); setNewAddress(''); }}
-              className="px-3 py-1.5 text-sm text-muted hover:text-foreground"
-            >
-              {t('common.cancel')}
-            </button>
-            <button
-              onClick={handleAdd}
-              disabled={!newName.trim() || !newAddress.trim()}
-              className="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
-            >
-              <Plus className="h-4 w-4" />
-              {t('environment.addPaymentToken')}
-            </button>
-          </div>
-        </div>
-) : (
-        <div className="flex justify-end">
-          <button
-            onClick={() => setAdding(true)}
-            className="px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
-            title={t('environment.addPaymentToken')}
-          >
-            <Plus className="h-4 w-4" />
-            {t('environment.addPaymentToken')}
-          </button>
-        </div>
-      )}
-    </div>
-  );
-}
-
 function Relayers({
   relayers,
   explorer,
@@ -881,145 +742,11 @@ function Exchanges({
   );
 }
 
-function Lenders({
-  lenders,
-  explorer,
-  onAdd,
-  onRemove,
-}: {
-  lenders: Record<string, { name: string; address: string }>;
-  explorer: string;
-  onAdd: (name: string, address: string) => void;
-  onRemove: (name: string) => void;
-}) {
-  const { t } = useTranslation();
-  const [adding, setAdding] = useState(false);
-  const [newName, setNewName] = useState('');
-  const [newAddress, setNewAddress] = useState('');
-
-  const handleAdd = () => {
-    if (!newName.trim() || !newAddress.trim()) return;
-    onAdd(newName.trim(), newAddress.trim());
-    setNewName('');
-    setNewAddress('');
-    setAdding(false);
-  };
-
-  return (
-    <div className="bg-surface rounded-xl border border-gray-200 p-6 flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
-          <Network className="h-5 w-5 text-green-600" />
-          {t('environment.lendingPlatforms')}
-        </h3>
-        <span className="text-xs font-medium text-muted bg-gray-50 px-2 py-1 rounded-full">
-          {Object.keys(lenders).length}
-        </span>
-      </div>
-
-      <p className="text-sm text-muted">
-        {t('environment.lendingPlatformsDesc')}
-      </p>
-
-      <div className="bg-gray-50 rounded-lg p-4 space-y-2">
-        {Object.keys(lenders).length > 0 ? (
-          Object.entries(lenders).map(([key, lender]) => {
-            if (!lender?.address || typeof lender.address !== 'string' || lender.address.length === 0) {
-              return null;
-            }
-            const addr = lender.address;
-            const name = lender.name || key;
-            return (
-              <div key={key} className="flex items-center justify-between gap-2">
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-foreground truncate">{name}</p>
-                  <code className="text-xs font-mono text-muted">
-                    {addr && addr.length > 8 ? `${addr.slice(0, 10)}...${addr.slice(-8)}` : addr}
-                  </code>
-                </div>
-                <div className="flex items-center gap-1">
-                  {explorer && addr && (
-                    <a
-                      href={`${explorer}/address/${addr}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-muted hover:text-blue-600"
-                      aria-label={t('environment.viewOnExplorer')}
-                      title={t('environment.viewOnExplorer')}
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                    </a>
-                  )}
-                  <button
-                    onClick={() => onRemove(key)}
-                    className="text-red-500 hover:text-red-700"
-                    title={t('environment.removeLender')}
-                  >
-                    <XCircle className="h-4 w-4" />
-                  </button>
-                </div>
-              </div>
-            );
-          })
-        ) : (
-          <span className="text-xs text-muted">{t('environment.noLenders')}</span>
-        )}
-      </div>
-
-      {adding ? (
-        <div className="space-y-2">
-          <input
-            type="text"
-            value={newName}
-            onChange={e => setNewName(e.target.value)}
-            placeholder={t('environment.lenderName')}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none"
-          />
-          <input
-            type="text"
-            value={newAddress}
-            onChange={e => setNewAddress(e.target.value)}
-            placeholder={t('environment.lenderAddress')}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm font-mono focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none"
-          />
-          <div className="flex justify-end gap-2">
-            <button
-              onClick={() => { setAdding(false); setNewName(''); setNewAddress(''); }}
-              className="px-3 py-1.5 text-sm text-muted hover:text-foreground"
-            >
-              {t('common.cancel')}
-            </button>
-            <button
-              onClick={handleAdd}
-              disabled={!newName.trim() || !newAddress.trim()}
-              className="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
-            >
-              <Plus className="h-4 w-4" />
-              {t('environment.addLender')}
-            </button>
-          </div>
-        </div>
-      ) : (
-        <div className="flex justify-end">
-          <button
-            onClick={() => setAdding(true)}
-            className="px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
-            title={t('environment.addLender')}
-          >
-            <Plus className="h-4 w-4" />
-            {t('environment.addLender')}
-          </button>
-        </div>
-      )}
-    </div>
-  );
-}
-
 export function Environment() {
   const { t } = useTranslation();
   const [chainStates, setChainStates] = useState<EnvironmentChainState[]>([]);
   const [activeStep, setActiveStep] = useState<string | null>(null);
-  const { selectedChainId, selectedChain, selectChain, updateChainCreate2Factory, updateChainFungibleFactory, updateChainFungibleEnvironment, updateChainPaymentTokens, updateChainRelayers, updateChainExchanges, updateChainLenders, chainCache } = useChainStore();
+  const { selectedChainId, selectedChain, selectChain, updateChainCreate2Factory, updateChainFungibleFactory, updateChainFungibleEnvironment, updateChainRelayers, updateChainExchanges, chainCache } = useChainStore();
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const [form, setForm] = useState({
@@ -1376,26 +1103,6 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
     }
   };
 
-  const handleAddPaymentToken = (name: string, address: string) => {
-    if (!selectedChain) return;
-    const existing = selectedChain.PaymentTokens ?? {};
-    const updated = {
-      ...existing,
-      [name]: { name, address },
-    };
-    updateChainPaymentTokens(selectedChainId, updated);
-    setSuccess(t('environment.success.paymentTokenAdded', { name: selectedChain.name }));
-  };
-
-  const handleRemovePaymentToken = (name: string) => {
-    if (!selectedChain) return;
-    const existing = selectedChain.PaymentTokens ?? {};
-    const { [name]: _removed, ...rest } = existing;
-    void _removed;
-    updateChainPaymentTokens(selectedChainId, rest);
-    setSuccess(t('environment.success.paymentTokenRemoved', { name: selectedChain.name }));
-  };
-
   const handleAddRelayer = (name: string, address: string) => {
     if (!selectedChain) return;
     const existing = selectedChain.Relayers ?? {};
@@ -1434,26 +1141,6 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
     void _removed;
     updateChainExchanges(selectedChainId, rest);
     setSuccess(t('environment.success.exchangeRemoved', { name: selectedChain.name }));
-  };
-
-  const handleAddLender = (name: string, address: string) => {
-    if (!selectedChain) return;
-    const existing = selectedChain.Lenders ?? {};
-    const updated = {
-      ...existing,
-      [name]: { name, address },
-    };
-    updateChainLenders(selectedChainId, updated);
-    setSuccess(t('environment.success.lenderAdded', { name: selectedChain.name }));
-  };
-
-  const handleRemoveLender = (name: string) => {
-    if (!selectedChain) return;
-    const existing = selectedChain.Lenders ?? {};
-    const { [name]: _removed, ...rest } = existing;
-    void _removed;
-    updateChainLenders(selectedChainId, rest);
-    setSuccess(t('environment.success.lenderRemoved', { name: selectedChain.name }));
   };
 
   if (!selectedState || !selectedChain) {
@@ -1627,13 +1314,6 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
             />
           </div>
 
-          <PaymentTokens
-            tokens={selectedChain.PaymentTokens ?? {}}
-            explorer={explorer}
-            onAdd={handleAddPaymentToken}
-            onRemove={handleRemovePaymentToken}
-          />
-
           <Relayers
             relayers={selectedChain.Relayers ?? {}}
             explorer={explorer}
@@ -1646,13 +1326,6 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
             explorer={explorer}
             onAdd={handleAddExchange}
             onRemove={handleRemoveExchange}
-          />
-
-          <Lenders
-            lenders={selectedChain.Lenders ?? {}}
-            explorer={explorer}
-            onAdd={handleAddLender}
-            onRemove={handleRemoveLender}
           />
 
           </div>
