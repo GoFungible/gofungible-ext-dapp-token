@@ -48,12 +48,22 @@ export function useFungibleTokens(masterChainId: number | null): UseFungibleToke
     const chainState = chainCache[masterChainId];
     const fungibleEnvironmentAddress = chainState?.FungibleEnvironment;
 
-    if (!fungibleEnvironmentAddress) {
+if (!fungibleEnvironmentAddress) {
       setError('Fungible Environment not deployed on this chain');
-			addToast({
+      addToast({
         type: 'error',
         title: 'Fungible Environment not deployed',
         message: 'Fungible Environment not deployed on this chain',
+        chainId: masterChainId,
+        functionName: 'getFungibles',
+      });
+      return;
+    }
+    if (!walletClient) {
+      addToast({
+        type: 'error',
+        title: 'WalletClient is not defined',
+        message: 'WalletClient is not defined',
         chainId: masterChainId,
         functionName: 'getFungibles',
       });
@@ -82,7 +92,11 @@ export function useFungibleTokens(masterChainId: number | null): UseFungibleToke
         address: fungibleEnvironmentAddress as Address,
         abi: fungibleEnvironmentArtifact.abi as Abi,
         functionName: 'getFungibles',
+        account: walletClient.account,
       });
+			console.log(symbols);
+			console.log(fungibleEnvironmentAddress);
+			console.log(fungibleEnvironmentAddress);
 
       // For each symbol, get the token address
       const tokensInfo: FungibleTokenInfo[] = [];
@@ -93,6 +107,7 @@ export function useFungibleTokens(masterChainId: number | null): UseFungibleToke
             abi: fungibleEnvironmentArtifact.abi as Abi,
             functionName: 'getFungibleAddress',
             args: [symbol],
+            account: walletClient.account,
           });
           tokensInfo.push({
             name: symbol, // Use symbol as name for now
