@@ -304,6 +304,11 @@
     "successUnbound": "Successfully unbound {{name}} from the multichain token ecosystem",
     "errorUnbindFailed": "Failed to unbind chain. Please try again.",
     "tokenCreated": "Token {{name}} created successfully",
+    "noMasterChain": "No master chain selected",
+    "walletNotConnected": "Wallet not connected",
+    "chainConfigNotFound": "Chain configuration not found",
+    "environmentNotDeployed": "Fungible Environment not deployed on this chain",
+    "errorCreateFailed": "Failed to create token. Please try again.",
     "supportedChains": "Supported Chains",
     "noSupportedChains": "No chains are currently bound to the multichain token ecosystem",
     "connectWallet": "Connect wallet to view supported chains"

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAccount, useChainId } from 'wagmi';
+import { useAccount, useChainId, useWalletClient } from 'wagmi';
+import { useCreateFungibleToken } from './hooks/useCreateFungibleToken';
 import {
   Network,
   CheckCircle,
@@ -336,6 +337,8 @@ export function TokenEcosystem() {
   const [createTokenIsMaster, setCreateTokenIsMaster] = useState(false);
   const [createTokenSupply, setCreateTokenSupply] = useState('');
   const { selectedChainId: slaveChainId, selectedChain: slaveChain, selectChain: selectSlaveChain } = useChainStore();
+  const { data: walletClient } = useWalletClient();
+  const { createFungibleToken } = useCreateFungibleToken();
 
   const masterChain = chains.find(c => c.id === masterChainId);
   const masterCandidates = chains.filter(c => c.isActive && c.token);
@@ -378,23 +381,45 @@ export function TokenEcosystem() {
     }
   }, [selectedToken]);
 
-  const handleCreateToken = () => {
+  const handleCreateToken = async () => {
     if (!createTokenName.trim()) return;
-    
+    if (!masterChain) {
+      setError(t('tokenEcosystem.noMasterChain'));
+      return;
+    }
+    if (!walletClient) {
+      setError(t('tokenEcosystem.walletNotConnected'));
+      return;
+    }
+
     setIsLoading(true);
     setError(undefined);
     setSuccess(undefined);
 
-    // Simulate token creation
-    setTimeout(() => {
-      setSuccess(t('tokenEcosystem.tokenCreated', { name: createTokenName }));
-      setCreateTokenOpen(false);
-      setCreateTokenName('');
-      setCreateTokenSupply('');
-      setCreateTokenIsMaster(false);
-      setSelectedToken('');
+    try {
+      const result = await createFungibleToken({
+        name: createTokenName,
+        supply: createTokenSupply,
+        isMaster: createTokenIsMaster,
+        masterChainId,
+      });
+
+      if (result.ok) {
+        setSuccess(t('tokenEcosystem.tokenCreated', { name: createTokenName }));
+        setCreateTokenOpen(false);
+        setCreateTokenName('');
+        setCreateTokenSupply('');
+        setCreateTokenIsMaster(false);
+        setSelectedToken('');
+      } else {
+        setError(result.error || t('tokenEcosystem.errorCreateFailed'));
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : t('tokenEcosystem.errorCreateFailed');
+      setError(message);
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   const handleCreateTokenCancel = () => {

@@ -304,6 +304,11 @@
     "successUnbound": "Se desvinculó correctamente {{name}} del ecosistema del token multichain",
     "errorUnbindFailed": "Error al desvincular la cadena. Inténtelo de nuevo.",
     "tokenCreated": "Token {{name}} creado exitosamente",
+    "noMasterChain": "No hay cadena maestra seleccionada",
+    "walletNotConnected": "Cartera no conectada",
+    "chainConfigNotFound": "Configuración de cadena no encontrada",
+    "environmentNotDeployed": "Fungible Environment no desplegado en esta cadena",
+    "errorCreateFailed": "Error al crear el token. Inténtelo de nuevo.",
     "supportedChains": "Cadenas Soportadas",
     "noSupportedChains": "No hay cadenas vinculadas actualmente al ecosistema del token multichain",
     "connectWallet": "Conecte la cartera para ver las cadenas soportadas"
