@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { XCircle, Copy, CheckCircle, RefreshCw } from 'lucide-react';
+import { XCircle, Copy, CheckCircle, RefreshCw, RotateCcw } from 'lucide-react';
 import { useChainStore } from '../modules/chains/ChainStore';
 import { coreFramework } from '../core/CoreFramework';
 import { eventBus } from '../core/EventBus';
@@ -19,7 +19,7 @@ interface DebugStatePopupProps {
 
 export function DebugStatePopup({ isOpen, onClose, onRefresh }: DebugStatePopupProps) {
   const { t } = useTranslation();
-  const { selectedChainId, selectedChain, chainCache } = useChainStore();
+  const { selectedChainId, selectedChain, chainCache, resetChainCache } = useChainStore();
   const [snapshots, setSnapshots] = useState<ModuleSnapshot[]>([]);
   const [copied, setCopied] = useState(false);
   const [collecting, setCollecting] = useState(false);
@@ -121,6 +121,14 @@ export function DebugStatePopup({ isOpen, onClose, onRefresh }: DebugStatePopupP
               title={t('common.refresh')}
             >
               <RefreshCw className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => { resetChainCache(); collect(); }}
+              className="p-2 text-muted hover:text-foreground hover:bg-muted/30 rounded-lg transition-colors"
+              aria-label={t('debugState.resetCache')}
+              title={t('debugState.resetCache')}
+            >
+              <RotateCcw className="h-4 w-4" />
             </button>
             <button
               onClick={() => { void handleCopy(); }}

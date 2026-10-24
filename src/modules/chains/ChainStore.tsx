@@ -1,4 +1,4 @@
-import { createContext, useContext, useCallback, useState, ReactNode } from 'react';
+import { createContext, useContext, useCallback, useState, useEffect, ReactNode } from 'react';
 
 export interface ChainToken {
   address: string;
@@ -200,6 +200,7 @@ interface ChainStoreContextType {
   updateChainAirdrops: (chainId: number, airdrops: Record<string, AirdropCampaign>) => void;
   updateChainLendingOffers: (chainId: number, offers: Record<string, LendingOffer>) => void;
   updateChainVestingSchedules: (chainId: number, schedules: Record<string, VestingSchedule>) => void;
+  resetChainCache: () => void;
 }
 
 const ChainStoreContext = createContext<ChainStoreContextType | undefined>(undefined);
@@ -229,11 +230,36 @@ const loadersReady = (async () => {
   }
 })();
 
+const STORAGE_KEY = 'chain-cache-v1';
+
+function loadCacheFromStorage(): Record<number, ChainJson> {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      const parsed = JSON.parse(stored) as Record<string, ChainJson>;
+      // Convert keys back to numbers since JSON.stringify converts them to strings
+      return Object.fromEntries(Object.entries(parsed).map(([k, v]) => [Number(k), v]));
+    }
+  } catch {
+    // Ignore parse errors
+  }
+  return {};
+}
+
 export function ChainStoreProvider({ children }: { children: ReactNode }) {
   const [selectedChainId, setSelectedChainId] = useState<number>(0);
-  const [chainCache, setChainCache] = useState<Record<number, ChainJson>>({});
+  const [chainCache, setChainCache] = useState<Record<number, ChainJson>>(() => loadCacheFromStorage());
 
   const selectedChain = selectedChainId > 0 ? (chainCache[selectedChainId] ?? null) : null;
+
+  // Persist chainCache to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(chainCache));
+    } catch {
+      // Ignore write errors (e.g., quota exceeded)
+    }
+  }, [chainCache]);
 
   const selectChain = useCallback(
     (chainId: number) => {
@@ -425,6 +451,15 @@ export function ChainStoreProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  const resetChainCache = useCallback(() => {
+    setChainCache({});
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      // Ignore
+    }
+  }, []);
+
   const value: ChainStoreContextType = {
     selectedChainId,
     selectedChain,
@@ -442,6 +477,7 @@ export function ChainStoreProvider({ children }: { children: ReactNode }) {
     updateChainAirdrops,
     updateChainLendingOffers,
     updateChainVestingSchedules,
+    resetChainCache,
   };
 
   return (

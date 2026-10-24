@@ -47,7 +47,8 @@
     "title": "Application State (Debug)",
     "collecting": "Collecting module state...",
     "copy": "Copy JSON",
-    "copied": "Copied!"
+    "copied": "Copied!",
+    "resetCache": "Reset Cache"
   },
   "sidebar": {
     "appTitle": "Fungible Standard",
