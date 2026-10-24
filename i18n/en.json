@@ -327,7 +327,7 @@
     "connectWallet": "Connect wallet to view supported chains"
   },
   "extensions": {
-    "title": "Token Extensions",
+    "title": "Extensions",
     "subtitle": "Assign token extensions for a token in a certain chain. Select a chain and configure extensions for the token on that chain.",
     "masterChain": "MASTER CHAIN",
     "masterToken": "Master Token",

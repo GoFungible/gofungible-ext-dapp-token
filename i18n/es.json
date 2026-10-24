@@ -327,7 +327,7 @@
     "connectWallet": "Conecte la cartera para ver las cadenas soportadas"
   },
   "extensions": {
-    "title": "Extensiones de Token",
+    "title": "Extensiones",
     "subtitle": "Asigne extensiones de token para un token en una cadena determinada. Seleccione una cadena y configure extensiones para el token en esa cadena.",
     "masterChain": "CADENA MAESTRA",
     "masterToken": "Token Maestro",
