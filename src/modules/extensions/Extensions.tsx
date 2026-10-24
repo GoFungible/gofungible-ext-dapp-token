@@ -25,6 +25,8 @@ import { eventBus } from '../../core/EventBus';
 import mockChains from '@data/chains';
 import { useChainStore } from '../chains/ChainStore';
 
+const initialChains = mockChains.map(c => ({ ...c, token: c.token ? { ...c.token } : undefined }));
+
 function CopyAddress({ address }: { address: string }) {
   const [copied, setCopied] = useState(false);
   const { t } = useTranslation();
@@ -336,7 +338,7 @@ export function Extensions() {
   const { t } = useTranslation();
   const { isConnected } = useAccount();
   const walletChainId = useChainId();
-  const [chains, setChains] = useState<ChainData[]>([]);
+  const [chains, setChains] = useState<ChainData[]>(initialChains);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
@@ -354,14 +356,6 @@ export function Extensions() {
   const slaveChainIsActive = slaveChain?.isActive ?? false;
   const canBind = !!slaveChain && !slaveChainIsActive;
   const canUnbind = !!slaveChain && slaveChainIsActive && slaveChain.id !== MASTER_CHAIN_ID;
-
-  useEffect(() => {
-    if (!isConnected) {
-      setChains([]);
-      return;
-    }
-    setChains(mockChains.map(c => ({ ...c, token: c.token ? { ...c.token } : undefined })));
-  }, [isConnected]);
 
   useEffect(() => {
     if (!isConnected || !walletChainId) return;
@@ -529,10 +523,21 @@ export function Extensions() {
               )}
               <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted pointer-events-none" />
             </div>
-            {masterChain && (
+            {masterChain ? (
               <ChainTokenCard
                 chain={masterChain}
                 masked={!isConnected}
+                statusBadge={
+                  <span className="flex items-center gap-1 text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
+                    <CheckCircle className="h-3 w-3" />
+                    {t('extensions.masterBadge')}
+                  </span>
+                }
+              />
+            ) : (
+              <ChainTokenCard
+                chain={chains[0]}
+                masked={true}
                 statusBadge={
                   <span className="flex items-center gap-1 text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
                     <CheckCircle className="h-3 w-3" />
@@ -610,7 +615,7 @@ export function Extensions() {
               <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted pointer-events-none" />
             </div>
 
-            {slaveChain && (
+            {slaveChain ? (
               <ChainTokenCard
                 chain={slaveChain}
                 masked={!isConnected}
@@ -626,6 +631,17 @@ export function Extensions() {
                       {t('extensions.available')}
                     </span>
                   )
+                }
+              />
+            ) : (
+              <ChainTokenCard
+                chain={chains.find(c => c.id !== masterChainId) || chains[0]}
+                masked={true}
+                statusBadge={
+                  <span className="flex items-center gap-1 text-xs font-medium text-muted bg-gray-50 px-2 py-1 rounded-full">
+                    <XCircle className="h-3 w-3" />
+                    {t('extensions.available')}
+                  </span>
                 }
               />
             )}
