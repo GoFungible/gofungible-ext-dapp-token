@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLayout } from './LayoutProvider';
 import { eventBus } from '../core/EventBus';
-import { Menu, Settings, Bell, User, ChevronDown, Network, RefreshCw, Palette } from 'lucide-react';
+import { Menu, Settings, Bell, User, ChevronDown, Network, RefreshCw, Palette, Bug } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { DebugStatePopup } from './DebugStatePopup';
@@ -16,6 +16,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   'network': Network,
   'refresh-cw': RefreshCw,
   'palette': Palette,
+  'bug': Bug,
 };
 
 export function Topbar() {
@@ -44,6 +45,7 @@ export function Topbar() {
             {topbarItems.map(item => {
               const Icon = item.icon ? iconMap[item.icon] : Settings;
               const isDebugButton = item.id === 'token-perimeter-refresh';
+              const DebugIcon = isDebugButton ? Bug : Icon;
               return (
                 <button
                   key={item.id}
@@ -59,7 +61,7 @@ export function Topbar() {
                   aria-label={t(item.label)}
                   title={t(item.label)}
                 >
-                  <Icon className="h-5 w-5" />
+                  <DebugIcon className="h-5 w-5" />
                 </button>
               );
             })}
