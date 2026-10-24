@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAccount, useChainId } from 'wagmi';
+import { useAccount } from 'wagmi';
 import {
   Network,
   CheckCircle,
@@ -436,7 +436,6 @@ function DraggableSupportedChains({
 export function TokenPerimeter() {
   const { t } = useTranslation();
   const { isConnected } = useAccount();
-  const walletChainId = useChainId();
   const [chains, setChains] = useState<ChainData[]>(initialChains);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
@@ -446,31 +445,15 @@ export function TokenPerimeter() {
   const [bindTokenAddress, setBindTokenAddress] = useState('');
   const [unbindModalOpen, setUnbindModalOpen] = useState(false);
   const [chainToUnbind, setChainToUnbind] = useState<ChainData | null>(null);
-  const [masterChainId, setMasterChainId] = useState<number>(MASTER_CHAIN_ID);
+  const [masterChainId, setMasterChainId] = useState<number | null>(null);
   const { selectedChainId: slaveChainId, selectedChain: slaveChain, selectChain: selectSlaveChain, chainCache } = useChainStore();
 
   const masterChain = chains.find(c => c.id === masterChainId);
   const masterCandidates = chains.filter(c => c.isActive && c.token);
   const selectableChains = chains.filter(c => c.id !== masterChainId);
-  const connectedChain = walletChainId ? mockChains.find(c => c.id === Number(walletChainId)) : undefined;
   const slaveChainIsActive = slaveChain?.isActive ?? false;
   const canBind = !!slaveChain && !slaveChainIsActive;
   const canUnbind = !!slaveChain && slaveChainIsActive && slaveChain.id !== MASTER_CHAIN_ID;
-
-  useEffect(() => {
-    if (!isConnected || !walletChainId || !connectedChain) return;
-    const chainId = Number(walletChainId);
-
-    // Set master chain if connected chain is a master candidate (has token and isActive)
-    if (connectedChain.isActive && connectedChain.token) {
-      setMasterChainId(chainId);
-    }
-
-    // Set slave chain if connected chain is a valid selectable chain (not master, has token)
-    if (selectableChains.some(c => c.id === chainId)) {
-      void selectSlaveChain(chainId);
-    }
-  }, [isConnected, walletChainId, connectedChain, selectSlaveChain, selectableChains]);
 
   useEffect(() => {
     const unsubscribe = eventBus.on('refresh-token-perimeter', () => {
@@ -601,12 +584,13 @@ export function TokenPerimeter() {
             <div className="relative mb-3">
               {isConnected ? (
                 <select
-                  value={masterChainId}
-                  onChange={e => setMasterChainId(Number(e.target.value))}
+                  value={masterChainId || ''}
+                  onChange={e => setMasterChainId(Number(e.target.value) || null)}
                   className="w-full px-3 py-1.5 border border-gray-300 rounded-lg bg-surface focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none appearance-none font-mono text-sm pr-8"
                   disabled={isLoading}
                   aria-label={t('tokenPerimeter.masterToken')}
                 >
+                  <option value="">{t('tokenPerimeter.tokenSelectPlaceholder')}</option>
                   {masterCandidates.map(chain => (
                     <option key={chain.id} value={chain.id}>
                       {t('tokenPerimeter.masterOption', {
@@ -640,8 +624,8 @@ export function TokenPerimeter() {
                 >
                   <option value="">{t('tokenPerimeter.tokenSelectPlaceholder')}</option>
                   {(() => {
-                    const tokens = chainCache[masterChainId]?.FungibleTokens || {};
-                    return Object.entries(tokens).map(([symbol, token]) => (
+                    const tokens = masterChainId ? chainCache[masterChainId]?.FungibleTokens || {} : {};
+                    return Object.entries(tokens).map(([symbol, token]: [string, { name: string; address: string }]) => (
                       <option key={token.address} value={token.address}>
                         {token.name} ({symbol}){token.address ? ` • ${token.address.slice(0, 10)}...` : ''}
                       </option>
