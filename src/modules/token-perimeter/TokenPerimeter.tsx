@@ -381,7 +381,7 @@ function DraggableSupportedChains({
   };
 
   return (
-    <div className="bg-surface rounded-xl border border-gray-200 p-6">
+    <div className="bg-surface rounded-xl border border-gray-200 p-4 lg:p-6">
       <h3 className="font-semibold text-foreground mb-4">
         {t('tokenPerimeter.supportedChains')} ({masked ? 0 : chains.length})
       </h3>
@@ -392,7 +392,7 @@ function DraggableSupportedChains({
       ) : (
         <div
           ref={trackRef}
-          className="overflow-hidden cursor-grab active:cursor-grabbing select-none"
+          className="overflow-x-auto cursor-grab active:cursor-grabbing select-none pb-2 -mx-2 px-2 lg:mx-0 lg:px-0 lg:pb-0"
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={commit}
@@ -400,7 +400,7 @@ function DraggableSupportedChains({
           onPointerCancel={commit}
         >
           <div
-            className="flex flex-nowrap gap-4"
+            className="flex flex-nowrap gap-4 min-w-max"
             style={{ transform: `translateX(${offset}px)` }}
           >
             {loopItems.map((chain, index) => (

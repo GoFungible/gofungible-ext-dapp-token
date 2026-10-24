@@ -34,38 +34,40 @@ export function Topbar() {
     <>
       <header className="sticky top-0 z-30 bg-surface border-b border-border">
         <div className="flex items-center justify-between h-16 px-4 lg:px-8">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 overflow-x-auto lg:overflow-visible">
             <button
               onClick={toggleSidebar}
-              className="lg:hidden p-2 text-foreground hover:text-foreground hover:bg-muted/30 rounded-lg"
+              className="lg:hidden p-2 text-foreground hover:text-foreground hover:bg-muted/30 rounded-lg flex-shrink-0"
               aria-label={sidebarOpen ? t('topbar.closeSidebar') : t('topbar.openSidebar')}
             >
               <Menu className="h-6 w-6" />
             </button>
-            {topbarItems.map(item => {
-              const Icon = item.icon ? iconMap[item.icon] : Settings;
-              const isDebugButton = item.id === 'token-perimeter-refresh';
-              const DebugIcon = isDebugButton ? Bug : Icon;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    if (isDebugButton) {
-                      setDebugOpen(true);
-                      return;
-                    }
-                    if (item.route) navigate(item.route);
-                    if (item.action) eventBus.emit(item.action, undefined);
-                  }}
-                  className="p-2 text-foreground hover:text-foreground hover:bg-muted/30 rounded-lg transition-colors"
-                  aria-label={t(item.label)}
-                  title={t(item.label)}
-                >
-                  <DebugIcon className="h-5 w-5" />
-                </button>
-              );
-            })}
-            <div className="relative ml-4">
+            <div className="flex items-center gap-2 lg:gap-4">
+              {topbarItems.map(item => {
+                const Icon = item.icon ? iconMap[item.icon] : Settings;
+                const isDebugButton = item.id === 'token-perimeter-refresh';
+                const DebugIcon = isDebugButton ? Bug : Icon;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      if (isDebugButton) {
+                        setDebugOpen(true);
+                        return;
+                      }
+                      if (item.route) navigate(item.route);
+                      if (item.action) eventBus.emit(item.action, undefined);
+                    }}
+                    className="p-2 text-foreground hover:text-foreground hover:bg-muted/30 rounded-lg transition-colors flex-shrink-0"
+                    aria-label={t(item.label)}
+                    title={t(item.label)}
+                  >
+                    <DebugIcon className="h-5 w-5" />
+                  </button>
+                );
+              })}
+            </div>
+            <div className="relative ml-2 lg:ml-4 flex-shrink-0">
               <select
                 value={i18nInstance.language}
                 onChange={e => {
