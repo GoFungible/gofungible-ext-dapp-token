@@ -447,7 +447,7 @@ export function TokenPerimeter() {
   const [unbindModalOpen, setUnbindModalOpen] = useState(false);
   const [chainToUnbind, setChainToUnbind] = useState<ChainData | null>(null);
   const [masterChainId, setMasterChainId] = useState<number>(MASTER_CHAIN_ID);
-  const { selectedChainId: slaveChainId, selectedChain: slaveChain, selectChain: selectSlaveChain } = useChainStore();
+  const { selectedChainId: slaveChainId, selectedChain: slaveChain, selectChain: selectSlaveChain, chainCache } = useChainStore();
 
   const masterChain = chains.find(c => c.id === masterChainId);
   const masterCandidates = chains.filter(c => c.isActive && c.token);
@@ -628,6 +628,38 @@ export function TokenPerimeter() {
               )}
               <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted pointer-events-none" />
             </div>
+
+            <div className="relative mb-3">
+              {isConnected && masterChain ? (
+                <select
+                  value={''}
+                  onChange={() => {}}
+                  className="w-full px-3 py-1.5 border border-gray-300 rounded-lg bg-surface focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none appearance-none font-mono text-sm pr-8"
+                  disabled={isLoading}
+                  aria-label={t('tokenPerimeter.masterTokenSelect')}
+                >
+                  <option value="">{t('tokenPerimeter.tokenSelectPlaceholder')}</option>
+                  {(() => {
+                    const tokens = chainCache[masterChainId]?.FungibleTokens || {};
+                    return Object.entries(tokens).map(([symbol, token]) => (
+                      <option key={token.address} value={token.address}>
+                        {token.name} ({symbol}){token.address ? ` • ${token.address.slice(0, 10)}...` : ''}
+                      </option>
+                    ));
+                  })()}
+                </select>
+              ) : (
+                <input
+                  type="text"
+                  className="w-full px-3 py-1.5 border border-gray-300 rounded-lg bg-gray-50 text-muted font-mono text-sm cursor-not-allowed"
+                  disabled
+                  placeholder=""
+                  aria-label={t('tokenPerimeter.masterTokenSelect')}
+                />
+              )}
+              <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted pointer-events-none" />
+            </div>
+
             {masterChain ? (
               <ChainTokenCard
                 chain={masterChain}
@@ -715,6 +747,37 @@ export function TokenPerimeter() {
                   disabled
                   placeholder=""
                   aria-label={t('tokenPerimeter.chain')}
+                />
+              )}
+              <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted pointer-events-none" />
+            </div>
+
+            <div className="relative mb-3">
+              {isConnected && slaveChain ? (
+                <select
+                  value={''}
+                  onChange={() => {}}
+                  className="w-full px-3 py-1.5 border border-gray-300 rounded-lg bg-surface focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none appearance-none font-mono text-sm pr-8"
+                  disabled={isLoading}
+                  aria-label={t('tokenPerimeter.tokenSelect')}
+                >
+                  <option value="">{t('tokenPerimeter.tokenSelectPlaceholder')}</option>
+                  {(() => {
+                    const tokens = chainCache[slaveChain.id]?.FungibleTokens || {};
+                    return Object.entries(tokens).map(([symbol, token]) => (
+                      <option key={token.address} value={token.address}>
+                        {token.name} ({symbol}){token.address ? ` • ${token.address.slice(0, 10)}...` : ''}
+                      </option>
+                    ));
+                  })()}
+                </select>
+              ) : (
+                <input
+                  type="text"
+                  className="w-full px-3 py-1.5 border border-gray-300 rounded-lg bg-gray-50 text-muted font-mono text-sm cursor-not-allowed"
+                  disabled
+                  placeholder=""
+                  aria-label={t('tokenPerimeter.tokenSelect')}
                 />
               )}
               <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted pointer-events-none" />

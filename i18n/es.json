@@ -255,7 +255,9 @@
     "errorUnbindFailed": "Error al desvincular la cadena. Inténtelo de nuevo.",
     "supportedChains": "Cadenas Soportadas",
     "noSupportedChains": "No hay cadenas vinculadas actualmente al perímetro del token multichain",
-    "connectWallet": "Conecte la cartera para ver las cadenas soportadas"
+    "connectWallet": "Conecte la cartera para ver las cadenas soportadas",
+    "tokenSelect": "Token",
+    "tokenSelectPlaceholder": "Seleccionar token..."
   },
   "tokenEcosystem": {
     "title": "Ecosistema de Token",

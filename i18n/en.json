@@ -255,7 +255,9 @@
     "errorUnbindFailed": "Failed to unbind chain. Please try again.",
     "supportedChains": "Supported Chains",
     "noSupportedChains": "No chains are currently bound to the multichain token perimeter",
-    "connectWallet": "Connect wallet to view supported chains"
+    "connectWallet": "Connect wallet to view supported chains",
+    "tokenSelect": "Token",
+    "tokenSelectPlaceholder": "Select token..."
   },
   "tokenEcosystem": {
     "title": "Token Ecosystem",
