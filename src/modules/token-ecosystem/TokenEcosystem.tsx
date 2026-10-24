@@ -24,6 +24,8 @@ import {
 import { eventBus } from '../../core/EventBus';
 import mockChains from '@data/chains';
 
+const initialChains = mockChains.map(c => ({ ...c, token: c.token ? { ...c.token } : undefined }));
+
 function CopyAddress({ address }: { address: string }) {
   const [copied, setCopied] = useState(false);
   const { t } = useTranslation();
@@ -172,7 +174,7 @@ export function TokenEcosystem() {
   const { t } = useTranslation();
   const { isConnected } = useAccount();
   const walletChainId = useChainId();
-  const [chains, setChains] = useState<ChainData[]>([]);
+  const [chains, setChains] = useState<ChainData[]>(initialChains);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
@@ -216,14 +218,6 @@ export function TokenEcosystem() {
   ];
 
   useEffect(() => {
-    if (!isConnected) {
-      setChains([]);
-      return;
-    }
-    setChains(mockChains.map(c => ({ ...c, token: c.token ? { ...c.token } : undefined })));
-  }, [isConnected]);
-
-  useEffect(() => {
     if (!isConnected || !walletChainId) return;
     const chainId = Number(walletChainId);
 
@@ -240,7 +234,7 @@ export function TokenEcosystem() {
     const chainConfig = mockChains.find(c => c.id === masterChainId);
     if (chainConfig && chainConfig.isActive && chainConfig.token && masterChainId !== lastFetchedChainRef.current) {
       lastFetchedChainRef.current = masterChainId;
-      fetchTokens();
+      void fetchTokens();
     }
   }, [isConnected, masterChainId, fetchTokens]);
 
@@ -291,7 +285,7 @@ export function TokenEcosystem() {
         setCreateTokenIsMaster(false);
         setSelectedToken('');
         // Refresh tokens list after creation
-        fetchTokens();
+        void fetchTokens();
       } else {
         setError(result.error || t('tokenEcosystem.errorCreateFailed'));
       }
@@ -344,11 +338,11 @@ export function TokenEcosystem() {
               {isConnected ? (
                 <select
                   value={masterChainId || ''}
-                  onChange={e => {
-                    const newChainId = Number(e.target.value);
-                    setMasterChainId(newChainId || null);
-                    fetchTokens();
-                  }}
+onChange={e => {
+                     const newChainId = Number(e.target.value);
+                     setMasterChainId(newChainId || null);
+                     void fetchTokens();
+                   }}
                   className="w-full px-3 py-1.5 border border-gray-300 rounded-lg bg-surface focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none appearance-none font-mono text-sm pr-8"
                   disabled={isLoading}
                   aria-label={t('tokenEcosystem.masterToken')}
@@ -459,7 +453,7 @@ export function TokenEcosystem() {
                       {t('common.cancel')}
                     </button>
                     <button
-                      onClick={handleCreateToken}
+                      onClick={() => void handleCreateToken()}
                       disabled={isLoading || !createTokenName.trim()}
                       className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
                     >
@@ -475,7 +469,7 @@ export function TokenEcosystem() {
                   </div>
                 </div>
               </div>
-            ) : masterChain && (
+            ) : masterChain ? (
               <ChainTokenCard
                 chain={masterChain}
                 masked={!isConnected}
@@ -487,6 +481,17 @@ export function TokenEcosystem() {
                   totalSupply: '0',
                   holders: 0
                 } : undefined}
+                statusBadge={
+                  <span className="flex items-center gap-1 text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
+                    <CheckCircle className="h-3 w-3" />
+                    {t('tokenEcosystem.masterBadge')}
+                  </span>
+                }
+              />
+            ) : (
+              <ChainTokenCard
+                chain={chains[0]}
+                masked={true}
                 statusBadge={
                   <span className="flex items-center gap-1 text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
                     <CheckCircle className="h-3 w-3" />
@@ -520,40 +525,50 @@ export function TokenEcosystem() {
             <p className="text-xs font-medium text-muted uppercase tracking-wide mb-2">
               {t('tokenEcosystem.chain')}
             </p>
-            <div className="relative mb-3">
-              {isConnected ? (
-                <select
-                  value={selectedExtension || ''}
-                  onChange={e => setSelectedExtension(e.target.value)}
-                  className="w-full px-3 py-1.5 border border-gray-300 rounded-lg bg-surface focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none appearance-none font-mono text-sm pr-8"
-                  disabled={isLoading}
-                  aria-label={t('tokenEcosystem.extensionSelect')}
-                >
-                  <option value="">{t('tokenEcosystem.extensionSelectPlaceholder')}</option>
-                  {extensions.map(ext => (
-                    <option key={ext.id} value={ext.id}>
-                      {ext.name}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <input
-                  type="text"
-                  className="w-full px-3 py-1.5 border border-gray-300 rounded-lg bg-gray-50 text-muted font-mono text-sm cursor-not-allowed"
-                  disabled
-                  placeholder=""
-                  aria-label={t('tokenEcosystem.extensionSelect')}
-                />
-              )}
-              <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted pointer-events-none" />
-            </div>
 
-            {selectedExtension && (
-              <div className="bg-surface rounded-lg border border-gray-200 p-4 mt-4">
-                <h4 className="font-medium text-foreground mb-2">{t('tokenEcosystem.extensionDetails')}</h4>
-                <p className="text-sm text-muted">{t('tokenEcosystem.extensionDescription')}</p>
+              <div className="relative mb-3">
+                {isConnected ? (
+                  <select
+                    value={selectedExtension || ''}
+                    onChange={e => setSelectedExtension(e.target.value)}
+                    className="w-full px-3 py-1.5 border border-gray-300 rounded-lg bg-surface focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none appearance-none font-mono text-sm pr-8"
+                    disabled={isLoading}
+                    aria-label={t('tokenEcosystem.extensionSelect')}
+                  >
+                    <option value="">{t('tokenEcosystem.extensionSelectPlaceholder')}</option>
+                    {extensions.map(ext => (
+                      <option key={ext.id} value={ext.id}>
+                        {ext.name}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <input
+                    type="text"
+                    className="w-full px-3 py-1.5 border border-gray-300 rounded-lg bg-gray-50 text-muted font-mono text-sm cursor-not-allowed"
+                    disabled
+                    placeholder=""
+                    aria-label={t('tokenEcosystem.extensionSelect')}
+                  />
+                )}
+                <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted pointer-events-none" />
               </div>
-            )}
+
+							<div className="relative bg-gray-100/80 rounded-xl border border-gray-200 p-6 min-h-[380px]">
+								{(!isConnected) && (
+									<div className="absolute inset-x-0 bottom-0 top-[80px] bg-gray-100/80 backdrop-blur-sm rounded-b-xl flex items-center justify-center z-10 pointer-events-none">
+										<p className="text-sm text-muted">{t('tokenEcosystem.connectWallet')}</p>
+									</div>
+								)}
+								<div className="relative z-10 space-y-4">
+									{selectedExtension && (
+										<div className="bg-surface rounded-lg border border-gray-200 p-4 mt-4">
+											<h4 className="font-medium text-foreground mb-2">{t('tokenEcosystem.extensionDetails')}</h4>
+											<p className="text-sm text-muted">{t('tokenEcosystem.extensionDescription')}</p>
+										</div>
+									)}
+								</div>
+							</div>
           </div>
         </div>
       </div>
