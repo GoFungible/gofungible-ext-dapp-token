@@ -13,6 +13,7 @@ import { LoaderModule } from './modules/loader/LoaderModule';
 import { Dashboard } from './modules/dashboard/Dashboard';
 import { Environment } from './modules/environment/Environment';
 import { TokenNegotiation } from './modules/token-negotiation/TokenNegotiation';
+import { DebugModule } from './modules/debug/DebugModule';
 
 
 import { ThemeManager } from './modules/theme-manager/ThemeManager';
@@ -28,6 +29,7 @@ const componentRegistry: Record<string, React.ComponentType> = {
   'Dashboard': Dashboard,
   'Environment': Environment,
   'TokenNegotiation': TokenNegotiation,
+  'DebugModule': DebugModule,
   
   
   'ThemeManager': ThemeManager,
@@ -49,6 +51,7 @@ function App() {
     await loadEnvironmentModule();
     await loadTokenNegotiationModule();
     await loadTokenPerimeterModule();
+    await loadDebugModule();
     await loadLoaderModule();
     await loadDefaultThemeModule();
     await loadDarkThemeModule();
@@ -101,6 +104,17 @@ function App() {
       }
     } catch (error) {
       console.error('Failed to load extensions module:', error);
+    }
+  };
+
+  const loadDebugModule = async () => {
+    try {
+      const mod = await import('./modules/debug/index');
+      if (mod.default && typeof mod.default.initialize === 'function') {
+        await mod.default.initialize(coreFramework);
+      }
+    } catch (error) {
+      console.error('Failed to load debug module:', error);
     }
   };
 

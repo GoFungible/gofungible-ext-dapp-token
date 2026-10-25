@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLayout } from './LayoutProvider';
 import { eventBus } from '../core/EventBus';
 import { Menu, Settings, Bell, User, ChevronDown, Network, RefreshCw, Palette, Bug } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { DebugStatePopup } from './DebugStatePopup';
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   'menu': Menu,
@@ -23,7 +22,6 @@ export function Topbar() {
   const { sidebarOpen, toggleSidebar, topbarItems } = useLayout();
   const { t, i18n: i18nInstance } = useTranslation();
   const navigate = useNavigate();
-  const [debugOpen, setDebugOpen] = useState(false);
 
   const languages = [
     { code: 'en', label: 'English' },
@@ -45,16 +43,10 @@ export function Topbar() {
             <div className="flex items-center gap-2 lg:gap-4">
               {topbarItems.map(item => {
                 const Icon = item.icon ? iconMap[item.icon] : Settings;
-                const isDebugButton = item.id === 'token-perimeter-refresh';
-                const DebugIcon = isDebugButton ? Bug : Icon;
                 return (
                   <button
                     key={item.id}
                     onClick={() => {
-                      if (isDebugButton) {
-                        setDebugOpen(true);
-                        return;
-                      }
                       if (item.route) navigate(item.route);
                       if (item.action) eventBus.emit(item.action, undefined);
                     }}
@@ -62,7 +54,7 @@ export function Topbar() {
                     aria-label={t(item.label)}
                     title={t(item.label)}
                   >
-                    <DebugIcon className="h-5 w-5" />
+                    <Icon className="h-5 w-5" />
                   </button>
                 );
               })}
@@ -93,11 +85,6 @@ export function Topbar() {
           </div>
         </div>
       </header>
-      <DebugStatePopup
-        isOpen={debugOpen}
-        onClose={() => setDebugOpen(false)}
-        onRefresh={() => eventBus.emit('refresh-token-perimeter', undefined)}
-      />
     </>
   );
 }

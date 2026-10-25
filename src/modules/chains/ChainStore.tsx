@@ -232,6 +232,9 @@ const loadersReady = (async () => {
 
 const STORAGE_KEY = 'chain-cache-v1';
 
+let chainCacheRef: Record<number, ChainJson> = {};
+let selectedChainIdRef: number = 0;
+
 function loadCacheFromStorage(): Record<number, ChainJson> {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -251,6 +254,14 @@ export function ChainStoreProvider({ children }: { children: ReactNode }) {
   const [chainCache, setChainCache] = useState<Record<number, ChainJson>>(() => loadCacheFromStorage());
 
   const selectedChain = selectedChainId > 0 ? (chainCache[selectedChainId] ?? null) : null;
+
+  // Keep refs in sync with state for stateRegistry
+  useEffect(() => {
+    chainCacheRef = chainCache;
+  }, [chainCache]);
+  useEffect(() => {
+    selectedChainIdRef = selectedChainId;
+  }, [selectedChainId]);
 
   // Persist chainCache to localStorage
   useEffect(() => {
@@ -491,4 +502,13 @@ export function useChainStore() {
     throw new Error('useChainStore must be used within a ChainStoreProvider');
   }
   return context;
+}
+
+// State registry getters
+export function getChainCache(): Record<number, ChainJson> {
+  return chainCacheRef;
+}
+
+export function getSelectedChainId(): number {
+  return selectedChainIdRef;
 }

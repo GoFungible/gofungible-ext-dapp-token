@@ -113,6 +113,12 @@ export interface ThemeRegistry {
   apply(themeId: string): void;
 }
 
+export interface StateRegistry {
+  register(moduleId: string, getState: () => unknown): void;
+  unregister(moduleId: string): void;
+  getAllState(): Record<string, unknown>;
+}
+
 export interface CoreFramework {
   registerModule(module: ModuleInstance): void;
   unregisterModule(moduleId: string): void;
@@ -121,6 +127,7 @@ export interface CoreFramework {
   eventBus: EventBus;
   layout: LayoutManager;
   theme: ThemeRegistry;
+  stateRegistry: StateRegistry;
 }
 
 export interface EventBus {

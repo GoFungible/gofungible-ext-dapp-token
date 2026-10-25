@@ -1,0 +1,14 @@
+{
+  "id": "debug",
+  "name": "Debug",
+  "version": "1.0.0",
+  "description": "Debug state inspector for all modules",
+  "author": "Gofungible Team",
+  "entryPoint": "debug",
+  "routes": [
+    { "path": "/debug", "component": "DebugModule", "exact": true }
+  ],
+  "topbarItems": [
+    { "id": "debug-toggle", "label": "topbar.debug", "icon": "bug", "action": "debug:toggle", "order": 99 }
+  ]
+}

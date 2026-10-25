@@ -1,13 +1,39 @@
-import { CoreFramework, ModuleInstance, ModuleManifest, ModuleRoute, TopbarItem, SidebarItem } from '../types';
+import { CoreFramework, ModuleInstance, ModuleManifest, ModuleRoute, TopbarItem, SidebarItem, StateRegistry } from '../types';
 import { moduleRegistry } from './ModuleRegistry';
 import { eventBus } from './EventBus';
 import { layoutManager } from './LayoutManager';
 import { themeRegistry } from './ThemeRegistry';
 
+class StateRegistryImpl implements StateRegistry {
+  private stateGetters: Map<string, () => unknown> = new Map();
+
+  register(moduleId: string, getState: () => unknown): void {
+    this.stateGetters.set(moduleId, getState);
+  }
+
+  unregister(moduleId: string): void {
+    this.stateGetters.delete(moduleId);
+  }
+
+  getAllState(): Record<string, unknown> {
+    const result: Record<string, unknown> = {};
+    for (const [moduleId, getState] of this.stateGetters.entries()) {
+      try {
+        result[moduleId] = getState();
+      } catch (error) {
+        console.error(`Error getting state for module ${moduleId}:`, error);
+        result[moduleId] = { error: 'Failed to get state' };
+      }
+    }
+    return result;
+  }
+}
+
 class CoreFrameworkImpl implements CoreFramework {
   eventBus = eventBus;
   layout = layoutManager;
   theme = themeRegistry;
+  stateRegistry = new StateRegistryImpl();
 
   registerModule(module: ModuleInstance): void {
     moduleRegistry.register(module);

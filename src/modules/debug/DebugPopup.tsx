@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { XCircle, Copy, CheckCircle, RefreshCw, RotateCcw } from 'lucide-react';
-import { useChainStore } from '../modules/chains/ChainStore';
-import { coreFramework } from '../core/CoreFramework';
-import { eventBus } from '../core/EventBus';
+import { XCircle, Copy, RefreshCw, RotateCcw } from 'lucide-react';
+import { coreFramework } from '../../core/CoreFramework';
+import { eventBus } from '../../core/EventBus';
+import { DebugEvents } from './DebugEvents';
+import { StateRegistry } from '../../types';
 
 interface ModuleSnapshot {
   id: string;
@@ -11,29 +12,27 @@ interface ModuleSnapshot {
   state: unknown;
 }
 
-interface DebugStatePopupProps {
+interface DebugPopupProps {
   isOpen: boolean;
+  stateRegistry: StateRegistry;
   onClose: () => void;
   onRefresh?: () => void;
 }
 
-export function DebugStatePopup({ isOpen, onClose, onRefresh }: DebugStatePopupProps) {
+export function DebugPopup({ isOpen, stateRegistry, onClose, onRefresh }: DebugPopupProps) {
   const { t } = useTranslation();
-  const { selectedChainId, selectedChain, chainCache, resetChainCache } = useChainStore();
   const [snapshots, setSnapshots] = useState<ModuleSnapshot[]>([]);
-  const [copied, setCopied] = useState(false);
   const [collecting, setCollecting] = useState(false);
 
-  const collect = () => {
+  const collect = useCallback(() => {
     setCollecting(true);
     setSnapshots([]);
     const correlation = `debug-${Date.now()}-${Math.random().toString(36).slice(2)}`;
-    eventBus.emit('debug:collect', { correlation });
-    // Fallback timeout: stop the "collecting" indicator even if no module responds
+    eventBus.emit(DebugEvents.COLLECT, { correlation });
     window.setTimeout(() => {
       setCollecting(false);
     }, 600);
-  };
+  }, []);
 
   useEffect(() => {
     const handler = (data: unknown) => {
@@ -44,15 +43,17 @@ export function DebugStatePopup({ isOpen, onClose, onRefresh }: DebugStatePopupP
         { id: d.id || d.name || 'module', name: d.name || d.id || 'module', state: d.state ?? null },
       ]);
     };
-    eventBus.on('debug:state', handler);
-    return () => eventBus.off('debug:state', handler);
+    eventBus.on(DebugEvents.STATE, handler);
+    return () => eventBus.off(DebugEvents.STATE, handler);
   }, []);
 
   useEffect(() => {
     if (isOpen) {
       collect();
     }
-  }, [isOpen]);
+  }, [isOpen, collect]);
+
+  const allState = useMemo(() => stateRegistry.getAllState(), [stateRegistry]);
 
   const stateJson = useMemo(() => {
     const modules = coreFramework.getAllModules().map(m => ({
@@ -60,28 +61,17 @@ export function DebugStatePopup({ isOpen, onClose, onRefresh }: DebugStatePopupP
       name: m.manifest.name,
       version: m.manifest.version,
     }));
-    const themes = coreFramework.theme.getAll().map(th => ({
-      id: th.id,
-      name: th.name,
-      mode: th.mode,
-      active: th.id === coreFramework.theme.getActive().id,
-    }));
+    const themes = coreFramework.theme.getAll();
     const activeTheme = coreFramework.theme.getActive();
-    const chains = Object.values(chainCache);
     return {
       capturedAt: new Date().toISOString(),
-      chainStore: {
-        selectedChainId,
-        selectedChain: selectedChain ?? null,
-        chainCount: Object.keys(chainCache).length,
-      },
-      chains,
+      allModuleState: allState,
       themes,
-      activeTheme: { id: activeTheme.id, name: activeTheme.name, mode: activeTheme.mode },
+      activeTheme: activeTheme ? { id: activeTheme.id, name: activeTheme.name, mode: activeTheme.mode } : null,
       modules,
       moduleSnapshots: snapshots,
     };
-  }, [selectedChainId, selectedChain, chainCache, snapshots]);
+  }, [allState, snapshots]);
 
   if (!isOpen) return null;
 
@@ -90,8 +80,6 @@ export function DebugStatePopup({ isOpen, onClose, onRefresh }: DebugStatePopupP
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(pretty);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1500);
     } catch {
       // ignore
     }
@@ -100,7 +88,12 @@ export function DebugStatePopup({ isOpen, onClose, onRefresh }: DebugStatePopupP
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-      onClick={onClose}
+      style={{ pointerEvents: 'auto' }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
     >
       <div
         className="bg-surface rounded-xl border border-border shadow-2xl w-full max-w-4xl max-h-[85vh] flex flex-col"
@@ -123,7 +116,10 @@ export function DebugStatePopup({ isOpen, onClose, onRefresh }: DebugStatePopupP
               <RefreshCw className="h-4 w-4" />
             </button>
             <button
-              onClick={() => { resetChainCache(); collect(); }}
+              onClick={() => { 
+                localStorage.removeItem('chain-cache-v1'); 
+                collect(); 
+              }}
               className="p-2 text-muted hover:text-foreground hover:bg-muted/30 rounded-lg transition-colors"
               aria-label={t('debugState.resetCache')}
               title={t('debugState.resetCache')}
@@ -131,12 +127,12 @@ export function DebugStatePopup({ isOpen, onClose, onRefresh }: DebugStatePopupP
               <RotateCcw className="h-4 w-4" />
             </button>
             <button
-              onClick={() => { void handleCopy(); }}
+              onClick={handleCopy}
               className="p-2 text-muted hover:text-foreground hover:bg-muted/30 rounded-lg transition-colors"
               aria-label={t('debugState.copy')}
               title={t('debugState.copy')}
             >
-              {copied ? <CheckCircle className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
+              <Copy className="h-4 w-4" />
             </button>
             <button
               onClick={onClose}
