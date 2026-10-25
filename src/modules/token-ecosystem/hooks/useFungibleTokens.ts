@@ -35,7 +35,7 @@ export function useFungibleTokens(masterChainId: number | null): UseFungibleToke
     const chainConfig = mockChains.find(c => c.id === masterChainId);
     if (!chainConfig) {
       setError('Chain configuration not found');
-			addToast({
+      addToast({
         type: 'error',
         title: 'Chain configuration not found',
         message: 'Chain configuration not found on this chain',
@@ -48,7 +48,7 @@ export function useFungibleTokens(masterChainId: number | null): UseFungibleToke
     const chainState = chainCache[masterChainId];
     const fungibleEnvironmentAddress = chainState?.FungibleEnvironment;
 
-if (!fungibleEnvironmentAddress) {
+    if (!fungibleEnvironmentAddress) {
       setError('Fungible Environment not deployed on this chain');
       addToast({
         type: 'error',
@@ -63,7 +63,7 @@ if (!fungibleEnvironmentAddress) {
       addToast({
         type: 'error',
         title: 'WalletClient is not defined',
-        message: 'WalletClient is not defined',
+        message: 'WalletClient is not defined. Please connect your wallet.',
         chainId: masterChainId,
         functionName: 'getFungibles',
       });
@@ -94,9 +94,6 @@ if (!fungibleEnvironmentAddress) {
         functionName: 'getFungibles',
         account: walletClient.account,
       });
-			console.log(symbols);
-			console.log(fungibleEnvironmentAddress);
-			console.log(fungibleEnvironmentAddress);
 
       // For each symbol, get the token address
       const tokensInfo: FungibleTokenInfo[] = [];
@@ -110,7 +107,7 @@ if (!fungibleEnvironmentAddress) {
             account: walletClient.account,
           });
           tokensInfo.push({
-            name: symbol, // Use symbol as name for now
+            name: symbol,
             symbol,
             address: address as string,
           });

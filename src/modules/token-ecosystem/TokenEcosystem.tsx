@@ -191,7 +191,15 @@ export function TokenEcosystem() {
   const { tokens: fungibleTokens, isLoading: isFetchingTokens, fetchTokens } = useFungibleTokens(masterChainId);
   const { chainCache } = useChainStore();
 
+  // Auto-fetch tokens when master chain is selected AND wallet is connected
+  // Uses callback pattern: wait for walletClient readiness via useEffect deps
   const lastFetchedChainRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (masterChainId && walletClient && masterChainId !== lastFetchedChainRef.current) {
+      lastFetchedChainRef.current = masterChainId;
+      fetchTokens();
+    }
+  }, [masterChainId, walletClient]);
 
   const masterChain = chains.find(c => c.id === masterChainId);
   const masterCandidates = chains.filter(c => c.isActive && c.token);
@@ -228,15 +236,6 @@ export function TokenEcosystem() {
     }
   }, [isConnected, walletChainId]);
 
-  // Fetch tokens when masterChainId changes to a valid master candidate
-  useEffect(() => {
-    if (!isConnected || !masterChainId) return;
-    const chainConfig = mockChains.find(c => c.id === masterChainId);
-    if (chainConfig && chainConfig.isActive && chainConfig.token && masterChainId !== lastFetchedChainRef.current) {
-      lastFetchedChainRef.current = masterChainId;
-      void fetchTokens();
-    }
-  }, [isConnected, masterChainId, fetchTokens]);
 
   useEffect(() => {
     const unsubscribe = eventBus.on('refresh-token-ecosystem', () => {
@@ -339,10 +338,9 @@ export function TokenEcosystem() {
                 <select
                   value={masterChainId || ''}
 onChange={e => {
-                     const newChainId = Number(e.target.value);
-                     setMasterChainId(newChainId || null);
-                     void fetchTokens();
-                   }}
+                      const newChainId = Number(e.target.value);
+                      setMasterChainId(newChainId || null);
+                    }}
                   className="w-full px-3 py-1.5 border border-gray-300 rounded-lg bg-surface focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none appearance-none font-mono text-sm pr-8"
                   disabled={isLoading}
                   aria-label={t('tokenEcosystem.masterToken')}
