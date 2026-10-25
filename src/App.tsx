@@ -5,6 +5,7 @@ import { coreFramework } from './core/CoreFramework';
 import { ChainStoreProvider } from './modules/chains/ChainStore';
 import { FungibleTokensSync } from './modules/chains/FungibleTokensSync';
 import { LayoutProvider } from './components/LayoutProvider';
+import { CoreFrameworkProvider } from './core/CoreFrameworkContext';
 import { TokenPerimeter } from './modules/token-perimeter/TokenPerimeter';
 import { TokenEcosystem } from './modules/token-ecosystem/TokenEcosystem';
 import { Extensions } from './modules/extensions/Extensions';
@@ -251,7 +252,8 @@ function App() {
       <ToastProvider>
         <ChainStoreProvider>
           <FungibleTokensSync />
-          <LayoutProvider>
+          <CoreFrameworkProvider>
+            <LayoutProvider>
           {!modulesLoaded ? (
             <div className="min-h-screen flex items-center justify-center">
               <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
@@ -262,8 +264,9 @@ function App() {
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           )}
-          </LayoutProvider>
-        </ChainStoreProvider>
+</LayoutProvider>
+            </CoreFrameworkProvider>
+          </ChainStoreProvider>
       </ToastProvider>
     </BrowserRouter>
   );
