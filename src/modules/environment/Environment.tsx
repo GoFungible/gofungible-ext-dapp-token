@@ -52,13 +52,20 @@ function AddressRow({
   deployed,
   showExplorer,
   explorer,
+  rpcUrl,
 }: {
   address: string | null;
   deployed: boolean;
   showExplorer?: boolean;
   explorer?: string;
+  rpcUrl?: string;
 }) {
   const { t } = useTranslation();
+  
+  const explorerUrl = address && showExplorer && explorer && rpcUrl
+    ? `${explorer}${btoa(rpcUrl)}/address/${address}`
+    : undefined;
+  
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-2 min-w-0">
@@ -71,9 +78,9 @@ function AddressRow({
           <span className="text-sm text-muted font-mono">—</span>
         )}
       </div>
-      {address && showExplorer && explorer && (
+      {explorerUrl && (
         <a
-          href={`${explorer}/address/${address}`}
+          href={explorerUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="text-muted hover:text-muted"
@@ -160,12 +167,14 @@ function TokenDeployment({
   isLoading,
   explorer,
   chainAdded,
+  rpcUrl,
 }: {
   state: EnvironmentChainState;
   onDeploy: () => void;
   isLoading: boolean;
   explorer: string;
   chainAdded: boolean;
+  rpcUrl?: string;
 }) {
   const { t } = useTranslation();
 
@@ -193,6 +202,7 @@ function TokenDeployment({
                     deployed={true}
                     showExplorer={!!explorer}
                     explorer={explorer}
+                    rpcUrl={rpcUrl}
                   />
                 </div>
               ))
@@ -238,6 +248,7 @@ function FungibleFactoryDeployment({
   factories,
   selectedFactory,
   setSelectedFactory,
+  rpcUrl,
 }: {
   state: EnvironmentChainState;
   create2Salt: string;
@@ -250,6 +261,7 @@ function FungibleFactoryDeployment({
   factories: { label: string; address: string; desc?: string }[];
   selectedFactory: string;
   setSelectedFactory: (value: string) => void;
+  rpcUrl?: string;
 }) {
   const { t } = useTranslation();
   return (
@@ -305,6 +317,7 @@ function FungibleFactoryDeployment({
           deployed={state.fungibleFactory.deployed}
           showExplorer={!!explorer}
           explorer={explorer}
+          rpcUrl={rpcUrl}
         />
         <div className="flex items-center gap-2 mt-2">
           <div className={state.fungibleFactory.assigned ? 'text-green-600' : 'text-muted'}>
@@ -374,6 +387,7 @@ function FungibleEnvironmentDeployment({
   factories,
   selectedFactory,
   setSelectedFactory,
+  rpcUrl,
 }: {
   state: EnvironmentChainState;
   create2Salt: string;
@@ -384,6 +398,7 @@ function FungibleEnvironmentDeployment({
   factories: { label: string; address: string; desc?: string }[];
   selectedFactory: string;
   setSelectedFactory: (value: string) => void;
+  rpcUrl?: string;
 }) {
   const { t } = useTranslation();
   return (
@@ -444,6 +459,7 @@ function FungibleEnvironmentDeployment({
           deployed={state.fungibleEnvironment.deployed}
           showExplorer={!!explorer}
           explorer={explorer}
+          rpcUrl={rpcUrl}
         />
       </div>
 
@@ -758,7 +774,7 @@ export function Environment() {
   });
   const environmentInitializedRef = useRef(false);
 
-  const { deployCreate2Factory, isDeploying: isDeployingCreate2 } = useCreate2Deploy();
+  const { deployCreate2Factory } = useCreate2Deploy();
   const { deployFungibleFactory, isDeploying: isDeployingFactory } = useDeployFungibleFactory();
   const { deployFungibleEnvironment, isDeploying: isDeployingEnvironment } = useDeployFungibleEnvironment();
   const { setFungibleFactory, isAssigning: isAssigningFactory } = useSetFungibleFactory();
@@ -863,7 +879,7 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
 
   const selectedState = chainStates.find(c => c.chainId === selectedChainId);
   const isChainAdded = selectedChain ? connectedChains.some(c => c.id === selectedChainId) : false;
-  const explorer = selectedChain?.blockExplorer || '';
+  const explorer = selectedChain?.blockExplorer || selectedChain?.rpcUrl || '';
 
   const availableFactories: { label: string; address: string; desc?: string }[] = [];
   if (selectedChain?.create2Factory) {
@@ -1280,13 +1296,14 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
           )}
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
-            <TokenDeployment
-              state={selectedState}
-              onDeploy={() => { void handleDeployToken(); }}
-              isLoading={activeStep === 'token' || isDeployingCreate2}
-              explorer={explorer}
-              chainAdded={isChainAdded}
-            />
+					<TokenDeployment
+            state={selectedState}
+            onDeploy={() => { void handleDeployToken(); }}
+            isLoading={activeStep === 'token'}
+            explorer={explorer}
+            chainAdded={isChainAdded}
+            rpcUrl={selectedChain?.rpcUrl}
+          />
 
 <FungibleEnvironmentDeployment
               state={selectedState}
@@ -1298,6 +1315,7 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
               factories={availableFactories}
               selectedFactory={form.selectedCreate2Factory}
               setSelectedFactory={v => setForm({ ...form, selectedCreate2Factory: v })}
+              rpcUrl={selectedChain?.rpcUrl}
             />
 
             <FungibleFactoryDeployment
@@ -1312,6 +1330,7 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
               factories={availableFactories}
               selectedFactory={form.selectedCreate2Factory}
               setSelectedFactory={v => setForm({ ...form, selectedCreate2Factory: v })}
+              rpcUrl={selectedChain?.rpcUrl}
             />
           </div>
 
