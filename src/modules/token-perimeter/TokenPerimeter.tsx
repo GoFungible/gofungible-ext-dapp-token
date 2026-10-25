@@ -57,13 +57,15 @@ function ChainTokenCard({
   chain,
   statusBadge,
   masked,
+  tokenOverride,
 }: {
   chain: ChainData;
   statusBadge: React.ReactNode;
   masked: boolean;
+  tokenOverride?: { name: string; symbol: string; address: string; decimals: number; totalSupply: string; holders: number; priceUsd?: number; priceChange24h?: number };
 }) {
   const { t } = useTranslation();
-  const token = chain.token;
+  const token = tokenOverride || chain.token;
   const priceChange = token?.priceChange24h || 0;
   const isPositive = priceChange >= 0;
 
@@ -392,7 +394,7 @@ function DraggableSupportedChains({
       ) : (
         <div
           ref={trackRef}
-          className="overflow-x-auto cursor-grab active:cursor-grabbing select-none pb-2 -mx-2 px-2 lg:mx-0 lg:px-0 lg:pb-0"
+          className="overflow-x-auto cursor-grab active:cursor-grabbing select-none pb-2 -mx-2 px-2 lg:mx-0 lg:px-0 lg:pb-0 scrollbar-hide"
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={commit}
@@ -446,6 +448,7 @@ export function TokenPerimeter() {
   const [unbindModalOpen, setUnbindModalOpen] = useState(false);
   const [chainToUnbind, setChainToUnbind] = useState<ChainData | null>(null);
   const [masterChainId, setMasterChainId] = useState<number | null>(null);
+  const [selectedMasterToken, setSelectedMasterToken] = useState<string>('');
   const { selectedChainId: slaveChainId, selectedChain: slaveChain, selectChain: selectSlaveChain, chainCache } = useChainStore();
 
   const masterChain = chains.find(c => c.id === masterChainId);
@@ -454,6 +457,18 @@ export function TokenPerimeter() {
   const slaveChainIsActive = slaveChain?.isActive ?? false;
   const canBind = !!slaveChain && !slaveChainIsActive;
   const canUnbind = !!slaveChain && slaveChainIsActive && slaveChain.id !== MASTER_CHAIN_ID;
+
+  // Get selected master token data from cache
+  const selectedMasterTokenData = selectedMasterToken && masterChainId
+    ? (() => {
+        const tokens = chainCache[masterChainId]?.FungibleTokens || {};
+        const key = Object.keys(tokens).find(key =>
+          tokens[key]?.address?.toLowerCase() === selectedMasterToken.toLowerCase() ||
+          key.toLowerCase() === selectedMasterToken.toLowerCase()
+        );
+        return key ? { ...tokens[key], symbol: key } : null;
+      })()
+    : null;
 
   useEffect(() => {
     const unsubscribe = eventBus.on('refresh-token-perimeter', () => {
@@ -616,8 +631,8 @@ export function TokenPerimeter() {
             <div className="relative mb-3">
               {isConnected && masterChain ? (
                 <select
-                  value={''}
-                  onChange={() => {}}
+                  value={selectedMasterToken}
+                  onChange={e => setSelectedMasterToken(e.target.value)}
                   className="w-full px-3 py-1.5 border border-gray-300 rounded-lg bg-surface focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none appearance-none font-mono text-sm pr-8"
                   disabled={isLoading}
                   aria-label={t('tokenPerimeter.masterTokenSelect')}
@@ -648,6 +663,14 @@ export function TokenPerimeter() {
               <ChainTokenCard
                 chain={masterChain}
                 masked={!isConnected}
+                tokenOverride={selectedMasterTokenData ? {
+                  name: selectedMasterTokenData.name,
+                  symbol: selectedMasterTokenData.symbol || selectedMasterTokenData.name,
+                  address: selectedMasterTokenData.address,
+                  decimals: 18,
+                  totalSupply: '0',
+                  holders: 0
+                } : undefined}
                 statusBadge={
                   <span className="flex items-center gap-1 text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
                     <CheckCircle className="h-3 w-3" />
