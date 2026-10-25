@@ -4,13 +4,8 @@ import { useAccount, useChainId } from 'wagmi';
 import {
   Network,
   CheckCircle,
-  XCircle,
   ExternalLink,
   Copy,
-  Plus,
-  Trash2,
-  Loader2,
-  X,
   AlertCircle,
   ChevronDown,
 } from 'lucide-react';
@@ -18,12 +13,10 @@ import {
   ChainData,
   formatNumber,
   formatAddress,
-  isEthereumAddress,
   MASTER_CHAIN_ID,
 } from './types';
 import { eventBus } from '../../core/EventBus';
 import mockChains from '@data/chains';
-import { useChainStore } from '../chains/ChainStore';
 
 const initialChains = mockChains.map(c => ({ ...c, token: c.token ? { ...c.token } : undefined }));
 
@@ -166,206 +159,39 @@ function ChainTokenCard({
   );
 }
 
-function BindForm({
-  chain,
-  tokenAddress,
-  onTokenAddressChange,
-  onConfirm,
-  onCancel,
-  isLoading,
-}: {
-  chain: ChainData;
-  tokenAddress: string;
-  onTokenAddressChange: (value: string) => void;
-  onConfirm: () => void;
-  onCancel: () => void;
-  isLoading: boolean;
-}) {
-  const { t } = useTranslation();
-  const isAddressValid = tokenAddress && isEthereumAddress(tokenAddress);
-
-  return (
-    <div className="bg-surface rounded-xl border border-gray-200 p-6 space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
-          <Plus className="h-5 w-5 text-blue-600" />
-          {t('extensions.bindChain', { name: chain.name })}
-        </h3>
-        <button
-          onClick={onCancel}
-          className="p-1.5 text-muted hover:text-muted hover:bg-gray-100 rounded-lg transition-colors"
-          aria-label={t('extensions.cancelBind')}
-        >
-          <X className="h-4 w-4" />
-        </button>
-      </div>
-
-      <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center">
-            <Network className="h-5 w-5 text-muted" />
-          </div>
-          <div>
-            <p className="font-medium text-foreground">{chain.name}</p>
-            <p className="text-sm text-muted">
-              {chain.symbol} • Chain ID: {chain.id}
-            </p>
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-xs font-medium text-muted uppercase tracking-wide mb-1">
-            {t('extensions.tokenContractAddress')}
-          </label>
-          <input
-            type="text"
-            value={tokenAddress}
-            onChange={e => onTokenAddressChange(e.target.value)}
-            placeholder={t('common.addressPlaceholder')}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg font-mono text-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none"
-            disabled={isLoading}
-          />
-          {!isAddressValid && tokenAddress && (
-            <p className="text-xs text-red-600 mt-1 flex items-center gap-1">
-              <AlertCircle className="h-3 w-3" />
-              {t('extensions.invalidAddress')}
-            </p>
-          )}
-        </div>
-      </div>
-
-      <div className="flex justify-end gap-3">
-        <button
-          onClick={onCancel}
-          disabled={isLoading}
-          className="px-4 py-2 text-foreground bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50"
-        >
-          {t('common.cancel')}
-        </button>
-        <button
-          onClick={onConfirm}
-          disabled={isLoading || !isAddressValid}
-          className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              {t('extensions.binding')}
-            </>
-          ) : (
-            t('extensions.confirmBind')
-          )}
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function UnbindModal({
-  isOpen,
-  onClose,
-  chain,
-  onConfirm,
-  isLoading,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  chain: ChainData | null;
-  onConfirm: () => void;
-  isLoading: boolean;
-}) {
-  const { t } = useTranslation();
-  if (!isOpen || !chain) return null;
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="bg-surface rounded-xl shadow-xl w-full max-w-md">
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
-            <Trash2 className="h-5 w-5 text-red-600" />
-            {t('extensions.unbindChain')}
-          </h2>
-          <button
-            onClick={onClose}
-            className="p-2 text-muted hover:text-muted hover:bg-gray-100 rounded-lg transition-colors"
-            aria-label={t('common.close')}
-          >
-            <X className="h-5 w-5" />
-          </button>
-        </div>
-
-        <div className="p-6 space-y-4">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
-            <div>
-              <p className="font-medium text-red-900">{t('extensions.unbindWarning')}</p>
-              <p className="text-sm text-red-700 mt-1">
-                {t('extensions.unbindDescription', { name: chain.name })}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="p-6 border-t border-gray-200 flex justify-end gap-3">
-          <button
-            onClick={onClose}
-            disabled={isLoading}
-            className="px-4 py-2 text-foreground bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50"
-          >
-            {t('common.cancel')}
-          </button>
-          <button
-            onClick={onConfirm}
-            disabled={isLoading}
-            className="px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                {t('extensions.unbinding')}
-              </>
-            ) : (
-              t('extensions.confirmUnbind')
-            )}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export function Extensions() {
   const { t } = useTranslation();
   const { isConnected } = useAccount();
   const walletChainId = useChainId();
   const [chains, setChains] = useState<ChainData[]>(initialChains);
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
 
-  const [bindFormOpen, setBindFormOpen] = useState(false);
-  const [bindTokenAddress, setBindTokenAddress] = useState('');
-  const [unbindModalOpen, setUnbindModalOpen] = useState(false);
-  const [chainToUnbind, setChainToUnbind] = useState<ChainData | null>(null);
   const [masterChainId, setMasterChainId] = useState<number>(MASTER_CHAIN_ID);
-  const { selectedChainId: slaveChainId, selectedChain: slaveChain, selectChain: selectSlaveChain } = useChainStore();
+  const [selectedExtension, setSelectedExtension] = useState<string>('');
 
   const masterChain = chains.find(c => c.id === masterChainId);
   const masterCandidates = chains.filter(c => c.isActive && c.token);
-  const selectableChains = chains.filter(c => c.id !== masterChainId);
-  const slaveChainIsActive = slaveChain?.isActive ?? false;
-  const canBind = !!slaveChain && !slaveChainIsActive;
-  const canUnbind = !!slaveChain && slaveChainIsActive && slaveChain.id !== MASTER_CHAIN_ID;
+
+  const extensions = [
+    { id: 'erc20', name: 'ERC20 Standard' },
+    { id: 'erc721', name: 'ERC721 (NFT)' },
+    { id: 'erc1155', name: 'ERC1155 (Multi-token)' },
+    { id: 'permit', name: 'ERC2612 Permit' },
+    { id: 'votes', name: 'ERC5805 Votes' },
+    { id: 'flash-mint', name: 'ERC3156 Flash Mint' },
+  ];
 
   useEffect(() => {
     if (!isConnected || !walletChainId) return;
     const chainId = Number(walletChainId);
 
-    // Set slave chain if connected chain is a valid selectable chain (not master, has token)
-    if (selectableChains.some(c => c.id === chainId)) {
-      void selectSlaveChain(chainId);
+    // Set master chain if connected chain is a master candidate (has token and isActive)
+    const connectedChain = chains.find(c => c.id === chainId);
+    if (connectedChain && connectedChain.isActive && connectedChain.token) {
+      setMasterChainId(chainId);
     }
-  }, [isConnected, walletChainId, selectSlaveChain, selectableChains]);
+  }, [isConnected, walletChainId, chains]);
 
   useEffect(() => {
     const unsubscribe = eventBus.on('refresh-extensions', () => {
@@ -376,93 +202,6 @@ export function Extensions() {
 
     return () => unsubscribe();
   }, []);
-
-
-  const handleBindButtonClick = () => {
-    if (!slaveChain) return;
-    setBindTokenAddress(slaveChain.token?.address || '');
-    setBindFormOpen(true);
-  };
-
-  const handleBind = async () => {
-    if (!slaveChain) return;
-
-    setIsLoading(true);
-    setError(undefined);
-    setSuccess(undefined);
-
-    try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      setChains(prev => prev.map(c =>
-        c.id === slaveChain.id
-          ? {
-              ...c,
-              isActive: true,
-              token: c.token
-                ? { ...c.token, address: bindTokenAddress }
-                : {
-                    address: bindTokenAddress,
-                    name: `${c.name} Token`,
-                    symbol: c.symbol,
-                    decimals: 18,
-                    totalSupply: '0',
-                    holders: 0,
-                  },
-            }
-          : c
-      ));
-
-      eventBus.emit('extensions:bind', {
-        chainId: slaveChain.id,
-        chainName: slaveChain.name,
-        action: 'bind',
-        timestamp: Date.now(),
-      });
-
-      setSuccess(t('extensions.successBound', { name: slaveChain.name }));
-      setBindFormOpen(false);
-      setBindTokenAddress('');
-    } catch {
-      setError(t('extensions.errorBindFailed'));
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleUnbind = async (chain: ChainData) => {
-    setIsLoading(true);
-    setError(undefined);
-    setSuccess(undefined);
-
-    try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      setChains(prev => prev.map(c =>
-        c.id === chain.id ? { ...c, isActive: false } : c
-      ));
-
-      eventBus.emit('extensions:unbind', {
-        chainId: chain.id,
-        chainName: chain.name,
-        action: 'unbind',
-        timestamp: Date.now(),
-      });
-
-      setSuccess(t('extensions.successUnbound', { name: chain.name }));
-      setUnbindModalOpen(false);
-      setChainToUnbind(null);
-    } catch {
-      setError(t('extensions.errorUnbindFailed'));
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleUnbindClick = (chain: ChainData) => {
-    setChainToUnbind(chain);
-    setUnbindModalOpen(true);
-  };
 
   return (
     <div className="space-y-8">
@@ -489,7 +228,7 @@ export function Extensions() {
 
       <div className="bg-surface rounded-xl border border-gray-200 p-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          <div className="lg:col-span-5">
+          <div className="lg:col-span-4">
             <p className="text-xs font-medium text-muted uppercase tracking-wide mb-2">
               {t('extensions.masterChain')}
             </p>
@@ -499,7 +238,6 @@ export function Extensions() {
                   value={masterChainId}
                   onChange={e => setMasterChainId(Number(e.target.value))}
                   className="w-full px-3 py-1.5 border border-gray-300 rounded-lg bg-surface focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none appearance-none font-mono text-sm pr-8"
-                  disabled={isLoading}
                   aria-label={t('extensions.masterToken')}
                 >
                   {masterCandidates.map(chain => (
@@ -548,58 +286,22 @@ export function Extensions() {
             )}
           </div>
 
-          <div className="lg:col-span-2 flex items-center justify-center self-center">
-            <div className="flex flex-col gap-3">
-              <button
-                onClick={handleBindButtonClick}
-                disabled={isLoading || !canBind || !isConnected}
-                className="px-8 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
-                title={t('extensions.titleBind')}
-              >
-                {isLoading && canBind ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Plus className="h-4 w-4" />
-                )}
-                {t('extensions.bind')}
-              </button>
-              <button
-                onClick={() => slaveChain && handleUnbindClick(slaveChain)}
-                disabled={isLoading || !canUnbind || !isConnected}
-                className="px-8 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
-                title={t('extensions.titleUnbind')}
-              >
-                {isLoading && canUnbind ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Trash2 className="h-4 w-4" />
-                )}
-                {t('extensions.unbind')}
-              </button>
-            </div>
-          </div>
-
-          <div className="lg:col-span-5">
+          <div className="lg:col-span-8">
             <p className="text-xs font-medium text-muted uppercase tracking-wide mb-2">
-              {t('extensions.chain')}
+              {t('extensions.extensionSelect')}
             </p>
             <div className="relative mb-3">
               {isConnected ? (
                 <select
-                  value={slaveChainId || ''}
-                  onChange={e => void selectSlaveChain(Number(e.target.value))}
+                  value={selectedExtension || ''}
+                  onChange={e => setSelectedExtension(e.target.value)}
                   className="w-full px-3 py-1.5 border border-gray-300 rounded-lg bg-surface focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none appearance-none font-mono text-sm pr-8"
-                  disabled={isLoading}
-                  aria-label={t('extensions.chain')}
+                  aria-label={t('extensions.extensionSelect')}
                 >
-                  <option value="">Select chain...</option>
-                  {selectableChains.map(chain => (
-                    <option key={chain.id} value={chain.id}>
-                      {t('extensions.chainOption', {
-                        name: chain.name,
-                        symbol: chain.symbol,
-                        status: chain.isActive ? t('extensions.bound') : t('extensions.available'),
-                      })}
+                  <option value="">{t('extensions.extensionSelectPlaceholder')}</option>
+                  {extensions.map(ext => (
+                    <option key={ext.id} value={ext.id}>
+                      {ext.name}
                     </option>
                   ))}
                 </select>
@@ -609,70 +311,30 @@ export function Extensions() {
                   className="w-full px-3 py-1.5 border border-gray-300 rounded-lg bg-gray-50 text-muted font-mono text-sm cursor-not-allowed"
                   disabled
                   placeholder=""
-                  aria-label={t('extensions.chain')}
+                  aria-label={t('extensions.extensionSelect')}
                 />
               )}
               <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted pointer-events-none" />
             </div>
 
-            {slaveChain ? (
-              <ChainTokenCard
-                chain={slaveChain}
-                masked={!isConnected}
-                statusBadge={
-                  slaveChainIsActive ? (
-                    <span className="flex items-center gap-1 text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">
-                      <CheckCircle className="h-3 w-3" />
-                      {t('extensions.active')}
-                    </span>
-                  ) : (
-                    <span className="flex items-center gap-1 text-xs font-medium text-muted bg-gray-50 px-2 py-1 rounded-full">
-                      <XCircle className="h-3 w-3" />
-                      {t('extensions.available')}
-                    </span>
-                  )
-                }
-              />
-            ) : (
-              <ChainTokenCard
-                chain={chains.find(c => c.id !== masterChainId) || chains[0]}
-                masked={true}
-                statusBadge={
-                  <span className="flex items-center gap-1 text-xs font-medium text-muted bg-gray-50 px-2 py-1 rounded-full">
-                    <XCircle className="h-3 w-3" />
-                    {t('extensions.available')}
-                  </span>
-                }
-              />
-            )}
+            <div className="relative bg-gray-100/80 rounded-xl border border-gray-200 p-6 min-h-[380px]">
+              {!isConnected && (
+                <div className="absolute inset-x-0 bottom-0 top-[80px] bg-gray-100/80 backdrop-blur-sm rounded-b-xl flex items-center justify-center z-10 pointer-events-none">
+                  <p className="text-sm text-muted">{t('extensions.connectWallet')}</p>
+                </div>
+              )}
+              <div className="relative z-10 space-y-4">
+                {selectedExtension && (
+                  <div className="bg-surface rounded-lg border border-gray-200 p-4 mt-4">
+                    <h4 className="font-medium text-foreground mb-2">{t('extensions.extensionDetails')}</h4>
+                    <p className="text-sm text-muted">{t('extensions.extensionDescription')}</p>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
-      {bindFormOpen && slaveChain && (
-        <BindForm
-          chain={slaveChain}
-          tokenAddress={bindTokenAddress}
-          onTokenAddressChange={setBindTokenAddress}
-          onConfirm={() => { void handleBind(); }}
-          onCancel={() => {
-            setBindFormOpen(false);
-            setBindTokenAddress('');
-          }}
-          isLoading={isLoading}
-        />
-      )}
-
-      <UnbindModal
-        isOpen={unbindModalOpen}
-        onClose={() => {
-          setUnbindModalOpen(false);
-          setChainToUnbind(null);
-        }}
-        chain={chainToUnbind}
-        onConfirm={() => { if (chainToUnbind) { void handleUnbind(chainToUnbind); } }}
-        isLoading={isLoading}
-      />
     </div>
   );
 }
