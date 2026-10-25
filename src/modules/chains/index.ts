@@ -3,7 +3,7 @@ import { coreFramework } from '../../core/CoreFramework';
 import { eventBus } from '../../core/EventBus';
 import { probeChain, type ChainHealth, type ChainHealthStatus } from './chainHealth';
 import { classifyRpcFailure, isChainUnreachable, type RpcFailure, type RpcFailureKind } from './rpcErrors';
-import { getChainCache, getSelectedChainId } from './ChainStore';
+import { getChainCache, getSelectedChainId, resetChainCache } from './ChainStore';
 
 
 import manifestRaw from './manifest.json';
@@ -24,6 +24,11 @@ const chainsModule: ModuleInstance = {
 
     eventBus.on('chain:unreachable', (data) => {
       console.warn('Chains: chain unreachable', data);
+    });
+
+    eventBus.on('debug:reset-cache', () => {
+      console.log('Chains: reset cache requested via debug');
+      resetChainCache();
     });
 
     console.log('Chains module initialized');

@@ -1,6 +1,6 @@
 import { useMemo, useState, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { XCircle, Copy, RefreshCw, RotateCcw } from 'lucide-react';
+import { XCircle, Copy, RefreshCw, Trash2 } from 'lucide-react';
 import { coreFramework } from '../../core/CoreFramework';
 import { eventBus } from '../../core/EventBus';
 import { DebugEvents } from './DebugEvents';
@@ -115,16 +115,16 @@ export function DebugPopup({ isOpen, stateRegistry, onClose, onRefresh }: DebugP
             >
               <RefreshCw className="h-4 w-4" />
             </button>
-            <button
-              onClick={() => { 
-                localStorage.removeItem('chain-cache-v1'); 
-                collect(); 
+<button
+              onClick={() => {
+                eventBus.emit('debug:reset-cache', undefined);
+                collect();
               }}
               className="p-2 text-muted hover:text-foreground hover:bg-muted/30 rounded-lg transition-colors"
               aria-label={t('debugState.resetCache')}
               title={t('debugState.resetCache')}
             >
-              <RotateCcw className="h-4 w-4" />
+              <Trash2 className="h-4 w-4" />
             </button>
             <button
               onClick={handleCopy}

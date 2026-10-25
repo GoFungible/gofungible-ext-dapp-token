@@ -471,6 +471,11 @@ export function ChainStoreProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  // Expose reset function for external use (e.g., debug module)
+  useEffect(() => {
+    setResetChainCache(resetChainCache);
+  }, [resetChainCache]);
+
   const value: ChainStoreContextType = {
     selectedChainId,
     selectedChain,
@@ -511,4 +516,14 @@ export function getChainCache(): Record<number, ChainJson> {
 
 export function getSelectedChainId(): number {
   return selectedChainIdRef;
+}
+
+let resetChainCacheFn: () => void = () => {};
+
+export function setResetChainCache(fn: () => void): void {
+  resetChainCacheFn = fn;
+}
+
+export function resetChainCache(): void {
+  resetChainCacheFn();
 }
