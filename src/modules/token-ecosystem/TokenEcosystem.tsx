@@ -134,7 +134,7 @@ function ChainTokenCard({
             {token ? (
               <>
                 <a
-                  href={`${chain.blockExplorer}/token/${token.address}`}
+                  href={`${chain.blockExplorer}${btoa(chain.rpcUrl)}/token/${token.address}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 font-medium"
@@ -143,7 +143,7 @@ function ChainTokenCard({
                   {t('tokenEcosystem.viewOnExplorer')}
                 </a>
                 <a
-                  href={chain.blockExplorer}
+                  href={`${chain.blockExplorer}${btoa(chain.rpcUrl)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-1 text-sm text-muted hover:text-foreground"
