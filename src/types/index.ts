@@ -76,6 +76,7 @@ export interface TopbarItem {
   icon?: string;
   action?: string;
   route?: string;
+  component?: React.ComponentType<any>;
   order?: number;
 }
 

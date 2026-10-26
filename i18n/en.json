@@ -425,5 +425,21 @@
     "importTitle": "Import Theme",
     "importSuccess": "Theme module loaded successfully.",
     "importError": "Failed to import theme module."
+  },
+  "chains": {
+    "nodeStatus": "Node Status",
+    "nodeOnline": "Node online",
+    "nodeOfflineBadge": "Node unreachable",
+    "nodeUnknown": "Node status unknown",
+    "checkingNode": "Checking node...",
+    "retryNodeCheck": "Check again",
+    "nodeMismatchBadge": "Wrong chain",
+    "chainDetails": "Chain Details",
+    "chainName": "Name",
+    "chainId": "Chain ID",
+    "rpcUrl": "RPC URL",
+    "actualChainId": "Actual Chain ID",
+    "errorDetails": "Error Details",
+    "openExplorer": "Open Explorer"
   }
 }

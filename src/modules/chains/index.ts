@@ -4,6 +4,7 @@ import { eventBus } from '../../core/EventBus';
 import { probeChain, type ChainHealth, type ChainHealthStatus } from './chainHealth';
 import { classifyRpcFailure, isChainUnreachable, type RpcFailure, type RpcFailureKind } from './rpcErrors';
 import { getChainCache, getSelectedChainId, resetChainCache } from './ChainStore';
+import { ChainHealthButton } from './ChainHealthButton';
 
 
 import manifestRaw from './manifest.json';
@@ -47,13 +48,21 @@ const chainsModule: ModuleInstance = {
     return manifest.routes || [];
   },
   getTopbarItems() {
-    return manifest.topbarItems || [];
+    return [
+      {
+        id: 'chain-health-button',
+        label: 'chains.nodeStatus',
+        component: ChainHealthButton,
+        order: 100,
+      },
+      ...(manifest.topbarItems || []),
+    ];
   },
   getSidebarItems() {
     return manifest.sidebarItems || [];
   },
 };
 
-export { chainsModule, manifest, probeChain, classifyRpcFailure, isChainUnreachable, getChainCache, getSelectedChainId };
+export { chainsModule, manifest, probeChain, classifyRpcFailure, isChainUnreachable, getChainCache, getSelectedChainId, ChainHealthButton };
 export type { ChainHealth, ChainHealthStatus, RpcFailure, RpcFailureKind };
 export default chainsModule;

@@ -42,6 +42,14 @@ export function Topbar() {
             </button>
             <div className="flex items-center gap-2 lg:gap-4">
               {topbarItems.map(item => {
+                if (item.component) {
+                  const Component = item.component;
+                  return (
+                    <div key={item.id} className="flex items-center">
+                      <Component />
+                    </div>
+                  );
+                }
                 const Icon = item.icon ? iconMap[item.icon] : Settings;
                 return (
                   <button

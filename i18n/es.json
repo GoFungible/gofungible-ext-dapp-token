@@ -425,5 +425,21 @@
     "importTitle": "Importar Tema",
     "importSuccess": "El módulo de tema se cargó correctamente.",
     "importError": "Error al importar el módulo de tema."
+  },
+  "chains": {
+    "nodeStatus": "Estado del Nodo",
+    "nodeOnline": "Nodo en línea",
+    "nodeOfflineBadge": "Nodo inaccesible",
+    "nodeUnknown": "Estado del nodo desconocido",
+    "checkingNode": "Verificando nodo...",
+    "retryNodeCheck": "Verificar de nuevo",
+    "nodeMismatchBadge": "Cadena incorrecta",
+    "chainDetails": "Detalles de la Cadena",
+    "chainName": "Nombre",
+    "chainId": "ID de Cadena",
+    "rpcUrl": "URL RPC",
+    "actualChainId": "ID de Cadena Actual",
+    "errorDetails": "Detalles del Error",
+    "openExplorer": "Abrir Explorador"
   }
 }
