@@ -10,9 +10,6 @@ import {
   AlertCircle,
   AlertTriangle,
   ExternalLink,
-  Wifi,
-  WifiOff,
-  HelpCircle,
 } from 'lucide-react';
 import {
   EnvironmentChainState,
@@ -24,9 +21,7 @@ import { useDeployFungibleFactory } from './hooks/useDeployFungibleFactory';
 import { useDeployFungibleEnvironment } from './hooks/useDeployFungibleEnvironment';
 import { useSetFungibleFactory } from './hooks/useSetFungibleFactory';
 import { useAddChain } from './hooks/useAddChain';
-import { useChainHealth } from './hooks/useChainHealth';
 import { useChainStore, type ChainJson, type Exchange } from '../chains/ChainStore';
-import type { ChainHealthStatus } from '../chains/chainHealth';
 import { isChainUnreachable, classifyRpcFailure, type RpcFailure } from '../chains/rpcErrors';
 
 function StatusBadge({ deployed }: { deployed: boolean }) {
@@ -91,73 +86,6 @@ function AddressRow({
         </a>
       )}
     </div>
-  );
-}
-
-function NodeStatusBadge({
-  status,
-  isChecking,
-  onRecheck,
-}: {
-  status: ChainHealthStatus;
-  isChecking: boolean;
-  onRecheck: () => void;
-}) {
-  const { t } = useTranslation();
-
-  if (isChecking) {
-    return (
-      <span className="flex items-center gap-1.5 text-xs font-medium text-muted bg-gray-50 px-2.5 py-1 rounded-full">
-        <Loader2 className="h-3 w-3 animate-spin" />
-        {t('environment.checkingNode')}
-      </span>
-    );
-  }
-
-  if (status === 'online') {
-    return (
-      <span className="flex items-center gap-1.5 text-xs font-medium text-green-700 bg-green-50 px-2.5 py-1 rounded-full">
-        <Wifi className="h-3 w-3" />
-        {t('environment.nodeOnline')}
-      </span>
-    );
-  }
-
-  if (status === 'offline') {
-    return (
-      <button
-        onClick={onRecheck}
-        className="flex items-center gap-1.5 text-xs font-medium text-red-700 bg-red-50 px-2.5 py-1 rounded-full hover:bg-red-100"
-        title={t('environment.retryNodeCheck')}
-      >
-        <WifiOff className="h-3 w-3" />
-        {t('environment.nodeOfflineBadge')}
-      </button>
-    );
-  }
-
-  if (status === 'mismatch') {
-    return (
-      <button
-        onClick={onRecheck}
-        className="flex items-center gap-1.5 text-xs font-medium text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full hover:bg-amber-100"
-        title={t('environment.retryNodeCheck')}
-      >
-        <AlertTriangle className="h-3 w-3" />
-        {t('environment.nodeMismatchBadge')}
-      </button>
-    );
-  }
-
-  return (
-    <button
-      onClick={onRecheck}
-      className="flex items-center gap-1.5 text-xs font-medium text-muted bg-gray-50 px-2.5 py-1 rounded-full hover:bg-gray-100"
-      title={t('environment.retryNodeCheck')}
-    >
-      <HelpCircle className="h-3 w-3" />
-      {t('environment.nodeUnknown')}
-    </button>
   );
 }
 
@@ -874,9 +802,6 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
   const { addChain, switchChain, isAdding: isAddingChain, error: addChainError } =
     useAddChain();
 
-  const { health: nodeHealth, isChecking: isCheckingNode, check: checkNode } =
-    useChainHealth(selectedChain?.rpcUrl, selectedChain?.id);
-
   const selectedState = chainStates.find(c => c.chainId === selectedChainId);
   const isChainAdded = selectedChain ? connectedChains.some(c => c.id === selectedChainId) : false;
   const explorer = selectedChain?.blockExplorer || selectedChain?.rpcUrl || '';
@@ -1219,58 +1144,7 @@ const refreshed: EnvironmentChainState[] = mockChains.map((c: ChainJson) => {
                 {selectedChain.rpcUrl}
               </p>
             </div>
-            <NodeStatusBadge
-              status={nodeHealth?.status ?? 'unknown'}
-              isChecking={isCheckingNode}
-              onRecheck={checkNode}
-            />
           </div>
-
-          {nodeHealth?.status === 'offline' && (
-            <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
-              <WifiOff className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
-              <div className="flex-1">
-                <p className="text-sm text-red-800">
-                  {t('environment.nodeOffline', { name: selectedChain.name, url: selectedChain.rpcUrl })}
-                </p>
-                {nodeHealth.failure?.message && (
-                  <p className="mt-1 text-xs text-red-600 font-mono break-words">
-                    {nodeHealth.failure.message}
-                  </p>
-                )}
-                <button
-                  onClick={checkNode}
-                  disabled={isCheckingNode}
-                  className="mt-2 text-sm font-medium text-red-700 hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isCheckingNode ? t('environment.checkingNode') : t('environment.retryNodeCheck')}
-                </button>
-              </div>
-            </div>
-          )}
-
-          {nodeHealth?.status === 'mismatch' && (
-            <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-3">
-              <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
-              <div className="flex-1">
-                <p className="text-sm text-amber-800">
-                  {t('environment.nodeMismatch', {
-                    name: selectedChain.name,
-                    url: selectedChain.rpcUrl,
-                    expected: nodeHealth.expectedChainId ?? '',
-                    actual: nodeHealth.chainId ?? '',
-                  })}
-                </p>
-                <button
-                  onClick={checkNode}
-                  disabled={isCheckingNode}
-                  className="mt-2 text-sm font-medium text-amber-700 hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isCheckingNode ? t('environment.checkingNode') : t('environment.retryNodeCheck')}
-                </button>
-              </div>
-            </div>
-          )}
 
           {!isChainAdded && selectedChain && (
             <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-center gap-3">
