@@ -18,7 +18,6 @@ import {
   ChainData,
   formatNumber,
   formatAddress,
-  isEthereumAddress,
   MASTER_CHAIN_ID,
 } from './types';
 import { eventBus } from '../../core/EventBus';
@@ -165,101 +164,6 @@ function ChainTokenCard({
           </div>
         </div>
       )}
-    </div>
-  );
-}
-
-function BindForm({
-  chain,
-  tokenAddress,
-  onTokenAddressChange,
-  onConfirm,
-  onCancel,
-  isLoading,
-}: {
-  chain: ChainData;
-  tokenAddress: string;
-  onTokenAddressChange: (value: string) => void;
-  onConfirm: () => void;
-  onCancel: () => void;
-  isLoading: boolean;
-}) {
-  const { t } = useTranslation();
-  const isAddressValid = tokenAddress && isEthereumAddress(tokenAddress);
-
-  return (
-    <div className="bg-surface rounded-xl border border-gray-200 p-6 space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
-          <Plus className="h-5 w-5 text-blue-600" />
-          {t('tokenPerimeter.bindChain', { name: chain.name })}
-        </h3>
-        <button
-          onClick={onCancel}
-          className="p-1.5 text-muted hover:text-muted hover:bg-gray-100 rounded-lg transition-colors"
-          aria-label={t('tokenPerimeter.cancelBind')}
-        >
-          <X className="h-4 w-4" />
-        </button>
-      </div>
-
-      <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center">
-            <Network className="h-5 w-5 text-muted" />
-          </div>
-          <div>
-            <p className="font-medium text-foreground">{chain.name}</p>
-            <p className="text-sm text-muted">
-              {chain.symbol} • Chain ID: {chain.id}
-            </p>
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-xs font-medium text-muted uppercase tracking-wide mb-1">
-            {t('tokenPerimeter.tokenContractAddress')}
-          </label>
-          <input
-            type="text"
-            value={tokenAddress}
-            onChange={e => onTokenAddressChange(e.target.value)}
-            placeholder={t('common.addressPlaceholder')}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg font-mono text-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none"
-            disabled={isLoading}
-          />
-          {!isAddressValid && tokenAddress && (
-            <p className="text-xs text-red-600 mt-1 flex items-center gap-1">
-              <AlertCircle className="h-3 w-3" />
-              {t('tokenPerimeter.invalidAddress')}
-            </p>
-          )}
-        </div>
-      </div>
-
-      <div className="flex justify-end gap-3">
-        <button
-          onClick={onCancel}
-          disabled={isLoading}
-          className="px-4 py-2 text-foreground bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50"
-        >
-          {t('common.cancel')}
-        </button>
-        <button
-          onClick={onConfirm}
-          disabled={isLoading || !isAddressValid}
-          className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              {t('tokenPerimeter.binding')}
-            </>
-          ) : (
-            t('tokenPerimeter.confirmBind')
-          )}
-        </button>
-      </div>
     </div>
   );
 }
@@ -444,8 +348,6 @@ export function TokenPerimeter() {
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
 
-  const [bindFormOpen, setBindFormOpen] = useState(false);
-  const [bindTokenAddress, setBindTokenAddress] = useState('');
   const [unbindModalOpen, setUnbindModalOpen] = useState(false);
   const [chainToUnbind, setChainToUnbind] = useState<ChainData | null>(null);
   const [masterChainId, setMasterChainId] = useState<number | null>(null);
@@ -500,13 +402,6 @@ export function TokenPerimeter() {
 
     return () => unsubscribe();
   }, []);
-
-
-  const handleBindButtonClick = () => {
-    if (!slaveChain) return;
-    setBindTokenAddress(slaveChain.token?.address || '');
-    setBindFormOpen(true);
-  };
 
   const handleBind = async () => {
     if (!slaveChain || !selectedSlaveToken) return;
@@ -565,8 +460,6 @@ export function TokenPerimeter() {
       });
 
       setSuccess(t('tokenPerimeter.successBound', { name: slaveChain.name }));
-      setBindFormOpen(false);
-      setBindTokenAddress('');
       setSelectedSlaveToken('');
     } catch (err) {
       const message = err instanceof Error ? err.message : t('tokenPerimeter.errorBindFailed');
@@ -738,7 +631,7 @@ export function TokenPerimeter() {
           <div className="lg:col-span-2 flex items-center justify-center self-center">
             <div className="flex flex-col gap-3">
               <button
-                onClick={handleBindButtonClick}
+                onClick={() => { void handleBind(); }}
                 disabled={isLoading || !canBind || !isConnected}
                 className="px-8 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
                 title={t('tokenPerimeter.titleBind')}
@@ -876,20 +769,6 @@ export function TokenPerimeter() {
       </div>
 
       <DraggableSupportedChains chains={chains.filter(c => c.isActive)} selectedChainId={slaveChainId} masked={!isConnected} />
-
-      {bindFormOpen && slaveChain && (
-        <BindForm
-          chain={slaveChain}
-          tokenAddress={bindTokenAddress}
-          onTokenAddressChange={setBindTokenAddress}
-          onConfirm={() => { void handleBind(); }}
-          onCancel={() => {
-            setBindFormOpen(false);
-            setBindTokenAddress('');
-          }}
-          isLoading={isLoading}
-        />
-      )}
 
       <UnbindModal
         isOpen={unbindModalOpen}

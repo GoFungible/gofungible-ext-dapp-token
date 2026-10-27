@@ -1,15 +1,18 @@
 import { useCallback } from 'react';
-import { useWalletClient } from 'wagmi';
-import { createPublicClient, http, type Abi, type Address } from 'viem';
+import { useWalletClient, useAccount } from 'wagmi';
+import { createPublicClient, http, type Abi, type Address, type Chain } from 'viem';
 import fungibleArtifact from '../../../../abi/Fungible.json';
 import mockChains from '@data/chains';
 import { useChainStore } from '../../chains/ChainStore';
 import { useToast } from '../../../core/toast/ToastContext';
+import { useAddChain } from '../../environment/hooks/useAddChain';
 
 export function useBindToken() {
   const { data: walletClient } = useWalletClient();
+  const { chain: connectedChain } = useAccount();
   const { chainCache } = useChainStore();
   const { addToast, updateToast } = useToast();
+  const { addChain, switchChain } = useAddChain();
 
   const bind = useCallback(async (
     masterChainId: number,
@@ -41,6 +44,25 @@ export function useBindToken() {
     });
 
     try {
+      updateToast(toastId, { message: 'Checking wallet chain...' });
+
+      // Auto-switch to master chain if needed
+      const isChainConnected = connectedChain?.id === masterChainId;
+      if (!isChainConnected) {
+        updateToast(toastId, { message: 'Switching to master chain...' });
+        
+        const chain: Chain = {
+          id: masterChainConfig.id,
+          name: masterChainConfig.name,
+          nativeCurrency: { name: masterChainConfig.symbol, symbol: masterChainConfig.symbol, decimals: 18 },
+          rpcUrls: { default: { http: [masterChainConfig.rpcUrl] } },
+          blockExplorers: masterChainConfig.blockExplorer ? { default: { name: 'Explorer', url: masterChainConfig.blockExplorer } } : undefined,
+        };
+        
+        await addChain(chain);
+        await switchChain(masterChainId);
+      }
+
       updateToast(toastId, { message: 'Calling bind on master token...' });
 
       const publicClient = createPublicClient({
@@ -79,7 +101,7 @@ export function useBindToken() {
       });
       throw err;
     }
-  }, [walletClient, chainCache, addToast, updateToast]);
+  }, [walletClient, connectedChain, chainCache, addToast, updateToast, addChain, switchChain]);
 
   return { bind };
 }
