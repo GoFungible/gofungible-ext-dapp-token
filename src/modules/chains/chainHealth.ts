@@ -28,7 +28,7 @@ export async function probeChain(
     });
     const chainId = await client.getChainId();
     const status: ChainHealthStatus =
-      expectedChainId !== undefined && chainId !== expectedChainId ? 'mismatch' : 'online';
+      expectedChainId !== undefined && Number(chainId) !== expectedChainId ? 'mismatch' : 'online';
     return { status, chainId, expectedChainId, checkedAt: Date.now() };
   } catch (error) {
     const failure = classifyRpcFailure(error);
