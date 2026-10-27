@@ -24,6 +24,7 @@ import {
 import { eventBus } from '../../core/EventBus';
 import mockChains from '@data/chains';
 import { useChainStore } from '../chains/ChainStore';
+import { useBindToken } from './hooks/useBindToken';
 
 const initialChains = mockChains.map(c => ({ ...c, token: c.token ? { ...c.token } : undefined }));
 
@@ -449,13 +450,21 @@ export function TokenPerimeter() {
   const [chainToUnbind, setChainToUnbind] = useState<ChainData | null>(null);
   const [masterChainId, setMasterChainId] = useState<number | null>(null);
   const [selectedMasterToken, setSelectedMasterToken] = useState<string>('');
+  const [selectedSlaveToken, setSelectedSlaveToken] = useState<string>('');
   const { selectedChainId: slaveChainId, selectedChain: slaveChain, selectChain: selectSlaveChain, chainCache } = useChainStore();
+
+  const { bind: bindToken } = useBindToken();
+
+  // Reset selected slave token when slave chain changes
+  useEffect(() => {
+    setSelectedSlaveToken('');
+  }, [slaveChainId]);
 
   const masterChain = chains.find(c => c.id === masterChainId);
   const masterCandidates = chains.filter(c => c.isActive && c.token);
   const selectableChains = chains.filter(c => c.id !== masterChainId);
   const slaveChainIsActive = slaveChain?.isActive ?? false;
-  const canBind = !!slaveChain && !slaveChainIsActive;
+  const canBind = !!slaveChain && masterChain?.token?.address && !!selectedSlaveToken;
   const canUnbind = !!slaveChain && slaveChainIsActive && slaveChain.id !== MASTER_CHAIN_ID;
 
   // Get selected master token data from cache
@@ -465,6 +474,18 @@ export function TokenPerimeter() {
         const key = Object.keys(tokens).find(key =>
           tokens[key]?.address?.toLowerCase() === selectedMasterToken.toLowerCase() ||
           key.toLowerCase() === selectedMasterToken.toLowerCase()
+        );
+        return key ? { ...tokens[key], symbol: key } : null;
+      })()
+    : null;
+
+  // Get selected slave token data from cache
+  const selectedSlaveTokenData = selectedSlaveToken && slaveChain
+    ? (() => {
+        const tokens = chainCache[slaveChain.id]?.FungibleTokens || {};
+        const key = Object.keys(tokens).find(key =>
+          tokens[key]?.address?.toLowerCase() === selectedSlaveToken.toLowerCase() ||
+          key.toLowerCase() === selectedSlaveToken.toLowerCase()
         );
         return key ? { ...tokens[key], symbol: key } : null;
       })()
@@ -488,14 +509,34 @@ export function TokenPerimeter() {
   };
 
   const handleBind = async () => {
-    if (!slaveChain) return;
+    if (!slaveChain || !selectedSlaveToken) return;
+    if (!masterChain || !masterChain.token?.address) {
+      setError('Master token not found on selected master chain');
+      return;
+    }
 
     setIsLoading(true);
     setError(undefined);
     setSuccess(undefined);
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      if (!masterChainId) throw new Error('Master chain not selected');
+      const masterChainConfig = mockChains.find(c => c.id === masterChainId);
+      if (!masterChainConfig) throw new Error('Master chain not found');
+
+      const masterChainState = chainCache[masterChainId];
+      const fungibleEnvironmentAddress = masterChainState?.FungibleEnvironment;
+      if (!fungibleEnvironmentAddress) throw new Error('Fungible Environment not deployed on master chain');
+
+      // Master token is the original token on the master chain
+      const masterTokenAddress = masterChain.token.address;
+
+      await bindToken(
+        masterChainId,
+        masterTokenAddress,
+        slaveChain.id,
+        selectedSlaveToken
+      );
 
       setChains(prev => prev.map(c =>
         c.id === slaveChain.id
@@ -503,9 +544,9 @@ export function TokenPerimeter() {
               ...c,
               isActive: true,
               token: c.token
-                ? { ...c.token, address: bindTokenAddress }
+                ? { ...c.token, address: selectedSlaveToken }
                 : {
-                    address: bindTokenAddress,
+                    address: selectedSlaveToken,
                     name: `${c.name} Token`,
                     symbol: c.symbol,
                     decimals: 18,
@@ -526,8 +567,10 @@ export function TokenPerimeter() {
       setSuccess(t('tokenPerimeter.successBound', { name: slaveChain.name }));
       setBindFormOpen(false);
       setBindTokenAddress('');
-    } catch {
-      setError(t('tokenPerimeter.errorBindFailed'));
+      setSelectedSlaveToken('');
+    } catch (err) {
+      const message = err instanceof Error ? err.message : t('tokenPerimeter.errorBindFailed');
+      setError(message);
     } finally {
       setIsLoading(false);
     }
@@ -700,7 +743,7 @@ export function TokenPerimeter() {
                 className="px-8 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
                 title={t('tokenPerimeter.titleBind')}
               >
-                {isLoading && canBind ? (
+                {isLoading ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   <Plus className="h-4 w-4" />
@@ -762,8 +805,8 @@ export function TokenPerimeter() {
             <div className="relative mb-3">
               {isConnected && slaveChain ? (
                 <select
-                  value={''}
-                  onChange={() => {}}
+                  value={selectedSlaveToken}
+                  onChange={e => setSelectedSlaveToken(e.target.value)}
                   className="w-full px-3 py-1.5 border border-gray-300 rounded-lg bg-surface focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none appearance-none font-mono text-sm pr-8"
                   disabled={isLoading}
                   aria-label={t('tokenPerimeter.tokenSelect')}
@@ -794,6 +837,14 @@ export function TokenPerimeter() {
               <ChainTokenCard
                 chain={slaveChain}
                 masked={!isConnected}
+                tokenOverride={selectedSlaveTokenData ? {
+                  name: selectedSlaveTokenData.name,
+                  symbol: selectedSlaveTokenData.symbol || selectedSlaveTokenData.name,
+                  address: selectedSlaveTokenData.address,
+                  decimals: 18,
+                  totalSupply: '0',
+                  holders: 0
+                } : undefined}
                 statusBadge={
                   slaveChainIsActive ? (
                     <span className="flex items-center gap-1 text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">
